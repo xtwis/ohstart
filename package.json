@@ -1,0 +1,63 @@
+{
+  "name": "@xtwis/ohstart",
+  "version": "0.1.0",
+  "packageManager": "pnpm@11.24.0",
+  "description": "ohstart",
+  "author": "Twisuki",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
+  "readme": "README.md",
+  "homepage": "https://x.twis.uk/en/ohstart/",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/xtwis/ohstart.git"
+  },
+  "bugs": "https://github.com/xtwis/ohstart/issues",
+  "keywords": [],
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    }
+  },
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "LICENSE",
+    "README.md",
+    "dist"
+  ],
+  "scripts": {
+    "build": "pnpm lint && pnpm check && pnpm test:run && tsdown",
+    "check": "pnpm check:src && pnpm check:test",
+    "check:src": "tsc --noEmit",
+    "check:test": "tsc -p tsconfig.test.json",
+    "docs": "ohdoc dev",
+    "fix": "eslint . --fix",
+    "lint": "eslint",
+    "prepack": "pnpm build",
+    "prepare": "husky",
+    "test": "vitest",
+    "test:run": "pnpm test run",
+    "test:ui": "pnpm test --ui"
+  },
+  "devDependencies": {
+    "@antfu/eslint-config": "^9.5.1",
+    "@commitlint/cli": "^21.2.3",
+    "@commitlint/config-conventional": "^21.2.3",
+    "@types/node": "^26.0.0",
+    "@vitest/ui": "^5.0.5",
+    "@xtwis/ohdoc": "^1.1.0",
+    "eslint": "^10.13.0",
+    "eslint-plugin-format": "^2.0.1",
+    "husky": "^9.1.7",
+    "tsdown": "^0.23.1",
+    "typescript": "^6.0.0",
+    "vitest": "^5.0.5"
+  }
+}
