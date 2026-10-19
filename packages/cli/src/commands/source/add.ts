@@ -1,6 +1,7 @@
 import { defineCommand } from "citty"
 import { loadConfig, saveConfig } from "@/config.js"
 import { log } from "@/logger.js"
+import { prompt } from "@/prompts/index.js"
 import { cloneSource, readSourceMeta } from "@/remote.js"
 
 export default defineCommand({
@@ -36,10 +37,13 @@ export default defineCommand({
       const workspace = await cloneSource(url)
       try {
         const meta = await readSourceMeta(workspace.dir)
-        const keyName = key ?? meta.name
         const config = await loadConfig()
-        if (config.source[keyName])
-          throw new Error(`source ${keyName} already exists, pick another key name`)
+        let keyName = key ?? meta.name
+        while (config.source[keyName]) {
+          keyName = await prompt.input(`source ${keyName} already exists, enter another key name`, {
+            validate: value => value.trim().length > 0 || "key name is required",
+          })
+        }
 
         config.source[keyName] = {
           name: meta.name,

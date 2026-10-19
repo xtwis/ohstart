@@ -1,6 +1,7 @@
 import { defineCommand } from "citty"
 import { loadConfig, saveConfig } from "@/config.js"
 import { log } from "@/logger.js"
+import { prompt } from "@/prompts/index.js"
 
 export default defineCommand({
   meta: {
@@ -20,6 +21,11 @@ export default defineCommand({
       const config = await loadConfig()
       if (!config.source[keyName])
         throw new Error(`unknown source ${keyName}`)
+
+      if (!(await prompt.confirm(`remove source ${keyName}?`, { default: false }))) {
+        log.info("cancelled")
+        return
+      }
 
       delete config.source[keyName]
       if (config.default === keyName)

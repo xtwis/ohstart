@@ -19,12 +19,25 @@ export interface DefineArgvResult<S extends ArgvSchema> {
 
 export declare function defineArgv<S extends ArgvSchema>(schema: S): DefineArgvResult<S>
 
+export interface ConfirmOptions {
+  default?: boolean
+}
+
+export interface InputOptions {
+  default?: string
+  validate?: (value: string) => true | string
+}
+
+export interface SelectOption {
+  label: string
+  value?: string
+}
+
 export declare const prompt: {
-  confirm: (message: string, opts?: { default?: boolean }) => Promise<boolean>
-  input: (message: string, opts?: { default?: string, validate?: (value: string) => true | string }) => Promise<string>
-  password: (message: string, validate?: (value: string) => true | string) => Promise<string>
-  select: (message: string, opts: Array<{ label: string, value?: string }>) => Promise<string>
-  multiselect: (message: string, opts: Array<{ label: string, value?: string }>) => Promise<string[]>
+  confirm: (message: string, options?: ConfirmOptions) => Promise<boolean>
+  input: (message: string, options?: InputOptions) => Promise<string>
+  select: (message: string, options: SelectOption[]) => Promise<string>
+  multiselect: (message: string, options: SelectOption[]) => Promise<string[]>
 }
 
 export declare const log: {
