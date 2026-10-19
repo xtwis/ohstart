@@ -1,0 +1,39 @@
+{
+  "name": "@xtwis/ohstart-dev",
+  "type": "module",
+  "version": "0.1.0",
+  "description": "ohstart dev CLI and SDK",
+  "author": "Twisuki",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
+  "keywords": [],
+  "sideEffects": false,
+  "exports": {
+    "./package.json": "./package.json"
+  },
+  "bin": {
+    "ohstart-dev": "./dist/cli.mjs"
+  },
+  "files": [
+    "README.md",
+    "dist"
+  ],
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "build": "tsdown",
+    "check": "pnpm check:src && pnpm check:test",
+    "check:src": "tsc --noEmit",
+    "check:test": "tsc --noEmit -p tsconfig.test.json",
+    "fix": "pnpm -w fix",
+    "lint": "pnpm -w lint",
+    "prepack": "pnpm check && pnpm lint && pnpm test:run && pnpm build",
+    "test": "vitest",
+    "test:run": "vitest run",
+    "test:ui": "vitest --ui"
+  },
+  "dependencies": {}
+}

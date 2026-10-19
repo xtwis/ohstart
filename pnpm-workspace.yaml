@@ -8,5 +8,8 @@ trustPolicyExclude:
 
 shellEmulator: true
 
+packages:
+  - "packages/*"
+
 allowBuilds:
   esbuild: true
