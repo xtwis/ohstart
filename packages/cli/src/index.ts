@@ -1,5 +1,5 @@
 import { defineCommand, runMain } from "citty"
-import { subCommands } from "@/commands/index.js"
+import { subCommands } from "@/commands/index"
 
 const main = defineCommand({
   meta: {

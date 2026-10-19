@@ -1,10 +1,10 @@
 import type { SubCommandsDef } from "citty"
 import { defineCommand } from "citty"
-import add from "@/commands/source/add.js"
-import sourceDefault from "@/commands/source/default.js"
-import list from "@/commands/source/list.js"
-import remove from "@/commands/source/remove.js"
-import view from "@/commands/source/view.js"
+import add from "@/commands/source/add"
+import sourceDefault from "@/commands/source/default"
+import list from "@/commands/source/list"
+import remove from "@/commands/source/remove"
+import view from "@/commands/source/view"
 
 export const subCommands = {
   add,

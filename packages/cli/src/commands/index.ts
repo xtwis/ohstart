@@ -1,12 +1,12 @@
 import type { SubCommandsDef } from "citty"
-import add from "@/commands/add.js"
-import help from "@/commands/help.js"
-import init from "@/commands/init.js"
-import list from "@/commands/list.js"
-import source from "@/commands/source/index.js"
-import update from "@/commands/update.js"
-import version from "@/commands/version.js"
-import view from "@/commands/view.js"
+import add from "@/commands/add"
+import help from "@/commands/help"
+import init from "@/commands/init"
+import list from "@/commands/list"
+import source from "@/commands/source/index"
+import update from "@/commands/update"
+import version from "@/commands/version"
+import view from "@/commands/view"
 
 export const subCommands = {
   add,

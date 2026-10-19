@@ -1,7 +1,7 @@
-import { confirm } from "@/prompts/confirm.js"
-import { input } from "@/prompts/input.js"
-import { multiselect } from "@/prompts/multiselect.js"
-import { select } from "@/prompts/select.js"
+import { confirm } from "@/prompts/confirm"
+import { input } from "@/prompts/input"
+import { multiselect } from "@/prompts/multiselect"
+import { select } from "@/prompts/select"
 
 export const prompt = {
   confirm,

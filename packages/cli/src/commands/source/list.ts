@@ -1,6 +1,6 @@
 import { defineCommand } from "citty"
-import { loadConfig } from "@/config.js"
-import { log } from "@/logger.js"
+import { loadConfig } from "@/config"
+import { log } from "@/logger"
 
 export default defineCommand({
   meta: {

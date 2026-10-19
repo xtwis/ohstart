@@ -1,2 +1,2 @@
-export { log } from "@/logger.js"
-export { prompt } from "@/prompts/index.js"
+export { log } from "@/logger"
+export { prompt } from "@/prompts/index"

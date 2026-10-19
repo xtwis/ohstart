@@ -1,6 +1,6 @@
-import type { ConfirmOptions } from "@/prompts/types.js"
-import { log } from "@/logger.js"
-import { readLine } from "@/prompts/read.js"
+import type { ConfirmOptions } from "@/prompts/types"
+import { log } from "@/logger"
+import { readLine } from "@/prompts/read"
 
 export async function confirm(message: string, options: ConfirmOptions = {}): Promise<boolean> {
   const hint = options.default === undefined ? " [y/n]" : options.default ? " [Y/n]" : " [y/N]"

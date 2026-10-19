@@ -1,8 +1,8 @@
 import { defineCommand } from "citty"
-import { loadConfig, saveConfig } from "@/config.js"
-import { log } from "@/logger.js"
-import { prompt } from "@/prompts/index.js"
-import { cloneSource, readSourceMeta } from "@/remote.js"
+import { loadConfig, saveConfig } from "@/config"
+import { log } from "@/logger"
+import { prompt } from "@/prompts/index"
+import { cloneSource, readSourceMeta } from "@/remote"
 
 export default defineCommand({
   meta: {
