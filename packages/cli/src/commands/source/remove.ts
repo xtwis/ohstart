@@ -1,7 +1,7 @@
 import { defineCommand } from "citty"
 import { loadConfig, saveConfig } from "@/config"
 import { log } from "@/logger"
-import { prompt } from "@/prompts/index"
+import { prompt } from "@/prompts"
 
 export default defineCommand({
   meta: {

@@ -44,6 +44,7 @@
     "test:ui": "vitest --ui"
   },
   "dependencies": {
-    "citty": "0.2.2"
+    "citty": "0.2.2",
+    "esbuild": "^0.28.2"
   }
 }
