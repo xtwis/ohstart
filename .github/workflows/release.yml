@@ -1,31 +1,43 @@
-name: release
+name: Release
 
 on:
   push:
-    tags:
-      - "v*"
+    branches: [main]
+
+concurrency: ${{ github.workflow }}-${{ github.ref }}
 
 jobs:
   release:
-    name: Publish to npm
     runs-on: ubuntu-latest
-
     permissions:
+      contents: write
+      pull-requests: write
       id-token: write
-
     steps:
       - uses: actions/checkout@v7
 
-      - uses: pnpm/action-setup@v6
+      - name: Install pnpm
+        uses: pnpm/action-setup@v6
 
-      - uses: actions/setup-node@v7
+      - name: Set node
+        uses: actions/setup-node@v7
         with:
-          node-version: lts/*
+          node-version: 22
           cache: pnpm
-          registry-url: https://registry.npmjs.org
 
       - name: Install
-        run: pnpm i --frozen-lockfile
+        run: pnpm install --frozen-lockfile
+
+      - name: Build
+        run: |
+          pnpm run build:cli
+          pnpm run build:dev
 
       - name: Publish
-        run: pnpm publish --provenance --access public --no-git-checks
+        uses: changesets/action@v2
+        with:
+          publish: pnpm changeset publish
+          commit: "chore(version): release"
+          title: "chore(version): release"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
