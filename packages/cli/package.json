@@ -43,5 +43,7 @@
     "test:run": "vitest run",
     "test:ui": "vitest --ui"
   },
-  "dependencies": {}
+  "dependencies": {
+    "citty": "0.2.2"
+  }
 }
