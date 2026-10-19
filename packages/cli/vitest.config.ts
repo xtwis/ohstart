@@ -1,7 +1,7 @@
 import { readFileSync } from "node:fs"
 import { fileURLToPath } from "node:url"
 import { defineConfig } from "vitest/config"
-import config from "../../vitest.base.mjs"
+import config from "../../vitest.base.ts"
 
 const { version } = JSON.parse(readFileSync(new URL("package.json", import.meta.url), "utf8")) as { version: string }
 

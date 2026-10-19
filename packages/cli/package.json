@@ -33,9 +33,7 @@
   },
   "scripts": {
     "build": "tsdown",
-    "check": "pnpm check:src && pnpm check:test",
-    "check:src": "tsc --noEmit",
-    "check:test": "tsc --noEmit -p tsconfig.test.json",
+    "check": "tsc --noEmit",
     "fix": "pnpm -w fix",
     "lint": "pnpm -w lint",
     "prepack": "pnpm check && pnpm lint && pnpm test:run && pnpm build",
