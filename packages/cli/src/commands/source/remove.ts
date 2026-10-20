@@ -1,7 +1,7 @@
+import { fail, log } from "@shared/logger"
+import { prompt } from "@shared/prompts"
 import { defineCommand } from "citty"
 import { loadConfig, saveConfig } from "@/config"
-import { log } from "@/logger"
-import { prompt } from "@/prompts"
 
 export default defineCommand({
   meta: {
@@ -34,7 +34,7 @@ export default defineCommand({
       log.info(`removed source ${keyName}`)
     }
     catch (error) {
-      log.fail(error)
+      fail(error)
     }
   },
 })

@@ -1,7 +1,6 @@
-import type { ArgvSchema } from "@ohstart/sdk"
+import type { ArgvSchema } from "@shared/argv/schema"
+import { fillRequiredArgs, parseScriptArgv } from "@shared/argv/parse"
 import { describe, expect, it } from "vitest"
-import { fillRequiredArgs, parseScriptArgv } from "@/runtime/argv"
-import { rewriteSdkSpecifier, SDK_URL } from "@/runtime/sdk"
 
 const schema: ArgvSchema = {
   args: [{ name: "project-name", required: true, description: "Project name" }],
@@ -66,20 +65,5 @@ describe("fillRequiredArgs - required positional completion", () => {
   it("ignores a schema without required args", async () => {
     const argv = { args: [], flags: {} }
     await expect(fillRequiredArgs({}, argv)).resolves.toBeUndefined()
-  })
-})
-
-describe("rewriteSdkSpecifier - sdk specifier rewriting", () => {
-  it("rewrites a single quoted import", () => {
-    expect(rewriteSdkSpecifier(`import { log } from '@xtwis/ohstart-dev'`)).toBe(`import { log } from "${SDK_URL}"`)
-  })
-
-  it("rewrites a double quoted import", () => {
-    expect(rewriteSdkSpecifier(`import { log } from "@xtwis/ohstart-dev"`)).toBe(`import { log } from "${SDK_URL}"`)
-  })
-
-  it("leaves unrelated specifiers untouched", () => {
-    const code = `import { readFile } from "node:fs/promises"`
-    expect(rewriteSdkSpecifier(code)).toBe(code)
   })
 })

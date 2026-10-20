@@ -1,12 +1,15 @@
-import type { OhstartConfig, ScriptType, SourceConfig } from "@ohstart/sdk"
-import type { ScriptArgv } from "@/runtime/argv"
+import type { RawScriptArgv } from "@shared/argv/schema"
+import type { OhstartConfig, ScriptType, SourceConfig } from "@shared/types"
 import { spawn } from "node:child_process"
 import { join } from "node:path"
 import process from "node:process"
+import { loadArgvSchema, resolveArgvFile } from "@shared/argv/load"
+import { fillRequiredArgs, parseScriptArgv } from "@shared/argv/parse"
+import { prompt } from "@shared/prompts"
+import { readOhstartJson, readScriptJson } from "@shared/read"
 import { loadConfig, saveConfig } from "@/config"
-import { prompt } from "@/prompts"
-import { cloneSource, parseScriptAddress, readScriptJson, readSourceMeta } from "@/remote"
-import { fillRequiredArgs, loadArgvSchema, parseScriptArgv, resolveArgvFile } from "@/runtime/argv"
+import { cloneSource, parseScriptAddress } from "@/remote"
+import { SCRIPT_API_URL } from "@/runtime/api"
 import { bundleScript } from "@/runtime/bundle"
 
 export interface RunScriptOptions {
@@ -23,8 +26,8 @@ export async function runScript({ type, address, tokens, trust }: RunScriptOptio
 
   const workspace = await cloneSource(target.source.url)
   try {
-    const meta = await readSourceMeta(workspace.dir)
-    const path = meta.scripts?.[target.name]
+    const meta = await readOhstartJson(workspace.dir)
+    const path = meta.scripts[target.name]
     if (!path)
       throw new Error(`unknown script ${target.name} in source ${target.key}`)
 
@@ -35,7 +38,7 @@ export async function runScript({ type, address, tokens, trust }: RunScriptOptio
       throw new Error(`script ${target.name} is a ${script.type} script, use \`ohstart ${script.type}\``)
 
     const scriptDir = join(workspace.dir, path)
-    const schema = await loadArgvSchema(await resolveArgvFile(scriptDir, script))
+    const schema = await loadArgvSchema(await resolveArgvFile(scriptDir, script), SCRIPT_API_URL)
     const argv = parseScriptArgv(tokens, schema)
     await fillRequiredArgs(schema, argv)
 
@@ -68,7 +71,7 @@ async function ensureTrusted(
   }
 
   const accepted = await prompt.confirm(
-    `source ${key} (${source.name}) is not trusted: ${source.url}\nscripts from this source run arbitrary code, continue?`,
+    `source ${key} (${source.name}) is not trusted: ${source.url}\nsources from this source run arbitrary code, continue?`,
     { default: false },
   )
   if (!accepted)
@@ -78,7 +81,7 @@ async function ensureTrusted(
   await saveConfig(config)
 }
 
-function spawnScript(file: string, argv: ScriptArgv): Promise<number | null> {
+function spawnScript(file: string, argv: RawScriptArgv): Promise<number | null> {
   return new Promise((resolve, reject) => {
     const child = spawn(process.execPath, [file], {
       cwd: process.cwd(),

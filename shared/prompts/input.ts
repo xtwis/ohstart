@@ -1,6 +1,6 @@
-import type { InputOptions } from "@/prompts/types"
-import { log } from "@/logger"
-import { readLine } from "@/prompts/read"
+import type { InputOptions } from "@shared/prompts/types"
+import { log } from "@shared/logger"
+import { readLine } from "@shared/prompts/read"
 
 export async function input(message: string, options: InputOptions = {}): Promise<string> {
   const hint = options.default === undefined ? "" : ` (${options.default})`

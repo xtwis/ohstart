@@ -1,10 +1,9 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "rootDir": ".",
     "paths": {
       "@/*": ["./src/*"],
-      "@ohstart/sdk": ["../../shared/sdk.d.ts"]
+      "@shared/*": ["../../shared/*"]
     }
   },
   "include": ["src/**/*", "test/**/*", "../../shared/**/*"]

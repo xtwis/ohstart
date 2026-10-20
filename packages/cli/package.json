@@ -15,11 +15,11 @@
       "types": "./dist/index.d.mts",
       "import": "./dist/index.mjs"
     },
-    "./sdk": {
-      "types": "./dist/sdk.d.mts",
-      "import": "./dist/sdk.mjs"
-    },
-    "./package.json": "./package.json"
+    "./package.json": "./package.json",
+    "./script-api": {
+      "types": "./dist/script-api.d.mts",
+      "import": "./dist/script-api.mjs"
+    }
   },
   "bin": {
     "ohstart": "./dist/index.mjs",
@@ -37,10 +37,9 @@
     "check": "tsc --noEmit",
     "fix": "pnpm -w fix",
     "lint": "pnpm -w lint",
-    "prepack": "pnpm check && pnpm lint && pnpm test:run && pnpm build",
+    "prepack": "pnpm check && pnpm -w lint && pnpm test:run && pnpm build",
     "test": "vitest",
-    "test:run": "vitest run",
-    "test:ui": "vitest --ui"
+    "test:run": "vitest run"
   },
   "dependencies": {
     "citty": "0.2.2",

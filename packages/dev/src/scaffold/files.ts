@@ -1,4 +1,4 @@
-import type { ScriptJson } from "@ohstart/sdk"
+import type { ScriptJson } from "@shared/types"
 import { access, mkdir, readdir, rm, writeFile } from "node:fs/promises"
 import { dirname, join } from "node:path"
 import { ARGV_TS, INDEX_TS, scriptJson } from "@/scaffold/templates"

@@ -1,7 +1,7 @@
-import type { ScriptType } from "@ohstart/sdk"
+import type { ScriptType } from "@shared/types"
 import type { CommandDef } from "citty"
+import { fail } from "@shared/logger"
 import { defineCommand } from "citty"
-import { log } from "@/logger"
 import { runScript } from "@/runtime"
 
 const RESERVED_TRUST_FLAG = "--trust"
@@ -26,7 +26,7 @@ export function defineScriptCommand(type: ScriptType): CommandDef<typeof SCRIPT_
         await runScript({ type, address: args.script, tokens, trust })
       }
       catch (error) {
-        log.fail(error)
+        fail(error)
       }
     },
   })

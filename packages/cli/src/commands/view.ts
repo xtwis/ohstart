@@ -1,10 +1,13 @@
-import type { ArgvSchema, ScriptJson } from "@ohstart/sdk"
+import type { ArgvSchema } from "@shared/argv/schema"
+import type { ScriptJson } from "@shared/types"
 import { join } from "node:path"
+import { loadArgvSchema, resolveArgvFile } from "@shared/argv/load"
+import { fail, log } from "@shared/logger"
+import { readOhstartJson, readScriptJson } from "@shared/read"
 import { defineCommand } from "citty"
 import { loadConfig } from "@/config"
-import { log } from "@/logger"
-import { cloneSource, parseScriptAddress, readScriptJson, readSourceMeta } from "@/remote"
-import { loadArgvSchema, resolveArgvFile } from "@/runtime"
+import { cloneSource, parseScriptAddress } from "@/remote"
+import { SCRIPT_API_URL } from "@/runtime/api"
 
 function renderUsage(script: ScriptJson, schema: ArgvSchema): string {
   const parts = ["ohstart", script.type, script.name]
@@ -34,7 +37,7 @@ export default defineCommand({
 
       const workspace = await cloneSource(target.source.url)
       try {
-        const meta = await readSourceMeta(workspace.dir)
+        const meta = await readOhstartJson(workspace.dir)
         const path = meta.scripts?.[target.name]
         if (!path)
           throw new Error(`unknown script ${target.name} in source ${target.source.name}`)
@@ -43,7 +46,7 @@ export default defineCommand({
         if (script.name !== target.name)
           throw new Error(`script.json name ${script.name} does not match ${target.name}`)
 
-        const schema = await loadArgvSchema(await resolveArgvFile(join(workspace.dir, path), script))
+        const schema = await loadArgvSchema(await resolveArgvFile(join(workspace.dir, path), script), SCRIPT_API_URL)
 
         log.info(`name: ${script.name}`)
         log.info(`type: ${script.type}`)
@@ -58,7 +61,7 @@ export default defineCommand({
       }
     }
     catch (error) {
-      log.fail(error)
+      fail(error)
     }
   },
 })

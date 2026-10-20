@@ -1,8 +1,9 @@
+import { fail, log } from "@shared/logger"
+import { prompt } from "@shared/prompts"
+import { readOhstartJson } from "@shared/read"
 import { defineCommand } from "citty"
 import { loadConfig, saveConfig } from "@/config"
-import { log } from "@/logger"
-import { prompt } from "@/prompts"
-import { cloneSource, readSourceMeta } from "@/remote"
+import { cloneSource } from "@/remote"
 
 export default defineCommand({
   meta: {
@@ -36,7 +37,7 @@ export default defineCommand({
 
       const workspace = await cloneSource(url)
       try {
-        const meta = await readSourceMeta(workspace.dir)
+        const meta = await readOhstartJson(workspace.dir)
         const config = await loadConfig()
         let keyName = key ?? meta.name
         while (config.source[keyName]) {
@@ -59,7 +60,7 @@ export default defineCommand({
       }
     }
     catch (error) {
-      log.fail(error)
+      fail(error)
     }
   },
 })

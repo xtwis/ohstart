@@ -1,11 +1,11 @@
-import type { OhstartJson } from "@ohstart/sdk"
+import type { OhstartJson } from "@shared/types"
 import { execFile } from "node:child_process"
 import { userInfo } from "node:os"
 import { basename, join } from "node:path"
 import process from "node:process"
 import { promisify } from "node:util"
+import { fail, log } from "@shared/logger"
 import { defineCommand } from "citty"
-import { log } from "@/logger"
 import { isVacantDir, pathExists, writeScriptSkeleton } from "@/scaffold"
 import { writeSourceJson } from "@/source"
 
@@ -69,7 +69,7 @@ export default defineCommand({
       log.info("next: git init && git add -A && git commit  |  ohsd new <script> --type add --description \"...\"  |  ohsd check")
     }
     catch (error) {
-      log.fail(error)
+      fail(error)
     }
   },
 })

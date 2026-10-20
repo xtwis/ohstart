@@ -12,11 +12,12 @@
   "sideEffects": false,
   "exports": {
     ".": {
-      "types": "./dist/sdk.d.mts"
+      "types": "./dist/api.d.mts",
+      "import": "./dist/api.mjs"
     },
     "./package.json": "./package.json"
   },
-  "types": "./dist/sdk.d.mts",
+  "types": "./dist/api.d.mts",
   "bin": {
     "ohstart-dev": "./dist/index.mjs",
     "ohsd": "./dist/index.mjs"
@@ -33,10 +34,9 @@
     "check": "tsc --noEmit",
     "fix": "pnpm -w fix",
     "lint": "pnpm -w lint",
-    "prepack": "pnpm check && pnpm lint && pnpm test:run && pnpm build",
+    "prepack": "pnpm check && pnpm -w lint && pnpm test:run && pnpm build",
     "test": "vitest",
-    "test:run": "vitest run",
-    "test:ui": "vitest --ui"
+    "test:run": "vitest run"
   },
   "dependencies": {
     "citty": "0.2.2"

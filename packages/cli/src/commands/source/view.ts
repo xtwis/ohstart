@@ -1,6 +1,6 @@
+import { fail, log } from "@shared/logger"
 import { defineCommand } from "citty"
 import { loadConfig } from "@/config"
-import { log } from "@/logger"
 
 export default defineCommand({
   meta: {
@@ -30,7 +30,7 @@ export default defineCommand({
       log.info(`default: ${config.default === keyName}`)
     }
     catch (error) {
-      log.fail(error)
+      fail(error)
     }
   },
 })

@@ -1,5 +1,5 @@
+import { fail, log } from "@shared/logger"
 import { defineCommand } from "citty"
-import { log } from "@/logger"
 import { main } from "@/main"
 
 export default defineCommand({
@@ -13,7 +13,7 @@ export default defineCommand({
       log.info(await renderUsage(main))
     }
     catch (error) {
-      log.fail(error)
+      fail(error)
     }
   },
 })

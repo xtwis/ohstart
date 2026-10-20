@@ -1,4 +1,4 @@
-import type { OhstartConfig, SourceConfig } from "@ohstart/sdk"
+import type { OhstartConfig, SourceConfig } from "@shared/types"
 
 export interface ScriptTarget {
   key: string

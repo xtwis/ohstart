@@ -1,9 +1,10 @@
 import { join } from "node:path"
 import process from "node:process"
+import { fail, log } from "@shared/logger"
+import { readOhstartJson } from "@shared/read"
 import { defineCommand } from "citty"
-import { log } from "@/logger"
 import { assertScriptName, assertScriptPath, isVacantDir, pathExists, removeDir, writeScriptSkeleton } from "@/scaffold"
-import { readSourceJson, writeSourceJson } from "@/source"
+import { writeSourceJson } from "@/source"
 
 export default defineCommand({
   meta: {
@@ -41,7 +42,7 @@ export default defineCommand({
       if (!description)
         throw new Error("script description is required")
 
-      const meta = await readSourceJson(root)
+      const meta = await readOhstartJson(root)
       assertScriptName(name)
       assertScriptPath(path)
       if (meta.scripts[name])
@@ -70,7 +71,7 @@ export default defineCommand({
       log.info(`next: ohsd check ${name}`)
     }
     catch (error) {
-      log.fail(error)
+      fail(error)
     }
   },
 })

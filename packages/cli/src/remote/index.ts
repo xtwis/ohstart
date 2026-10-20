@@ -1,7 +1,4 @@
 export type { ScriptTarget } from "@/remote/address"
 export { parseScriptAddress, resolveDefaultSource } from "@/remote/address"
-export type { SourceScript } from "@/remote/script"
-export { readScriptJson, readSourceScripts } from "@/remote/script"
-export { readSourceMeta } from "@/remote/source"
 export type { SourceWorkspace } from "@/remote/workspace"
 export { cloneSource, disposeSource } from "@/remote/workspace"

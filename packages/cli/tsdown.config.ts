@@ -9,13 +9,14 @@ export default defineConfig({
   ...config,
   alias: {
     "@": fileURLToPath(new URL("src", import.meta.url)),
+    "@shared": fileURLToPath(new URL("../../shared", import.meta.url)),
   },
   define: {
     __VERSION__: JSON.stringify(version),
   },
   tsconfig: "tsconfig.build.json",
   entry: {
-    index: "src/index.ts",
-    sdk: "src/sdk.ts",
+    "index": "src/index.ts",
+    "script-api": "src/script-api.ts",
   },
 })

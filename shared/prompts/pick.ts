@@ -1,6 +1,6 @@
-import type { SelectOption } from "@/prompts/types"
+import type { SelectOption } from "@shared/prompts/types"
 import process from "node:process"
-import { isCtrlC, isSubmit, readKeypresses } from "@/prompts/read"
+import { isCtrlC, isSubmit, readKeypresses } from "@shared/prompts/read"
 
 const HIDE_CURSOR = "\u001B[?25l"
 const SHOW_CURSOR = "\u001B[?25h"

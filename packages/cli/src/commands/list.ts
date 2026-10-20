@@ -1,7 +1,8 @@
+import { fail, log } from "@shared/logger"
+import { readOhstartJson, readSourceScripts } from "@shared/read"
 import { defineCommand } from "citty"
 import { loadConfig } from "@/config"
-import { log } from "@/logger"
-import { cloneSource, readSourceMeta, readSourceScripts, resolveDefaultSource } from "@/remote"
+import { cloneSource, resolveDefaultSource } from "@/remote"
 
 export default defineCommand({
   meta: {
@@ -26,7 +27,7 @@ export default defineCommand({
 
       const workspace = await cloneSource(source.url)
       try {
-        const meta = await readSourceMeta(workspace.dir)
+        const meta = await readOhstartJson(workspace.dir)
         const scripts = await readSourceScripts(workspace.dir, meta)
         for (const entry of scripts) {
           if (entry.error)
@@ -55,7 +56,7 @@ export default defineCommand({
       }
     }
     catch (error) {
-      log.fail(error)
+      fail(error)
     }
   },
 })

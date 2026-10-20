@@ -5,26 +5,18 @@ import config from "../../tsdown.base.ts"
 
 const { version } = JSON.parse(readFileSync(new URL("package.json", import.meta.url), "utf8")) as { version: string }
 
-export default defineConfig([
-  {
-    ...config,
-    alias: {
-      "@": fileURLToPath(new URL("src", import.meta.url)),
-    },
-    define: {
-      __VERSION__: JSON.stringify(version),
-    },
-    tsconfig: "tsconfig.build.json",
-    entry: { index: "src/index.ts" },
+export default defineConfig({
+  ...config,
+  alias: {
+    "@": fileURLToPath(new URL("src", import.meta.url)),
+    "@shared": fileURLToPath(new URL("../../shared", import.meta.url)),
   },
-  {
-    ...config,
-    alias: {
-      "@": fileURLToPath(new URL("src", import.meta.url)),
-    },
-    tsconfig: "tsconfig.build.json",
-    entry: { sdk: "src/sdk.ts" },
-    dts: { emitDtsOnly: true },
-    clean: false,
+  define: {
+    __VERSION__: JSON.stringify(version),
   },
-])
+  tsconfig: "tsconfig.build.json",
+  entry: {
+    index: "src/index.ts",
+    api: "src/api.ts",
+  },
+})

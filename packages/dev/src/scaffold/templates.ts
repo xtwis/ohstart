@@ -1,4 +1,4 @@
-import type { OhstartJson, ScriptJson } from "@ohstart/sdk"
+import type { OhstartJson, ScriptJson } from "@shared/types"
 
 export const ARGV_TS = `import { defineArgv } from "@xtwis/ohstart-dev"
 

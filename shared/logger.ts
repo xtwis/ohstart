@@ -14,8 +14,9 @@ export const log = {
       return
     write(process.stderr, args)
   },
-  fail: (error: unknown): void => {
-    write(process.stderr, [error instanceof Error ? error.message : String(error)])
-    process.exitCode = 1
-  },
+}
+
+export function fail(error: unknown): void {
+  write(process.stderr, [error instanceof Error ? error.message : String(error)])
+  process.exitCode = 1
 }

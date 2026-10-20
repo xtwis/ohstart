@@ -10,18 +10,13 @@
     "node": ">=22"
   },
   "scripts": {
-    "build:cli": "pnpm --filter @xtwis/ohstart build",
-    "build:dev": "pnpm --filter @xtwis/ohstart-dev build",
-    "check": "pnpm check:cli && pnpm check:dev",
-    "check:cli": "pnpm --filter @xtwis/ohstart check",
-    "check:dev": "pnpm --filter @xtwis/ohstart-dev check",
+    "build": "pnpm -r build",
+    "check": "tsc --noEmit -p shared && pnpm -r check",
     "docs": "ohdoc dev",
     "fix": "eslint . --fix",
     "lint": "eslint .",
     "prepare": "husky",
-    "test": "pnpm test:cli && pnpm test:dev",
-    "test:cli": "pnpm --filter @xtwis/ohstart test",
-    "test:dev": "pnpm --filter @xtwis/ohstart-dev test"
+    "test": "pnpm -r test:run"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^9.5.1",
@@ -31,6 +26,7 @@
     "@types/node": "^26.0.0",
     "@vitest/ui": "^5.0.5",
     "@xtwis/ohdoc": "^1.1.0",
+    "esbuild": "^0.28.2",
     "eslint": "^10.13.0",
     "eslint-plugin-format": "^2.0.1",
     "husky": "^9.1.7",
