@@ -2,14 +2,14 @@ import type { Plugin } from "esbuild"
 import { rm } from "node:fs/promises"
 import { join } from "node:path"
 import { build } from "esbuild"
-import { SCRIPT_API_SPECIFIER, SCRIPT_API_URL } from "@/runtime/api"
+import { SDK_SPECIFIER, SDK_URL } from "@/runtime/sdk"
 
 const BUNDLE_FILE = ".ohstart-run.mjs"
 
 const sdkPlugin: Plugin = {
   name: "ohstart-sdk",
   setup(build) {
-    build.onResolve({ filter: new RegExp(`^${SCRIPT_API_SPECIFIER}$`) }, () => ({ path: SCRIPT_API_URL, external: true }))
+    build.onResolve({ filter: new RegExp(`^${SDK_SPECIFIER}$`) }, () => ({ path: SDK_URL, external: true }))
   },
 }
 

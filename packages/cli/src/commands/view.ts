@@ -7,7 +7,7 @@ import { readOhstartJson, readScriptJson } from "@shared/read"
 import { defineCommand } from "citty"
 import { loadConfig } from "@/config"
 import { cloneSource, parseScriptAddress } from "@/remote"
-import { SCRIPT_API_URL } from "@/runtime/api"
+import { SDK_URL } from "@/runtime/sdk"
 
 function renderUsage(script: ScriptJson, schema: ArgvSchema): string {
   const parts = ["ohstart", script.type, script.name]
@@ -46,7 +46,7 @@ export default defineCommand({
         if (script.name !== target.name)
           throw new Error(`script.json name ${script.name} does not match ${target.name}`)
 
-        const schema = await loadArgvSchema(await resolveArgvFile(join(workspace.dir, path), script), SCRIPT_API_URL)
+        const schema = await loadArgvSchema(await resolveArgvFile(join(workspace.dir, path), script), SDK_URL)
 
         log.info(`name: ${script.name}`)
         log.info(`type: ${script.type}`)

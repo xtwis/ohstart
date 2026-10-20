@@ -16,7 +16,7 @@ export default defineConfig({
   },
   tsconfig: "tsconfig.build.json",
   entry: {
-    "cli": "src/cli.ts",
-    "script-api": "src/script-api.ts",
+    cli: "src/cli.ts",
+    sdk: "src/sdk.ts",
   },
 })

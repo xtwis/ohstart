@@ -9,8 +9,8 @@ import { prompt } from "@shared/prompts"
 import { readOhstartJson, readScriptJson } from "@shared/read"
 import { loadConfig, saveConfig } from "@/config"
 import { cloneSource, parseScriptAddress } from "@/remote"
-import { SCRIPT_API_URL } from "@/runtime/api"
 import { bundleScript } from "@/runtime/bundle"
+import { SDK_URL } from "@/runtime/sdk"
 
 export interface RunScriptOptions {
   type: ScriptType
@@ -38,7 +38,7 @@ export async function runScript({ type, address, tokens, trust }: RunScriptOptio
       throw new Error(`script ${target.name} is a ${script.type} script, use \`ohstart ${script.type}\``)
 
     const scriptDir = join(workspace.dir, path)
-    const schema = await loadArgvSchema(await resolveArgvFile(scriptDir, script), SCRIPT_API_URL)
+    const schema = await loadArgvSchema(await resolveArgvFile(scriptDir, script), SDK_URL)
     const argv = parseScriptArgv(tokens, schema)
     await fillRequiredArgs(schema, argv)
 

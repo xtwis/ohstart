@@ -11,14 +11,10 @@
   "keywords": [],
   "sideEffects": false,
   "exports": {
-    ".": {
-      "types": "./dist/index.d.mts",
-      "import": "./dist/index.mjs"
-    },
     "./package.json": "./package.json",
-    "./script-api": {
-      "types": "./dist/script-api.d.mts",
-      "import": "./dist/script-api.mjs"
+    "./sdk": {
+      "types": "./dist/sdk.d.mts",
+      "import": "./dist/sdk.mjs"
     }
   },
   "bin": {

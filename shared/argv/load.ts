@@ -17,9 +17,9 @@ export async function resolveArgvFile(scriptDir: string, script: ScriptJson): Pr
   return file
 }
 
-function rewriteImportSpecifier(code: string, apiUrl: string): string {
+function rewriteImportSpecifier(code: string, sdkUrl: string): string {
   const pattern = /(["'])@xtwis\/ohstart-dev\1/g
-  return code.replace(pattern, () => JSON.stringify(apiUrl))
+  return code.replace(pattern, () => JSON.stringify(sdkUrl))
 }
 
 function isArgvSchema(value: unknown): value is ArgvSchema {
@@ -31,10 +31,10 @@ function isArgvSchema(value: unknown): value is ArgvSchema {
   return argsOk && flagsOk
 }
 
-export async function loadArgvSchema(file: string, apiUrl: string): Promise<ArgvSchema> {
+export async function loadArgvSchema(file: string, sdkUrl: string): Promise<ArgvSchema> {
   const source = await readFile(file, "utf8")
   const { code } = await transform(source, { loader: "ts", format: "esm", target: "esnext" })
-  const patched = rewriteImportSpecifier(code, apiUrl)
+  const patched = rewriteImportSpecifier(code, sdkUrl)
 
   const dir = await mkdtemp(join(tmpdir(), "ohstart-argv-"))
   const target = join(dir, "argv.mjs")

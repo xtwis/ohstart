@@ -12,12 +12,12 @@
   "sideEffects": false,
   "exports": {
     ".": {
-      "types": "./dist/api.d.mts",
-      "import": "./dist/api.mjs"
+      "types": "./dist/sdk.d.mts",
+      "import": "./dist/sdk.mjs"
     },
     "./package.json": "./package.json"
   },
-  "types": "./dist/api.d.mts",
+  "types": "./dist/sdk.d.mts",
   "bin": {
     "ohstart-dev": "./dist/cli.mjs",
     "ohsd": "./dist/cli.mjs"
