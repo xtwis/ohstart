@@ -1,8 +1,3 @@
-import { defineCommand } from "citty"
+import { defineScriptCommand } from "@/commands/script"
 
-export default defineCommand({
-  meta: {
-    name: "add",
-    description: "在已有项目里执行 add 类脚本",
-  },
-})
+export default defineScriptCommand("add")

@@ -1,23 +1,29 @@
 import type { OhstartConfig, SourceConfig } from "@ohstart/sdk"
 
 export interface ScriptTarget {
+  key: string
   source: SourceConfig
   name: string
 }
 
-export function resolveDefaultSource(config: OhstartConfig): SourceConfig {
+export function resolveDefaultKey(config: OhstartConfig): string {
   const key = config.default
   if (!key)
     throw new Error("no default source, run `ohstart source default <key>` first")
-  const source = config.source[key]
-  if (!source)
+  if (!config.source[key])
     throw new Error(`default source ${key} is not configured`)
-  return source
+  return key
+}
+
+export function resolveDefaultSource(config: OhstartConfig): SourceConfig {
+  return config.source[resolveDefaultKey(config)]
 }
 
 export function parseScriptAddress(config: OhstartConfig, address: string): ScriptTarget {
-  if (!address.startsWith("@"))
-    return { source: resolveDefaultSource(config), name: address }
+  if (!address.startsWith("@")) {
+    const key = resolveDefaultKey(config)
+    return { key, source: config.source[key], name: address }
+  }
 
   const body = address.slice(1)
   const index = body.indexOf("/")
@@ -28,5 +34,5 @@ export function parseScriptAddress(config: OhstartConfig, address: string): Scri
   const source = config.source[key]
   if (!source)
     throw new Error(`unknown source ${key}`)
-  return { source, name: body.slice(index + 1) }
+  return { key, source, name: body.slice(index + 1) }
 }

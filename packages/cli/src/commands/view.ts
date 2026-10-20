@@ -1,11 +1,10 @@
 import type { ArgvSchema, ScriptJson } from "@ohstart/sdk"
-import { access } from "node:fs/promises"
 import { join } from "node:path"
 import { defineCommand } from "citty"
 import { loadConfig } from "@/config"
 import { log } from "@/logger"
 import { cloneSource, parseScriptAddress, readScriptJson, readSourceMeta } from "@/remote"
-import { loadArgvSchema } from "@/runtime/argv"
+import { loadArgvSchema, resolveArgvFile } from "@/runtime"
 
 function renderUsage(script: ScriptJson, schema: ArgvSchema): string {
   const parts = ["ohstart", script.type, script.name]
@@ -44,22 +43,14 @@ export default defineCommand({
         if (script.name !== target.name)
           throw new Error(`script.json name ${script.name} does not match ${target.name}`)
 
-        const argv = script.argv ?? "./argv.ts"
-        const argvPath = join(workspace.dir, path, argv)
-        try {
-          await access(argvPath)
-        }
-        catch {
-          throw new Error(`script ${target.name} missing argv.ts`)
-        }
-        const schema = await loadArgvSchema(argvPath)
+        const schema = await loadArgvSchema(await resolveArgvFile(join(workspace.dir, path), script))
 
         log.info(`name: ${script.name}`)
         log.info(`type: ${script.type}`)
         log.info(`description: ${script.description}`)
         log.info(`path: ${path}`)
         log.info(`entry: ${script.entry ?? "index.ts"}`)
-        log.info(`argv: ${argv}`)
+        log.info(`argv: ${script.argv ?? "./argv.ts"}`)
         log.info(`usage: ${renderUsage(script, schema)}`)
       }
       finally {
