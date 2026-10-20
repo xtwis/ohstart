@@ -57,7 +57,11 @@ importers:
         specifier: ^0.28.2
         version: 0.28.2
 
-  packages/dev: {}
+  packages/dev:
+    dependencies:
+      citty:
+        specifier: 0.2.2
+        version: 0.2.2
 
 packages:
 

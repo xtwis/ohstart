@@ -11,11 +11,15 @@
   "keywords": [],
   "sideEffects": false,
   "exports": {
+    ".": {
+      "types": "./dist/sdk.d.mts"
+    },
     "./package.json": "./package.json"
   },
+  "types": "./dist/sdk.d.mts",
   "bin": {
-    "ohstart-dev": "./dist/cli.mjs",
-    "ohsd": "./dist/cli.mjs"
+    "ohstart-dev": "./dist/index.mjs",
+    "ohsd": "./dist/index.mjs"
   },
   "files": [
     "README.md",
@@ -34,5 +38,7 @@
     "test:run": "vitest run",
     "test:ui": "vitest --ui"
   },
-  "dependencies": {}
+  "dependencies": {
+    "citty": "0.2.2"
+  }
 }

@@ -1,8 +1,30 @@
+import { readFileSync } from "node:fs"
+import { fileURLToPath } from "node:url"
 import { defineConfig } from "tsdown"
 import config from "../../tsdown.base.ts"
 
-export default defineConfig({
-  ...config,
-  tsconfig: "tsconfig.build.json",
-  entry: ["src/cli.ts"],
-})
+const { version } = JSON.parse(readFileSync(new URL("package.json", import.meta.url), "utf8")) as { version: string }
+
+export default defineConfig([
+  {
+    ...config,
+    alias: {
+      "@": fileURLToPath(new URL("src", import.meta.url)),
+    },
+    define: {
+      __VERSION__: JSON.stringify(version),
+    },
+    tsconfig: "tsconfig.build.json",
+    entry: { index: "src/index.ts" },
+  },
+  {
+    ...config,
+    alias: {
+      "@": fileURLToPath(new URL("src", import.meta.url)),
+    },
+    tsconfig: "tsconfig.build.json",
+    entry: { sdk: "src/sdk.ts" },
+    dts: { emitDtsOnly: true },
+    clean: false,
+  },
+])
