@@ -19,6 +19,7 @@
     "fix": "eslint . --fix",
     "lint": "eslint .",
     "prepare": "husky",
+    "test": "pnpm test:cli && pnpm test:dev",
     "test:cli": "pnpm --filter @xtwis/ohstart test",
     "test:dev": "pnpm --filter @xtwis/ohstart-dev test"
   },
