@@ -1,27 +1,28 @@
-import type { OhstartJson } from "@shared/types"
 import { execFile } from "node:child_process"
-import { userInfo } from "node:os"
-import { basename, join } from "node:path"
-import process from "node:process"
+import { mkdir } from "node:fs/promises"
+import { basename, join, resolve } from "node:path"
 import { promisify } from "node:util"
 import { fail, log } from "@shared/logger"
 import { defineCommand } from "citty"
-import { isVacantDir, pathExists, writeScriptSkeleton } from "@/scaffold"
+import { isEmptyDirOrGit, pathExists, SAMPLE_NAME, writeSampleScript } from "@/scaffold"
 import { writeSourceJson } from "@/source"
 
 const execFileAsync = promisify(execFile)
 
-const SAMPLE_NAME = "hello"
-
 export default defineCommand({
   meta: {
     name: "init",
-    description: "在当前目录创建一个新源骨架(ohstart.json + 示范脚本)",
+    description: "创建一个新源骨架(ohstart.json + 示例脚本)",
   },
   args: {
+    dir: {
+      type: "positional",
+      required: false,
+      description: "目标目录, 默认当前目录",
+    },
     name: {
       type: "string",
-      description: "源名, 默认取当前目录名",
+      description: "源名, 默认取目标目录名",
     },
     author: {
       type: "string",
@@ -31,42 +32,38 @@ export default defineCommand({
       type: "string",
       description: "源描述",
     },
-    sample: {
+    bare: {
       type: "boolean",
-      default: true,
-      description: "生成示范脚本(--no-sample 关闭)",
+      description: "只生成 ohstart.json, 不生成示例脚本",
     },
   },
   async run({ args }) {
     try {
-      const root = process.cwd()
-      if (await pathExists(join(root, "ohstart.json")))
-        throw new Error("already a source here, use `ohsd new <script>`")
+      const root = resolve(args.dir ?? ".")
+      if (!await isEmptyDirOrGit(root))
+        throw new Error(`${root} is not empty, init needs an empty directory or an empty git repository`)
+
+      await mkdir(root, { recursive: true })
 
       const name = args.name?.trim() || basename(root)
-      if (!name)
-        throw new Error("source name is required")
+      const description = args.description?.trim() ?? ""
+      const author = await resolveAuthor(args.author, root)
+      const sample = SAMPLE_NAME
 
-      const sample = args.sample
-      if (sample && !await isVacantDir(join(root, SAMPLE_NAME)))
-        throw new Error(`directory ${SAMPLE_NAME} already exists and is not empty`)
+      if (!args.bare)
+        await writeSampleScript(root)
 
-      const meta: OhstartJson = {
+      await writeSourceJson(root, {
         name,
-        author: await resolveAuthor(args.author),
-        description: args.description?.trim() ?? "",
-        scripts: sample ? { [SAMPLE_NAME]: SAMPLE_NAME } : {},
-      }
+        author,
+        description,
+        scripts: args.bare ? {} : { [sample]: sample },
+      })
 
-      if (sample)
-        await writeScriptSkeleton(join(root, SAMPLE_NAME), { name: SAMPLE_NAME, type: "init", description: "example script" })
-
-      await writeSourceJson(root, meta)
-
-      log.info(`created source ${name}${sample ? ` with sample script ${SAMPLE_NAME}` : ""} in ${root}`)
-      if (!await isGitRepo(root))
+      log.info(`created source ${name}${args.bare ? "" : ` with sample script ${sample}`} in ${root}`)
+      if (!await pathExists(join(root, ".git")))
         log.warn("not a git repository yet: run `git init` before publishing this source")
-      log.info("next: git init && git add -A && git commit  |  ohsd new <script> --type add --description \"...\"  |  ohsd check")
+      log.info("next: git init && git add -A && git commit  |  ohsd new <dir> --type add  |  ohsd check")
     }
     catch (error) {
       fail(error)
@@ -74,29 +71,18 @@ export default defineCommand({
   },
 })
 
-async function resolveAuthor(explicit?: string): Promise<string> {
+async function resolveAuthor(explicit: string | undefined, cwd: string): Promise<string> {
   if (explicit?.trim())
     return explicit.trim()
-  const fromGit = await gitUserName()
-  return fromGit || userInfo().username
+  return gitUserName(cwd)
 }
 
-async function gitUserName(): Promise<string> {
+async function gitUserName(cwd: string): Promise<string> {
   try {
-    const { stdout } = await execFileAsync("git", ["config", "user.name"])
+    const { stdout } = await execFileAsync("git", ["config", "user.name"], { cwd })
     return stdout.trim()
   }
   catch {
     return ""
-  }
-}
-
-async function isGitRepo(root: string): Promise<boolean> {
-  try {
-    const { stdout } = await execFileAsync("git", ["rev-parse", "--is-inside-work-tree"], { cwd: root })
-    return stdout.trim() === "true"
-  }
-  catch {
-    return false
   }
 }

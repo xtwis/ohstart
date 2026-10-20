@@ -1,10 +1,11 @@
-import { join } from "node:path"
-import process from "node:process"
+import type { ScriptType } from "@shared/types"
+import { isAbsolute, relative, resolve, sep } from "node:path"
 import { fail, log } from "@shared/logger"
+import { prompt } from "@shared/prompts"
 import { readOhstartJson } from "@shared/read"
 import { defineCommand } from "citty"
-import { assertScriptName, assertScriptPath, isVacantDir, pathExists, removeDir, writeScriptSkeleton } from "@/scaffold"
-import { writeSourceJson } from "@/source"
+import { assertScriptName, isVacantDir, pathExists, removeDir, writeScriptSkeleton } from "@/scaffold"
+import { findSourceRoot, writeSourceJson } from "@/source"
 
 export default defineCommand({
   meta: {
@@ -12,55 +13,55 @@ export default defineCommand({
     description: "在已有的源里新增一个脚本骨架",
   },
   args: {
-    script: {
+    dir: {
       type: "positional",
-      required: true,
-      description: "脚本名, 支持 a/b 分级",
+      required: false,
+      description: "脚本目录, 默认当前目录",
+    },
+    name: {
+      type: "positional",
+      required: false,
+      description: "脚本名, 默认取目录相对源根的路径",
     },
     type: {
       type: "enum",
       options: ["init", "add"],
-      required: true,
-      description: "脚本类型",
+      required: false,
+      description: "脚本类型, 省略则交互选择",
     },
     description: {
       type: "string",
-      required: true,
       description: "脚本描述",
-    },
-    path: {
-      type: "string",
-      description: "脚本目录, 默认等于脚本名",
     },
   },
   async run({ args }) {
     try {
-      const root = process.cwd()
-      const name = args.script
-      const path = args.path?.trim() || name
-      const description = args.description.trim()
-      if (!description)
-        throw new Error("script description is required")
+      const root = await findSourceRoot(args.dir ?? ".")
+      const target = resolve(args.dir ?? ".")
+      const path = toPosix(relative(root, target))
+      if (!path || path.startsWith("..") || isAbsolute(path))
+        throw new Error(`${target} is not inside the source ${root}`)
+
+      const name = args.name?.trim() || path
+      assertScriptName(name)
+      const type = args.type ?? await selectType()
+      const description = args.description?.trim() ?? ""
 
       const meta = await readOhstartJson(root)
-      assertScriptName(name)
-      assertScriptPath(path)
       if (meta.scripts[name])
         throw new Error(`script ${name} already exists`)
       if (Object.values(meta.scripts).includes(path))
         throw new Error(`path ${path} is already used by another script`)
-
-      const dir = join(root, path)
-      if (!await isVacantDir(dir))
+      if (!await isVacantDir(target))
         throw new Error(`directory ${path} already exists and is not empty`)
 
-      const created = !await pathExists(dir)
+      const created = !await pathExists(target)
       try {
-        await writeScriptSkeleton(dir, { name, type: args.type, description })
+        await writeScriptSkeleton(target, { name, type, description })
       }
       catch (error) {
         if (created)
-          await removeDir(dir)
+          await removeDir(target)
         throw error
       }
 
@@ -75,3 +76,12 @@ export default defineCommand({
     }
   },
 })
+
+function toPosix(path: string): string {
+  return path.split(sep).join("/")
+}
+
+async function selectType(): Promise<ScriptType> {
+  const value = await prompt.select("script type", [{ label: "init" }, { label: "add" }])
+  return value === "init" ? "init" : "add"
+}
