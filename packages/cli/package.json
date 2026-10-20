@@ -22,7 +22,8 @@
     "./package.json": "./package.json"
   },
   "bin": {
-    "ohstart": "./dist/index.mjs"
+    "ohstart": "./dist/index.mjs",
+    "ohs": "./dist/index.mjs"
   },
   "files": [
     "README.md",

@@ -14,7 +14,8 @@
     "./package.json": "./package.json"
   },
   "bin": {
-    "ohstart-dev": "./dist/cli.mjs"
+    "ohstart-dev": "./dist/cli.mjs",
+    "ohsd": "./dist/cli.mjs"
   },
   "files": [
     "README.md",
