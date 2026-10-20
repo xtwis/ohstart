@@ -19,8 +19,8 @@
   },
   "types": "./dist/api.d.mts",
   "bin": {
-    "ohstart-dev": "./dist/index.mjs",
-    "ohsd": "./dist/index.mjs"
+    "ohstart-dev": "./dist/cli.mjs",
+    "ohsd": "./dist/cli.mjs"
   },
   "files": [
     "README.md",

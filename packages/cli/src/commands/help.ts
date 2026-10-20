@@ -1,6 +1,6 @@
 import { fail, log } from "@shared/logger"
 import { defineCommand } from "citty"
-import { main } from "@/main"
+import { main } from "@/cli"
 
 export default defineCommand({
   meta: {

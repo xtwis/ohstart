@@ -1,4 +1,4 @@
-import { defineCommand } from "citty"
+import { defineCommand, runMain } from "citty"
 import { subCommands } from "@/commands"
 import { VERSION } from "@/version"
 
@@ -11,3 +11,5 @@ export const main = defineCommand({
   subCommands,
   default: "help",
 })
+
+void runMain(main)

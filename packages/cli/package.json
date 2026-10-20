@@ -22,8 +22,8 @@
     }
   },
   "bin": {
-    "ohstart": "./dist/index.mjs",
-    "ohs": "./dist/index.mjs"
+    "ohstart": "./dist/cli.mjs",
+    "ohs": "./dist/cli.mjs"
   },
   "files": [
     "README.md",
