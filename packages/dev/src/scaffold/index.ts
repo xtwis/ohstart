@@ -1,3 +1,3 @@
-export * from "@/scaffold/files"
-export * from "@/scaffold/templates"
-export * from "@/scaffold/validate"
+export * from "@/scaffold/add"
+export * from "@/scaffold/fs"
+export * from "@/scaffold/init"

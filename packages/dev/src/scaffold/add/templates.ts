@@ -1,4 +1,6 @@
-import type { OhstartJson, ScriptJson } from "@shared/types"
+import type { ScriptJson } from "@shared/types"
+
+export const SAMPLE_NAME = "sayhi"
 
 export const ARGV_TS = `import { defineArgv } from "@xtwis/ohstart-dev"
 
@@ -103,7 +105,10 @@ export function scriptJson(script: ScriptJson): string {
   return `${JSON.stringify(body, null, 2)}\n`
 }
 
-export function ohstartJson(meta: OhstartJson): string {
-  const body = { name: meta.name, author: meta.author, description: meta.description, scripts: meta.scripts }
-  return `${JSON.stringify(body, null, 2)}\n`
+export function sampleScript(): ScriptJson {
+  return {
+    name: SAMPLE_NAME,
+    type: "add",
+    description: "Sample add script: write hello.md at the git root",
+  }
 }

@@ -148,3 +148,6 @@ vite.config.ts.timestamp-*
 
 # ohdoc generated config
 .vitepress/
+
+# ohstart
+.ohstart/

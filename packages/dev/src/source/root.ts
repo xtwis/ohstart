@@ -1,5 +1,5 @@
 import { dirname, join, resolve } from "node:path"
-import { pathExists } from "@/scaffold/files"
+import { pathExists } from "@/scaffold/fs"
 
 export async function findGitRoot(start: string): Promise<string | undefined> {
   let current = resolve(start)

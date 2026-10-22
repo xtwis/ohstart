@@ -1,10 +1,10 @@
 import type { ScriptType } from "@shared/types"
-import { isAbsolute, relative, resolve, sep } from "node:path"
+import { resolve } from "node:path"
 import { fail, log } from "@shared/logger"
 import { prompt } from "@shared/prompts"
 import { readOhstartJson } from "@shared/read"
 import { defineCommand } from "citty"
-import { assertScriptName, isVacantDir, pathExists, removeDir, writeScriptSkeleton } from "@/scaffold"
+import { assertScriptName, isVacantDir, pathExists, removeDir, resolveScriptPath, writeScriptSkeleton } from "@/scaffold"
 import { findSourceRoot, writeSourceJson } from "@/source"
 
 export default defineCommand({
@@ -38,10 +38,8 @@ export default defineCommand({
     try {
       const root = await findSourceRoot(args.dir ?? ".")
       const target = resolve(args.dir ?? ".")
-      const path = toPosix(relative(root, target))
-      if (!path || path.startsWith("..") || isAbsolute(path))
-        throw new Error(`${target} is not inside the source ${root}`)
 
+      const path = resolveScriptPath(root, target)
       const name = args.name?.trim() || path
       assertScriptName(name)
       const type = args.type ?? await selectType()
@@ -76,10 +74,6 @@ export default defineCommand({
     }
   },
 })
-
-function toPosix(path: string): string {
-  return path.split(sep).join("/")
-}
 
 async function selectType(): Promise<ScriptType> {
   const value = await prompt.select("script type", [{ label: "init" }, { label: "add" }])
