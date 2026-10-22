@@ -1,10 +1,10 @@
 import type { RawScriptArgv } from "@shared/argv/schema"
 import type { OhstartConfig, ScriptType, SourceConfig } from "@shared/types"
 import { spawn } from "node:child_process"
-import { join } from "node:path"
 import process from "node:process"
 import { loadArgvSchema, resolveArgvFile } from "@shared/argv/load"
 import { fillRequiredArgs, parseScriptArgv } from "@shared/argv/parse"
+import { resolveInside } from "@shared/path"
 import { prompt } from "@shared/prompts"
 import { readOhstartJson, readScriptJson } from "@shared/read"
 import { loadConfig, saveConfig } from "@/config"
@@ -31,13 +31,16 @@ export async function runScript({ type, address, tokens, trust }: RunScriptOptio
     if (!path)
       throw new Error(`unknown script ${target.name} in source ${target.key}`)
 
+    const scriptDir = resolveInside(workspace.dir, path)
+    if (!scriptDir)
+      throw new Error(`script "${target.name}": path "${path}" is not inside the source`)
+
     const script = await readScriptJson(workspace.dir, path)
     if (script.name !== target.name)
       throw new Error(`script.json name ${script.name} does not match ${target.name}`)
     if (script.type !== type)
       throw new Error(`script ${target.name} is a ${script.type} script, use \`ohstart ${script.type}\``)
 
-    const scriptDir = join(workspace.dir, path)
     const schema = await loadArgvSchema(await resolveArgvFile(scriptDir, script), SDK_URL)
     const argv = parseScriptArgv(tokens, schema)
     await fillRequiredArgs(schema, argv)
