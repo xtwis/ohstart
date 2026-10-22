@@ -4,10 +4,7 @@ export const SAMPLE_NAME = "sayhi"
 
 export const ARGV_TS = `import { defineArgv } from "@xtwis/ohstart-dev"
 
-const result = defineArgv({})
-
-export default result.schema
-export const { getArgv } = result
+export default defineArgv({})
 `
 
 export const INDEX_TS = `import { log } from "@xtwis/ohstart-dev"
@@ -19,16 +16,13 @@ export default async function main() {
 
 export const SAYHI_ARGV_TS = `import { defineArgv } from "@xtwis/ohstart-dev"
 
-const result = defineArgv({
+export default defineArgv({
   args: [{ name: "name", description: "Name to greet" }],
   flags: { path: { type: "string", description: "Directory to start from (default: cwd)" } },
 })
-
-export default result.schema
-export const { getArgv } = result
 `
 
-export const SAYHI_INDEX_TS = `import { getArgv } from "./argv.js"
+export const SAYHI_INDEX_TS = `import argv from "./argv.js"
 import { log } from "@xtwis/ohstart-dev"
 import { execFile } from "node:child_process"
 import { access, writeFile } from "node:fs/promises"
@@ -37,6 +31,8 @@ import process from "node:process"
 import { promisify } from "node:util"
 
 const execFileAsync = promisify(execFile)
+
+const { getArgv } = argv
 
 async function findGitRoot(dir: string): Promise<string | undefined> {
   let current = resolve(dir)

@@ -1,4 +1,4 @@
-import type { ArgvSchema } from "@shared/argv/schema"
+import type { ArgvSchema, DefineArgvResult } from "@shared/argv/schema"
 import type { ScriptJson } from "@shared/types"
 import { access, mkdtemp, readFile, rm, writeFile } from "node:fs/promises"
 import { tmpdir } from "node:os"
@@ -31,6 +31,10 @@ function isArgvSchema(value: unknown): value is ArgvSchema {
   return argsOk && flagsOk
 }
 
+function isDefineArgvResult(value: unknown): value is DefineArgvResult<ArgvSchema> {
+  return typeof value === "object" && value !== null && "schema" in value
+}
+
 export async function loadArgvSchema(file: string, sdkUrl: string): Promise<ArgvSchema> {
   const source = await readFile(file, "utf8")
   const { code } = await transform(source, { loader: "ts", format: "esm", target: "esnext" })
@@ -41,12 +45,26 @@ export async function loadArgvSchema(file: string, sdkUrl: string): Promise<Argv
   try {
     await writeFile(target, patched, "utf8")
     const module = await import(`${pathToFileURL(target).href}?t=${Date.now()}`)
-    const schema: unknown = module.default
-    if (!isArgvSchema(schema))
+    const exported: unknown = module.default
+    if (!isDefineArgvResult(exported))
+      throw new Error(`${file} must \`export default defineArgv({ ... })\`, got ${describe(exported)}`)
+    if (!isArgvSchema(exported.schema))
       throw new Error(`${file} does not export an argv schema`)
-    return schema
+    return exported.schema
   }
   finally {
     await rm(dir, { recursive: true, force: true })
   }
+}
+
+function describe(value: unknown): string {
+  if (value === null)
+    return "null"
+  if (Array.isArray(value))
+    return "an array"
+  if (typeof value === "object" && !("schema" in value) && isArgvSchema(value))
+    return "a bare schema, which is the old format"
+  if (typeof value === "object")
+    return "an object without schema"
+  return `a ${typeof value}`
 }
