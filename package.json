@@ -4,7 +4,7 @@
   "private": true,
   "packageManager": "pnpm@11.24.0",
   "description": "ohstart monorepo",
-  "author": "Twisuki",
+  "author": "Twisuki <hi@twis.uk>",
   "license": "MIT",
   "engines": {
     "node": ">=22"

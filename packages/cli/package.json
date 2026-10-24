@@ -3,10 +3,18 @@
   "type": "module",
   "version": "0.1.0",
   "description": "ohstart CLI",
-  "author": "Twisuki",
+  "author": "Twisuki <hi@twis.uk>",
   "license": "MIT",
   "publishConfig": {
     "access": "public"
+  },
+  "readme": "README.md",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/xtwis/ohstart.git"
+  },
+  "bugs": {
+    "url": "https://github.com/xtwis/ohstart/issues"
   },
   "keywords": [],
   "sideEffects": false,
@@ -22,6 +30,7 @@
     "ohs": "./dist/cli.mjs"
   },
   "files": [
+    "LICENSE",
     "README.md",
     "dist"
   ],
