@@ -1,16 +1,16 @@
 import type { Plugin } from "esbuild"
 import { rm } from "node:fs/promises"
 import { join } from "node:path"
+import { SDK_SPECIFIER } from "@shared/runtime/sdk"
 import { build } from "esbuild"
-import { SDK_SPECIFIER, SDK_URL } from "@/runtime/sdk"
 
 const BUNDLE_FILE = ".ohstart-run.mjs"
 
-const sdkPlugin: Plugin = {
-  name: "ohstart-sdk",
-  setup(build) {
-    build.onResolve({ filter: new RegExp(`^${SDK_SPECIFIER}$`) }, () => ({ path: SDK_URL, external: true }))
-  },
+export interface BundleScriptOptions {
+  scriptDir: string
+  entry: string
+  sdkUrl: string
+  outFile?: string
 }
 
 export interface ScriptBundle {
@@ -18,8 +18,8 @@ export interface ScriptBundle {
   dispose: () => Promise<void>
 }
 
-export async function bundleScript(scriptDir: string, entry: string): Promise<ScriptBundle> {
-  const file = join(scriptDir, BUNDLE_FILE)
+export async function bundleScript({ scriptDir, entry, sdkUrl, outFile }: BundleScriptOptions): Promise<ScriptBundle> {
+  const file = outFile ?? join(scriptDir, BUNDLE_FILE)
   const specifier = `./${entry.replace(/\\/g, "/")}`
   const contents = [
     `import main from ${JSON.stringify(specifier)}`,
@@ -28,6 +28,13 @@ export async function bundleScript(scriptDir: string, entry: string): Promise<Sc
     `await main()`,
     "",
   ].join("\n")
+
+  const sdkPlugin: Plugin = {
+    name: "ohstart-sdk",
+    setup(build) {
+      build.onResolve({ filter: new RegExp(`^${SDK_SPECIFIER}$`) }, () => ({ path: sdkUrl, external: true }))
+    },
+  }
 
   try {
     await build({

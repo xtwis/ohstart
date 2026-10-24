@@ -1,15 +1,12 @@
-import type { RawScriptArgv } from "@shared/argv/schema"
 import type { OhstartConfig, ScriptType, SourceConfig } from "@shared/types"
-import { spawn } from "node:child_process"
 import process from "node:process"
-import { loadArgvSchema, resolveArgvFile } from "@shared/argv/load"
 import { fillRequiredArgs, parseScriptArgv } from "@shared/argv/parse"
-import { resolveInside } from "@shared/path"
 import { prompt } from "@shared/prompts"
-import { readOhstartJson, readScriptJson } from "@shared/read"
+import { bundleScript } from "@shared/runtime/bundle"
+import { prepareScript } from "@shared/runtime/prepare"
+import { spawnScript } from "@shared/runtime/spawn"
 import { loadConfig, saveConfig } from "@/config"
 import { cloneSource, parseScriptAddress } from "@/remote"
-import { bundleScript } from "@/runtime/bundle"
 import { SDK_URL } from "@/runtime/sdk"
 
 export interface RunScriptOptions {
@@ -26,28 +23,20 @@ export async function runScript({ type, address, tokens, trust }: RunScriptOptio
 
   const workspace = await cloneSource(target.source.url)
   try {
-    const meta = await readOhstartJson(workspace.dir)
-    const path = meta.scripts[target.name]
-    if (!path)
-      throw new Error(`unknown script ${target.name} in source ${target.key}`)
+    const { scriptDir, script, schema } = await prepareScript({
+      root: workspace.dir,
+      name: target.name,
+      type,
+      sdkUrl: SDK_URL,
+      sourceLabel: target.key,
+    })
 
-    const scriptDir = resolveInside(workspace.dir, path)
-    if (!scriptDir)
-      throw new Error(`script "${target.name}": path "${path}" is not inside the source`)
-
-    const script = await readScriptJson(workspace.dir, path)
-    if (script.name !== target.name)
-      throw new Error(`script.json name ${script.name} does not match ${target.name}`)
-    if (script.type !== type)
-      throw new Error(`script ${target.name} is a ${script.type} script, use \`ohstart ${script.type}\``)
-
-    const schema = await loadArgvSchema(await resolveArgvFile(scriptDir, script), SDK_URL)
     const argv = parseScriptArgv(tokens, schema)
     await fillRequiredArgs(schema, argv)
 
-    const bundle = await bundleScript(scriptDir, script.entry ?? "index.ts")
+    const bundle = await bundleScript({ scriptDir, entry: script.entry ?? "index.ts", sdkUrl: SDK_URL })
     try {
-      const code = await spawnScript(bundle.file, argv)
+      const code = await spawnScript(bundle.file, argv, { cwd: process.cwd() })
       if (code !== 0)
         process.exitCode = code ?? 1
     }
@@ -82,16 +71,4 @@ async function ensureTrusted(
 
   config.source[key] = { ...source, trust: true }
   await saveConfig(config)
-}
-
-function spawnScript(file: string, argv: RawScriptArgv): Promise<number | null> {
-  return new Promise((resolve, reject) => {
-    const child = spawn(process.execPath, [file], {
-      cwd: process.cwd(),
-      stdio: "inherit",
-      env: { ...process.env, OHSTART_ARGV: JSON.stringify(argv) },
-    })
-    child.once("error", reject)
-    child.once("close", code => resolve(code))
-  })
 }

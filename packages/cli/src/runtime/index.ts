@@ -1,5 +1,3 @@
-export type { ScriptBundle } from "@/runtime/bundle"
-export { bundleScript } from "@/runtime/bundle"
 export type { RunScriptOptions } from "@/runtime/runner"
 export { runScript } from "@/runtime/runner"
 export { SDK_SPECIFIER, SDK_URL } from "@/runtime/sdk"

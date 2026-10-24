@@ -4,6 +4,7 @@ import { access, mkdtemp, readFile, rm, writeFile } from "node:fs/promises"
 import { tmpdir } from "node:os"
 import { join } from "node:path"
 import { pathToFileURL } from "node:url"
+import { rewriteImportSpecifier } from "@shared/runtime/sdk"
 import { transform } from "esbuild"
 
 export async function resolveArgvFile(scriptDir: string, script: ScriptJson): Promise<string> {
@@ -15,11 +16,6 @@ export async function resolveArgvFile(scriptDir: string, script: ScriptJson): Pr
     throw new Error(`script ${script.name} missing argv.ts`)
   }
   return file
-}
-
-function rewriteImportSpecifier(code: string, sdkUrl: string): string {
-  const pattern = /(["'])@xtwis\/ohstart-dev\1/g
-  return code.replace(pattern, () => JSON.stringify(sdkUrl))
 }
 
 function isArgvSchema(value: unknown): value is ArgvSchema {
