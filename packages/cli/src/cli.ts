@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 import { defineCommand, runMain } from "citty"
 import { subCommands } from "@/commands"
 import { VERSION } from "@/version"
