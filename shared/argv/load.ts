@@ -59,7 +59,7 @@ function describe(value: unknown): string {
   if (Array.isArray(value))
     return "an array"
   if (typeof value === "object" && !("schema" in value) && isArgvSchema(value))
-    return "a bare schema, which is the old format"
+    return "a bare schema, which is not supported"
   if (typeof value === "object")
     return "an object without schema"
   return `a ${typeof value}`

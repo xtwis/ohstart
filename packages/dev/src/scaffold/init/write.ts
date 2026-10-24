@@ -7,7 +7,7 @@ import { writeSourceJson } from "@/source"
 
 export const GITIGNORE_HEADER = "# ohstart"
 
-export const GITIGNORE_ENTRIES = [".ohstart", "node_modules/"]
+export const GITIGNORE_ENTRIES = [".ohstart", ".ohstart-run.mjs", "node_modules/"]
 
 const GITIGNORE_FILE = ".gitignore"
 

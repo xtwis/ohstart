@@ -39,6 +39,7 @@
     "test:run": "vitest run"
   },
   "dependencies": {
-    "citty": "0.2.2"
+    "citty": "0.2.2",
+    "esbuild": "^0.28.2"
   }
 }

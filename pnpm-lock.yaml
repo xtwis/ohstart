@@ -65,6 +65,9 @@ importers:
       citty:
         specifier: 0.2.2
         version: 0.2.2
+      esbuild:
+        specifier: ^0.28.2
+        version: 0.28.2
 
 packages:
 

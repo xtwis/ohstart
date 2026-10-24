@@ -10,6 +10,7 @@ export interface PrepareScriptOptions {
   type: ScriptType
   sdkUrl: string
   sourceLabel?: string
+  command?: string
 }
 
 export interface PreparedScript {
@@ -18,7 +19,7 @@ export interface PreparedScript {
   schema: ArgvSchema
 }
 
-export async function prepareScript({ root, name, type, sdkUrl, sourceLabel }: PrepareScriptOptions): Promise<PreparedScript> {
+export async function prepareScript({ root, name, type, sdkUrl, sourceLabel, command }: PrepareScriptOptions): Promise<PreparedScript> {
   const meta = await readOhstartJson(root)
   const path = meta.scripts[name]
   if (!path)
@@ -32,7 +33,7 @@ export async function prepareScript({ root, name, type, sdkUrl, sourceLabel }: P
   if (script.name !== name)
     throw new Error(`script.json name ${script.name} does not match ${name}`)
   if (script.type !== type)
-    throw new Error(`script ${name} is a ${script.type} script, use \`ohstart ${script.type}\``)
+    throw new Error(`script ${name} is a ${script.type} script, use \`${command ?? "ohstart"} ${script.type}\``)
 
   const schema = await loadArgvSchema(await resolveArgvFile(scriptDir, script), sdkUrl)
   return { scriptDir, script, schema }

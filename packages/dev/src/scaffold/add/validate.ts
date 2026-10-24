@@ -28,7 +28,7 @@ export function assertScriptName(name: string): void {
 
 export function assertNotDotPrefixedPath(path: string): void {
   if (path.split("/").some(segment => segment.startsWith(".")))
-    throw new Error(`script directory ${path} must not start with a dot: ".ohstart" is reserved for the ohsd run sandbox`)
+    throw new Error(`script directory ${path} must not start with a dot: ".ohstart" is reserved for the ohsd run working directory`)
 }
 
 export function resolveScriptPath(root: string, target: string): string {
