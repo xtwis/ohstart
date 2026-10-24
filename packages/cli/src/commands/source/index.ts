@@ -4,6 +4,8 @@ import add from "@/commands/source/add"
 import sourceDefault from "@/commands/source/default"
 import list from "@/commands/source/list"
 import remove from "@/commands/source/remove"
+import trust from "@/commands/source/trust"
+import untrust from "@/commands/source/untrust"
 import view from "@/commands/source/view"
 
 export const subCommands = {
@@ -11,6 +13,8 @@ export const subCommands = {
   default: sourceDefault,
   list,
   remove,
+  trust,
+  untrust,
   view,
 } satisfies SubCommandsDef
 
