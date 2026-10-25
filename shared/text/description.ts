@@ -58,6 +58,7 @@ export const description = {
       bare: "do not create the sample script",
       keep: "keep the existing working directory content (cleared before each run by default)",
       git: "create a git repository in the working directory so scripts that look for a git root stop here; --no-git skips the git command and writes a minimal repository skeleton",
+      pnpm: "prepare an isolated package project in the working directory so pnpm commands run by scripts stay inside it; --no-pnpm skips the pnpm command and writes a minimal package manifest",
     },
   },
 } as const

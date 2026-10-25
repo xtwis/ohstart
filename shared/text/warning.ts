@@ -3,4 +3,5 @@ export const warning = {
   skippingScript: (name: string, reason: string): string => `skipping ${name}: ${reason}`,
   orphanScript: (dir: string): string => `orphan ${dir} has a script.json but is not registered in ohstart.json`,
   gitInitFailed: (dir: string): string => `git init failed in ${dir}, falling back to a minimal git skeleton`,
+  pnpmInitFailed: (dir: string): string => `pnpm init failed in ${dir}, falling back to a minimal package manifest`,
 } as const

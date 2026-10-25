@@ -38,6 +38,11 @@ export default defineCommand({
       default: true,
       description: text.description.arg.flag.git,
     },
+    pnpm: {
+      type: "boolean",
+      default: true,
+      description: text.description.arg.flag.pnpm,
+    },
   },
   async run({ args, rawArgs }) {
     try {
@@ -58,7 +63,7 @@ export default defineCommand({
 
       const bundle = await bundleScript({ scriptDir, entry: script.entry ?? text.terms.entryFile, sdkUrl: SDK_URL })
       try {
-        const workDir = await prepareWorkDir({ root, keep: args.keep === true, git: args.git !== false })
+        const workDir = await prepareWorkDir({ root, keep: args.keep === true, git: args.git !== false, pnpm: args.pnpm !== false })
         log.debug(text.debug.workingDirectory(workDir))
         const code = await spawnScript(bundle.file, argv, { cwd: workDir })
         if (code !== 0)
