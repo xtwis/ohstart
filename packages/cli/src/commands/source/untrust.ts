@@ -1,17 +1,18 @@
 import { fail, log } from "@shared/logger"
+import { text } from "@shared/text"
 import { defineCommand } from "citty"
 import { loadConfig, saveConfig } from "@/config"
 
 export default defineCommand({
   meta: {
     name: "untrust",
-    description: "撤销一个 source 的信任",
+    description: text.description.command.cli.source.untrust,
   },
   args: {
     keyName: {
       type: "positional",
       required: true,
-      description: "source 的 key name",
+      description: text.description.arg.source.keyName,
     },
   },
   async run({ args }) {
@@ -20,13 +21,13 @@ export default defineCommand({
       const config = await loadConfig()
       const entry = config.source[keyName]
       if (!entry)
-        throw new Error(`unknown source ${keyName}`)
+        throw new Error(text.error.source.unknown(keyName))
 
       const rest = { ...entry }
       delete rest.trust
       config.source[keyName] = rest
       await saveConfig(config)
-      log.info(`source ${keyName} is no longer trusted`)
+      log.info(text.success.sourceTrust(keyName, false))
     }
     catch (error) {
       fail(error)

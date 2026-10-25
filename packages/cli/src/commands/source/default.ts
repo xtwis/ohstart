@@ -1,17 +1,18 @@
 import { fail, log } from "@shared/logger"
+import { text } from "@shared/text"
 import { defineCommand } from "citty"
 import { loadConfig, saveConfig } from "@/config"
 
 export default defineCommand({
   meta: {
     name: "default",
-    description: "查看或设置默认 source",
+    description: text.description.command.cli.source.default,
   },
   args: {
     keyName: {
       type: "positional",
       required: false,
-      description: "source 的 key name",
+      description: text.description.arg.source.keyName,
     },
   },
   async run({ args }) {
@@ -19,15 +20,15 @@ export default defineCommand({
       const config = await loadConfig()
       const { keyName } = args
       if (!keyName) {
-        log.info(config.default ?? "no default source")
+        log.info(config.default ?? text.state.noDefaultSource)
         return
       }
       if (!config.source[keyName])
-        throw new Error(`unknown source ${keyName}`)
+        throw new Error(text.error.source.unknown(keyName))
 
       config.default = keyName
       await saveConfig(config)
-      log.info(`default source is now ${keyName}`)
+      log.info(text.success.defaultSourceNow(keyName))
     }
     catch (error) {
       fail(error)

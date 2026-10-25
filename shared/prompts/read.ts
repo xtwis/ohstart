@@ -1,6 +1,7 @@
 import type { Interface } from "node:readline"
 import process from "node:process"
 import { createInterface, emitKeypressEvents } from "node:readline"
+import { text } from "@shared/text"
 
 export interface Keypress {
   name?: string
@@ -55,7 +56,7 @@ function openSession(): LineState {
   created.session.on("close", () => {
     created.ended = true
     if (created.pending) {
-      created.pending.reject(new Error("stdin closed"))
+      created.pending.reject(new Error(text.error.runtime.stdinClosed))
       created.pending = undefined
     }
   })
@@ -70,7 +71,7 @@ export function readLine(question: string): Promise<string> {
     return Promise.resolve(queued)
   }
   if (state?.ended)
-    return Promise.reject(new Error("stdin closed"))
+    return Promise.reject(new Error(text.error.runtime.stdinClosed))
 
   const current = state ?? openSession()
   current.session.setPrompt(question)
@@ -82,7 +83,7 @@ export function readLine(question: string): Promise<string> {
 
 export async function* readKeypresses(): AsyncGenerator<Keypress> {
   if (!process.stdin.isTTY)
-    throw new Error("interactive prompt requires a tty")
+    throw new Error(text.error.runtime.requiresTty)
 
   state?.session.close()
   state = undefined

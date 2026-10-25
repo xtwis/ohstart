@@ -4,6 +4,7 @@ import { join } from "node:path"
 import { promisify } from "node:util"
 import { log } from "@shared/logger"
 import { resolveInside } from "@shared/path"
+import { text } from "@shared/text"
 import { ensureGitignore, GITIGNORE_HEADER, pathExists } from "@/scaffold"
 
 const execFileAsync = promisify(execFile)
@@ -30,7 +31,7 @@ export interface WorkDirOptions {
 export async function prepareWorkDir({ root, keep, git }: WorkDirOptions): Promise<string> {
   const dir = resolveInside(root, WORK_DIR)
   if (!dir)
-    throw new Error(`cannot create the working directory ${WORK_DIR} inside ${root}`)
+    throw new Error(text.error.runtime.cannotCreateWorkDir(root))
 
   if (!keep)
     await clearWorkDir(dir)
@@ -39,7 +40,7 @@ export async function prepareWorkDir({ root, keep, git }: WorkDirOptions): Promi
 
   const ignored = await ensureGitignore(root, GITIGNORE_HEADER, [WORK_DIR, BUNDLE_FILE])
   if (ignored.length > 0)
-    log.debug(`appended to ${join(root, ".gitignore")}: ${ignored.join(", ")}`)
+    log.debug(text.debug.appendedGitignore(join(root, ".gitignore"), ignored))
 
   await ensureGitRepo(dir, git)
 
@@ -51,9 +52,9 @@ async function clearWorkDir(dir: string): Promise<void> {
   if (!info)
     return
   if (info.isSymbolicLink())
-    throw new Error(`refusing to clear ${dir}: it is a symbolic link`)
+    throw new Error(text.error.runtime.refuseSymlink(dir))
   if (!info.isDirectory())
-    throw new Error(`refusing to clear ${dir}: it is not a directory`)
+    throw new Error(text.error.runtime.refuseNotDir(dir))
   await rm(dir, { recursive: true, force: true })
 }
 
@@ -67,7 +68,7 @@ async function ensureGitRepo(dir: string, useGitBinary: boolean): Promise<void> 
       return
     }
     catch {
-      log.warn(`git init failed in ${dir}, falling back to a minimal git skeleton`)
+      log.warn(text.warning.gitInitFailed(dir))
     }
   }
 

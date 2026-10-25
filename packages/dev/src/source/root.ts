@@ -1,4 +1,5 @@
 import { dirname, join, resolve } from "node:path"
+import { text } from "@shared/text"
 import { pathExists } from "@/scaffold/fs"
 
 export async function findGitRoot(start: string): Promise<string | undefined> {
@@ -16,8 +17,8 @@ export async function findGitRoot(start: string): Promise<string | undefined> {
 export async function findSourceRoot(start: string): Promise<string> {
   const root = await findGitRoot(start)
   if (!root)
-    throw new Error(`not inside a git repository: ${resolve(start)}`)
+    throw new Error(text.error.project.root.notInGitRepo(resolve(start)))
   if (!await pathExists(join(root, "ohstart.json")))
-    throw new Error(`no ohstart.json at the git root ${root}, run \`ohsd init\` first`)
+    throw new Error(text.error.project.root.noOhstartJson(root))
   return root
 }

@@ -5,15 +5,16 @@ import { tmpdir } from "node:os"
 import { join } from "node:path"
 import { pathToFileURL } from "node:url"
 import { rewriteImportSpecifier } from "@shared/runtime/sdk"
+import { text } from "@shared/text"
 import { transform } from "esbuild"
 
 export async function resolveArgvFile(scriptDir: string, script: ScriptJson): Promise<string> {
-  const file = join(scriptDir, script.argv ?? "./argv.ts")
+  const file = join(scriptDir, script.argv ?? text.terms.argvFile)
   try {
     await access(file)
   }
   catch {
-    throw new Error(`script ${script.name} missing argv.ts`)
+    throw new Error(text.error.script.missingArgvFile(script.name))
   }
   return file
 }
@@ -43,9 +44,9 @@ export async function loadArgvSchema(file: string, sdkUrl: string): Promise<Argv
     const module = await import(`${pathToFileURL(target).href}?t=${Date.now()}`)
     const exported: unknown = module.default
     if (!isDefineArgvResult(exported))
-      throw new Error(`${file} must \`export default defineArgv({ ... })\`, got ${describe(exported)}`)
+      throw new Error(text.error.script.argvNotDefineArgv(file, describe(exported)))
     if (!isArgvSchema(exported.schema))
-      throw new Error(`${file} does not export an argv schema`)
+      throw new Error(text.error.script.argvNoSchema(file))
     return exported.schema
   }
   finally {

@@ -1,4 +1,5 @@
 import type { SubCommandsDef } from "citty"
+import { text } from "@shared/text"
 import { defineCommand } from "citty"
 import add from "@/commands/source/add"
 import sourceDefault from "@/commands/source/default"
@@ -21,7 +22,7 @@ export const subCommands = {
 export default defineCommand({
   meta: {
     name: "source",
-    description: "管理已配置的 source(源)",
+    description: text.description.command.cli.source.manage,
   },
   subCommands,
 })

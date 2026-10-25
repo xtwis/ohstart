@@ -2,6 +2,7 @@ import type { OhstartJson } from "@shared/types"
 import type { Finding } from "@/check/report"
 import { readdir } from "node:fs/promises"
 import { join, relative, sep } from "node:path"
+import { text } from "@shared/text"
 import { warningFinding } from "@/check/report"
 import { pathExists } from "@/scaffold/fs"
 
@@ -13,7 +14,7 @@ export async function findOrphanScripts(root: string, meta: OhstartJson): Promis
 
   for (const dir of await collectScriptDirs(root, root)) {
     if (!registered.has(dir))
-      findings.push(warningFinding(`orphan "${dir}" has a script.json but is not registered in ohstart.json`))
+      findings.push(warningFinding(text.warning.orphanScript(dir)))
   }
 
   return findings

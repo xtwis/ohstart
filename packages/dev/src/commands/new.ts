@@ -3,6 +3,7 @@ import { resolve } from "node:path"
 import { fail, log } from "@shared/logger"
 import { prompt } from "@shared/prompts"
 import { readOhstartJson } from "@shared/read"
+import { text } from "@shared/text"
 import { defineCommand } from "citty"
 import { assertScriptName, isVacantDir, pathExists, removeDir, resolveScriptPath, writeScriptSkeleton } from "@/scaffold"
 import { findSourceRoot, writeSourceJson } from "@/source"
@@ -10,28 +11,28 @@ import { findSourceRoot, writeSourceJson } from "@/source"
 export default defineCommand({
   meta: {
     name: "new",
-    description: "在已有的源里新增一个脚本骨架",
+    description: text.description.command.dev.new,
   },
   args: {
     dir: {
       type: "positional",
       required: false,
-      description: "脚本目录, 默认当前目录",
+      description: text.description.arg.script.dir,
     },
     name: {
       type: "positional",
       required: false,
-      description: "脚本名, 默认取目录相对源根的路径",
+      description: text.description.arg.script.nameOption,
     },
     type: {
       type: "enum",
       options: ["init", "add"],
       required: false,
-      description: "脚本类型, 省略则交互选择",
+      description: text.description.arg.script.typeOption,
     },
     description: {
       type: "string",
-      description: "脚本描述",
+      description: text.description.arg.script.description,
     },
   },
   async run({ args }) {
@@ -47,11 +48,11 @@ export default defineCommand({
 
       const meta = await readOhstartJson(root)
       if (meta.scripts[name])
-        throw new Error(`script ${name} already exists`)
+        throw new Error(text.error.project.skeleton.exists(name))
       if (Object.values(meta.scripts).includes(path))
-        throw new Error(`path ${path} is already used by another script`)
+        throw new Error(text.error.project.skeleton.pathUsed(path))
       if (!await isVacantDir(target))
-        throw new Error(`directory ${path} already exists and is not empty`)
+        throw new Error(text.error.project.skeleton.dirNotEmpty(path))
 
       const created = !await pathExists(target)
       try {
@@ -66,8 +67,8 @@ export default defineCommand({
       meta.scripts[name] = path
       await writeSourceJson(root, meta)
 
-      log.info(`created script ${name} at ${path}`)
-      log.info(`next: ohsd check ${name}`)
+      log.info(text.success.createdScript(name, path))
+      log.info(text.next.checkSteps(name))
     }
     catch (error) {
       fail(error)
@@ -76,6 +77,6 @@ export default defineCommand({
 })
 
 async function selectType(): Promise<ScriptType> {
-  const value = await prompt.select("script type", [{ label: "init" }, { label: "add" }])
+  const value = await prompt.select(text.question.selectScriptType, [{ label: text.label.option.init }, { label: text.label.option.add }])
   return value === "init" ? "init" : "add"
 }

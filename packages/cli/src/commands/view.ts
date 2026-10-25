@@ -4,6 +4,7 @@ import { join } from "node:path"
 import { loadArgvSchema, resolveArgvFile } from "@shared/argv/load"
 import { fail, log } from "@shared/logger"
 import { readOhstartJson, readScriptJson } from "@shared/read"
+import { text } from "@shared/text"
 import { defineCommand } from "citty"
 import { loadConfig } from "@/config"
 import { cloneSource, parseScriptAddress } from "@/remote"
@@ -21,13 +22,13 @@ function renderUsage(script: ScriptJson, schema: ArgvSchema): string {
 export default defineCommand({
   meta: {
     name: "view",
-    description: "查看脚本完整元信息",
+    description: text.description.command.cli.view,
   },
   args: {
     script: {
       type: "positional",
       required: true,
-      description: "脚本名, 支持 @<key>/<name>",
+      description: text.description.arg.script.name,
     },
   },
   async run({ args }) {
@@ -40,21 +41,21 @@ export default defineCommand({
         const meta = await readOhstartJson(workspace.dir)
         const path = meta.scripts?.[target.name]
         if (!path)
-          throw new Error(`unknown script ${target.name} in source ${target.source.name}`)
+          throw new Error(text.error.script.unknown(target.name, target.source.name))
 
         const script = await readScriptJson(workspace.dir, path)
         if (script.name !== target.name)
-          throw new Error(`script.json name ${script.name} does not match ${target.name}`)
+          throw new Error(text.error.script.nameMismatch(script.name, target.name))
 
         const schema = await loadArgvSchema(await resolveArgvFile(join(workspace.dir, path), script), SDK_URL)
 
-        log.info(`name: ${script.name}`)
-        log.info(`type: ${script.type}`)
-        log.info(`description: ${script.description}`)
-        log.info(`path: ${path}`)
-        log.info(`entry: ${script.entry ?? "index.ts"}`)
-        log.info(`argv: ${script.argv ?? "./argv.ts"}`)
-        log.info(`usage: ${renderUsage(script, schema)}`)
+        log.info(`${text.label.field.name}: ${script.name}`)
+        log.info(`${text.label.field.type}: ${script.type}`)
+        log.info(`${text.label.field.description}: ${script.description}`)
+        log.info(`${text.label.field.path}: ${path}`)
+        log.info(`${text.label.field.entry}: ${script.entry ?? text.terms.entryFile}`)
+        log.info(`${text.label.field.argv}: ${script.argv ?? text.terms.argvFile}`)
+        log.info(`${text.label.field.usage}: ${renderUsage(script, schema)}`)
       }
       finally {
         await workspace.dispose()

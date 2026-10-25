@@ -3,6 +3,7 @@ import { mkdtemp, rm } from "node:fs/promises"
 import { tmpdir } from "node:os"
 import { join } from "node:path"
 import { promisify } from "node:util"
+import { text } from "@shared/text"
 
 const execFileAsync = promisify(execFile)
 
@@ -19,7 +20,7 @@ export async function cloneSource(url: string): Promise<SourceWorkspace> {
   catch (error) {
     await disposeSource(dir)
     const stderr = (error as { stderr?: string }).stderr
-    throw new Error(`failed to clone ${url}${stderr ? `\n${stderr.trim()}` : ""}`)
+    throw new Error(text.error.source.cloneFailed(url, stderr))
   }
   return { dir, dispose: () => disposeSource(dir) }
 }

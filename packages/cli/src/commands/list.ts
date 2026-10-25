@@ -1,5 +1,6 @@
 import { fail, log } from "@shared/logger"
 import { readOhstartJson, readSourceScripts } from "@shared/read"
+import { text } from "@shared/text"
 import { defineCommand } from "citty"
 import { loadConfig } from "@/config"
 import { cloneSource, resolveDefaultSource } from "@/remote"
@@ -7,20 +8,20 @@ import { cloneSource, resolveDefaultSource } from "@/remote"
 export default defineCommand({
   meta: {
     name: "list",
-    description: "按 init / add 类型列出可用脚本",
+    description: text.description.command.cli.list,
   },
   args: {
     type: {
       type: "positional",
       required: false,
-      description: "只看 init 或 add",
+      description: text.description.arg.flag.typeFilter,
     },
   },
   async run({ args }) {
     try {
       const wanted = args.type
       if (wanted && wanted !== "init" && wanted !== "add")
-        throw new Error(`unknown script type ${wanted}, expected init or add`)
+        throw new Error(text.error.command.invalidScriptType(wanted))
 
       const config = await loadConfig()
       const source = resolveDefaultSource(config)
@@ -31,7 +32,7 @@ export default defineCommand({
         const scripts = await readSourceScripts(workspace.dir, meta)
         for (const entry of scripts) {
           if (entry.error)
-            log.warn(`skipping ${entry.name}: ${entry.error}`)
+            log.warn(text.warning.skippingScript(entry.name, entry.error))
         }
 
         const rows = scripts.flatMap((entry) => {
@@ -43,7 +44,7 @@ export default defineCommand({
         })
 
         if (rows.length === 0) {
-          log.info(wanted ? `no ${wanted} script in source ${source.name}` : `no script in source ${source.name}`)
+          log.info(text.state.noScriptInSource(source.name, wanted))
           return
         }
 

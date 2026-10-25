@@ -2,6 +2,7 @@ import type { Plugin } from "esbuild"
 import { rm } from "node:fs/promises"
 import { join } from "node:path"
 import { SDK_SPECIFIER } from "@shared/runtime/sdk"
+import { text } from "@shared/text"
 import { build } from "esbuild"
 
 const BUNDLE_FILE = ".ohstart-run.mjs"
@@ -24,7 +25,7 @@ export async function bundleScript({ scriptDir, entry, sdkUrl, outFile }: Bundle
   const contents = [
     `import main from ${JSON.stringify(specifier)}`,
     `if (typeof main !== "function")`,
-    `  throw new Error("script entry must default-export a function")`,
+    `  throw new Error(${JSON.stringify(text.error.script.entryNotFunction)})`,
     `await main()`,
     "",
   ].join("\n")
@@ -49,7 +50,7 @@ export async function bundleScript({ scriptDir, entry, sdkUrl, outFile }: Bundle
     })
   }
   catch (error) {
-    throw new Error(`failed to bundle ${entry}: ${error instanceof Error ? error.message : String(error)}`)
+    throw new Error(text.error.script.bundleFailed(entry, error instanceof Error ? error.message : String(error)))
   }
   return { file, dispose: () => rm(file, { force: true }) }
 }

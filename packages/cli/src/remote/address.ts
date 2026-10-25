@@ -1,4 +1,5 @@
 import type { OhstartConfig, SourceConfig } from "@shared/types"
+import { text } from "@shared/text"
 
 export interface ScriptTarget {
   key: string
@@ -9,9 +10,9 @@ export interface ScriptTarget {
 export function resolveDefaultKey(config: OhstartConfig): string {
   const key = config.default
   if (!key)
-    throw new Error("no default source, run `ohstart source default <key>` first")
+    throw new Error(text.error.source.noDefault)
   if (!config.source[key])
-    throw new Error(`default source ${key} is not configured`)
+    throw new Error(text.error.source.defaultMissing(key))
   return key
 }
 
@@ -28,11 +29,11 @@ export function parseScriptAddress(config: OhstartConfig, address: string): Scri
   const body = address.slice(1)
   const index = body.indexOf("/")
   if (index <= 0 || index === body.length - 1)
-    throw new Error(`invalid address ${address}, expected @<key>/<script>`)
+    throw new Error(text.error.source.invalidAddress(address))
 
   const key = body.slice(0, index)
   const source = config.source[key]
   if (!source)
-    throw new Error(`unknown source ${key}`)
+    throw new Error(text.error.source.unknown(key))
   return { key, source, name: body.slice(index + 1) }
 }

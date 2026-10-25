@@ -1,0 +1,63 @@
+export const description = {
+  command: {
+    cli: {
+      cli: "apply project templates and toolchain configs from a source",
+      help: "show help",
+      list: "list available scripts by init / add type",
+      source: {
+        manage: "manage configured sources",
+        add: "add a source",
+        default: "show or set the default source",
+        list: "list configured sources",
+        remove: "remove a source",
+        trust: "mark a source as trusted",
+        untrust: "revoke the trust of a source",
+        view: "show the details of a source",
+      },
+      initScript: "run an init script in a new project",
+      addScript: "apply an add script to an existing project",
+      update: "update ohstart itself",
+      version: "print the ohstart version",
+      view: "show the full metadata of a script",
+    },
+    dev: {
+      dev: "develop an ohstart source: scaffold it, validate contracts, try scripts",
+      version: "print the ohstart-dev version",
+      check: "validate the source contract",
+      init: "create a new source skeleton (ohstart.json + project config + sample script)",
+      new: "add a script skeleton to an existing source",
+      run: "try a script in the local source; the working directory is .ohstart under the source root",
+    },
+  },
+
+  arg: {
+    source: {
+      url: "git URL of the source repository",
+      keyNameOption: "local key name, defaults to the source name",
+      note: "write a local note for the source",
+      trust: "mark the source as trusted",
+      keyName: "key name of the source",
+      targetDir: "target directory, defaults to the current directory",
+      name: "source name, defaults to the target directory name",
+      author: "source author, defaults to git user.name",
+      description: "source description",
+    },
+    script: {
+      name: "script name, supports @<key>/<name>",
+      dir: "script directory, defaults to the current directory",
+      nameOption: "script name, defaults to the path of the directory relative to the source root",
+      typeOption: "script type, prompts when omitted",
+      description: "script description",
+      checkName: "check only the given script, defaults to the whole source",
+      runType: "script type, init or add",
+      runName: "script name, must match a key registered in ohstart.json",
+    },
+    flag: {
+      trust: "skip the trust confirmation once (does not persist)",
+      typeFilter: "only init or add",
+      bare: "do not create the sample script",
+      keep: "keep the existing working directory content (cleared before each run by default)",
+      git: "create a git repository in the working directory so scripts that look for a git root stop here; --no-git skips the git command and writes a minimal repository skeleton",
+    },
+  },
+} as const

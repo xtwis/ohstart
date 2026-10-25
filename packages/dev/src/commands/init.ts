@@ -3,44 +3,45 @@ import { mkdir } from "node:fs/promises"
 import { basename, join, resolve } from "node:path"
 import { promisify } from "node:util"
 import { fail, log } from "@shared/logger"
+import { text } from "@shared/text"
 import { defineCommand } from "citty"
-import { IGNORED_ENTRY_HINT, isVacantSourceRoot, pathExists, writeSourceProject } from "@/scaffold"
+import { isVacantSourceRoot, pathExists, writeSourceProject } from "@/scaffold"
 
 const execFileAsync = promisify(execFile)
 
 export default defineCommand({
   meta: {
     name: "init",
-    description: "创建一个新源骨架(ohstart.json + 项目配置 + 示例脚本)",
+    description: text.description.command.dev.init,
   },
   args: {
     dir: {
       type: "positional",
       required: false,
-      description: "目标目录, 默认当前目录",
+      description: text.description.arg.source.targetDir,
     },
     name: {
       type: "string",
-      description: "源名, 默认取目标目录名",
+      description: text.description.arg.source.name,
     },
     author: {
       type: "string",
-      description: "源作者, 默认取 git user.name",
+      description: text.description.arg.source.author,
     },
     description: {
       type: "string",
-      description: "源描述",
+      description: text.description.arg.source.description,
     },
     bare: {
       type: "boolean",
-      description: "不生成示例脚本",
+      description: text.description.arg.flag.bare,
     },
   },
   async run({ args }) {
     try {
       const root = resolve(args.dir ?? ".")
       if (!await isVacantSourceRoot(root))
-        throw new Error(`${root} is not empty, init needs a directory without source files (${IGNORED_ENTRY_HINT})`)
+        throw new Error(text.error.project.root.notEmpty(root))
 
       await mkdir(root, { recursive: true })
 
@@ -56,12 +57,12 @@ export default defineCommand({
         sample: !args.bare,
       })
 
-      log.info(`created source ${name}${args.bare ? "" : " with sample script"} in ${root}`)
+      log.info(text.success.createdSource(name, root, !args.bare))
       if (ignored.length > 0)
-        log.debug(`appended to ${join(root, ".gitignore")}: ${ignored.join(", ")}`)
+        log.debug(text.debug.appendedGitignore(join(root, ".gitignore"), ignored))
       if (!await pathExists(join(root, ".git")))
-        log.warn("not a git repository yet: run `git init` before publishing this source")
-      log.info(`next: pnpm install  |  pnpm check  |  ohsd new <dir> --type add  |  ohsd check`)
+        log.warn(text.warning.notGitRepo)
+      log.info(text.next.sourceSteps)
     }
     catch (error) {
       fail(error)

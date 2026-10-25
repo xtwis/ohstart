@@ -1,6 +1,7 @@
 import type { OhstartJson } from "@shared/types"
 import type { Finding } from "@/check/report"
 import { readOhstartJson } from "@shared/read"
+import { text } from "@shared/text"
 import { errorFinding } from "@/check/report"
 import { findSourceRoot } from "@/source/root"
 
@@ -23,7 +24,7 @@ export function checkDuplicatePaths(meta: OhstartJson): Finding[] {
     if (owner === undefined)
       owners.set(path, key)
     else
-      findings.push(errorFinding(`script "${key}": path "${path}" is already used by script "${owner}"`))
+      findings.push(errorFinding(text.error.project.skeleton.pathUsed(path, owner)))
   }
 
   return findings

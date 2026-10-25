@@ -2,6 +2,7 @@ import type { ArgvSchema, RawScriptArgv } from "@shared/argv/schema"
 import process from "node:process"
 import { parseArgs } from "node:util"
 import { prompt } from "@shared/prompts"
+import { text } from "@shared/text"
 
 const NEGATIVE_SUPPORTED = ((): boolean => {
   try {
@@ -58,9 +59,9 @@ export async function fillRequiredArgs(schema: ArgvSchema, argv: RawScriptArgv):
     if (!arg.required || argv.args[index] !== undefined)
       continue
     if (!process.stdin.isTTY)
-      throw new Error(`missing required arg <${arg.name}>`)
+      throw new Error(text.error.script.missingRequiredArg(arg.name))
     argv.args[index] = await prompt.input(arg.description || arg.name, {
-      validate: value => value.length > 0 || `${arg.name} is required`,
+      validate: value => value.length > 0 || text.question.argRequired(arg.name),
     })
   }
 }

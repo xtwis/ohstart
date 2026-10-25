@@ -1,18 +1,19 @@
 import { fail, log } from "@shared/logger"
 import { prompt } from "@shared/prompts"
+import { text } from "@shared/text"
 import { defineCommand } from "citty"
 import { loadConfig, saveConfig } from "@/config"
 
 export default defineCommand({
   meta: {
     name: "remove",
-    description: "移除一个 source",
+    description: text.description.command.cli.source.remove,
   },
   args: {
     keyName: {
       type: "positional",
       required: true,
-      description: "source 的 key name",
+      description: text.description.arg.source.keyName,
     },
   },
   async run({ args }) {
@@ -20,10 +21,10 @@ export default defineCommand({
       const { keyName } = args
       const config = await loadConfig()
       if (!config.source[keyName])
-        throw new Error(`unknown source ${keyName}`)
+        throw new Error(text.error.source.unknown(keyName))
 
-      if (!(await prompt.confirm(`remove source ${keyName}?`, { default: false }))) {
-        log.info("cancelled")
+      if (!(await prompt.confirm(text.question.removeSource(keyName), { default: false }))) {
+        log.info(text.state.cancelled)
         return
       }
 
@@ -31,7 +32,7 @@ export default defineCommand({
       if (config.default === keyName)
         delete config.default
       await saveConfig(config)
-      log.info(`removed source ${keyName}`)
+      log.info(text.success.removedSource(keyName))
     }
     catch (error) {
       fail(error)

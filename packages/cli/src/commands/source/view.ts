@@ -1,17 +1,18 @@
 import { fail, log } from "@shared/logger"
+import { text } from "@shared/text"
 import { defineCommand } from "citty"
 import { loadConfig } from "@/config"
 
 export default defineCommand({
   meta: {
     name: "view",
-    description: "查看某个 source 的配置详情",
+    description: text.description.command.cli.source.view,
   },
   args: {
     keyName: {
       type: "positional",
       required: true,
-      description: "source 的 key name",
+      description: text.description.arg.source.keyName,
     },
   },
   async run({ args }) {
@@ -20,14 +21,14 @@ export default defineCommand({
       const config = await loadConfig()
       const entry = config.source[keyName]
       if (!entry)
-        throw new Error(`unknown source ${keyName}`)
+        throw new Error(text.error.source.unknown(keyName))
 
-      log.info(`key: ${keyName}`)
-      log.info(`name: ${entry.name}`)
-      log.info(`url: ${entry.url}`)
-      log.info(`trust: ${entry.trust ?? false}`)
-      log.info(`note: ${entry.note ?? ""}`)
-      log.info(`default: ${config.default === keyName}`)
+      log.info(`${text.label.field.key}: ${keyName}`)
+      log.info(`${text.label.field.name}: ${entry.name}`)
+      log.info(`${text.label.field.url}: ${entry.url}`)
+      log.info(`${text.label.field.trust}: ${entry.trust ?? false}`)
+      log.info(`${text.label.field.note}: ${entry.note ?? ""}`)
+      log.info(`${text.label.field.default}: ${config.default === keyName}`)
     }
     catch (error) {
       fail(error)

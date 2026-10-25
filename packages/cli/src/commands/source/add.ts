@@ -1,6 +1,7 @@
 import { fail, log } from "@shared/logger"
 import { prompt } from "@shared/prompts"
 import { readOhstartJson } from "@shared/read"
+import { text } from "@shared/text"
 import { defineCommand } from "citty"
 import { loadConfig, saveConfig } from "@/config"
 import { cloneSource } from "@/remote"
@@ -8,32 +9,32 @@ import { cloneSource } from "@/remote"
 export default defineCommand({
   meta: {
     name: "add",
-    description: "添加一个 source",
+    description: text.description.command.cli.source.add,
   },
   args: {
     url: {
       type: "positional",
       required: true,
-      description: "源仓库的 git URL",
+      description: text.description.arg.source.url,
     },
     key: {
       type: "string",
-      description: "本地 key name, 省略则取源的 name",
+      description: text.description.arg.source.keyNameOption,
     },
     note: {
       type: "string",
-      description: "给该源写一条本地备注",
+      description: text.description.arg.source.note,
     },
     trust: {
       type: "boolean",
-      description: "标记该源为可信源",
+      description: text.description.arg.source.trust,
     },
   },
   async run({ args }) {
     try {
       const { url, key, note, trust } = args
       if (args._.length > 1)
-        throw new Error(`unexpected arguments: ${args._.slice(1).join(" ")}`)
+        throw new Error(text.error.command.unexpectedArguments(args._.slice(1).join(" ")))
 
       const workspace = await cloneSource(url)
       try {
@@ -41,8 +42,8 @@ export default defineCommand({
         const config = await loadConfig()
         let keyName = key ?? meta.name
         while (config.source[keyName]) {
-          keyName = await prompt.input(`source ${keyName} already exists, enter another key name`, {
-            validate: value => value.trim().length > 0 || "key name is required",
+          keyName = await prompt.input(text.question.enterKeyName(keyName), {
+            validate: value => value.trim().length > 0 || text.question.argRequired(text.terms.keyName),
           })
         }
 
@@ -53,7 +54,7 @@ export default defineCommand({
           ...(note ? { note } : {}),
         }
         await saveConfig(config)
-        log.info(`added source ${keyName} (${meta.name}) -> ${url}`)
+        log.info(text.success.addedSource(keyName, url, meta.name))
       }
       finally {
         await workspace.dispose()

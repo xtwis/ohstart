@@ -3,6 +3,7 @@ import type { ScriptJson, ScriptType } from "@shared/types"
 import { loadArgvSchema, resolveArgvFile } from "@shared/argv/load"
 import { resolveInside } from "@shared/path"
 import { readOhstartJson, readScriptJson } from "@shared/read"
+import { text } from "@shared/text"
 
 export interface PrepareScriptOptions {
   root: string
@@ -23,17 +24,17 @@ export async function prepareScript({ root, name, type, sdkUrl, sourceLabel, com
   const meta = await readOhstartJson(root)
   const path = meta.scripts[name]
   if (!path)
-    throw new Error(`unknown script ${name} in source ${sourceLabel ?? meta.name}`)
+    throw new Error(text.error.script.unknown(name, sourceLabel ?? meta.name))
 
   const scriptDir = resolveInside(root, path)
   if (!scriptDir)
-    throw new Error(`script "${name}": path "${path}" is not inside the source`)
+    throw new Error(text.error.project.root.pathOutsideSource(path))
 
   const script = await readScriptJson(root, path)
   if (script.name !== name)
-    throw new Error(`script.json name ${script.name} does not match ${name}`)
+    throw new Error(text.error.script.nameMismatch(script.name, name))
   if (script.type !== type)
-    throw new Error(`script ${name} is a ${script.type} script, use \`${command ?? "ohstart"} ${script.type}\``)
+    throw new Error(text.error.script.wrongType(name, script.type, command ?? "ohstart"))
 
   const schema = await loadArgvSchema(await resolveArgvFile(scriptDir, script), sdkUrl)
   return { scriptDir, script, schema }

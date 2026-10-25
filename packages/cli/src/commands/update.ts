@@ -1,8 +1,9 @@
+import { text } from "@shared/text"
 import { defineCommand } from "citty"
 
 export default defineCommand({
   meta: {
     name: "update",
-    description: "更新 ohstart 自身",
+    description: text.description.command.cli.update,
   },
 })

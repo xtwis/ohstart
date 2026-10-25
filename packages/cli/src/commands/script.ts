@@ -1,19 +1,20 @@
 import type { ScriptType } from "@shared/types"
 import type { CommandDef } from "citty"
 import { fail } from "@shared/logger"
+import { text } from "@shared/text"
 import { defineCommand } from "citty"
 import { runScript } from "@/runtime"
 
 const RESERVED_TRUST_FLAG = "--trust"
 
 const META: Record<ScriptType, { name: ScriptType, description: string }> = {
-  init: { name: "init", description: "在新项目里执行 init 类脚本" },
-  add: { name: "add", description: "向已有项目叠加 add 类脚本" },
+  init: { name: "init", description: text.description.command.cli.initScript },
+  add: { name: "add", description: text.description.command.cli.addScript },
 }
 
 const SCRIPT_ARGS = {
-  script: { type: "positional", required: true, description: "脚本名, 支持 @<key>/<name>" },
-  trust: { type: "boolean", description: "单次跳过信任确认(不写回信任标记)" },
+  script: { type: "positional", required: true, description: text.description.arg.script.name },
+  trust: { type: "boolean", description: text.description.arg.flag.trust },
 } as const
 
 export function defineScriptCommand(type: ScriptType): CommandDef<typeof SCRIPT_ARGS> {

@@ -53,7 +53,7 @@ describe("parseScriptArgv - token parsing", () => {
 
 describe("fillRequiredArgs - required positional completion", () => {
   it("rejects a missing required arg on non-tty stdin", async () => {
-    await expect(fillRequiredArgs(schema, { args: [], flags: {} })).rejects.toThrow("missing required arg <project-name>")
+    await expect(fillRequiredArgs(schema, { args: [], flags: {} })).rejects.toThrow("missing required arg: project-name")
   })
 
   it("keeps a provided arg without prompting", async () => {

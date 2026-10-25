@@ -1,15 +1,16 @@
 import type { SelectOption } from "@shared/prompts/types"
 import process from "node:process"
 import { isCtrlC, isSubmit, readKeypresses } from "@shared/prompts/read"
+import { text } from "@shared/text"
 
 const HIDE_CURSOR = "\u001B[?25l"
 const SHOW_CURSOR = "\u001B[?25h"
 
 export async function pick(message: string, options: SelectOption[], multiple: boolean): Promise<number[]> {
   if (options.length === 0)
-    throw new Error("no option to select from")
+    throw new Error(text.error.runtime.noOptions)
   if (!process.stdin.isTTY)
-    throw new Error("interactive prompt requires a tty")
+    throw new Error(text.error.runtime.requiresTty)
 
   const chosen = new Set<number>()
   let cursor = 0
@@ -32,7 +33,7 @@ export async function pick(message: string, options: SelectOption[], multiple: b
   try {
     for await (const key of readKeypresses()) {
       if (isCtrlC(key))
-        throw new Error("cancelled")
+        throw new Error(text.state.cancelled)
       if (key.name === "up") {
         cursor = (cursor - 1 + options.length) % options.length
       }

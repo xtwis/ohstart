@@ -5,6 +5,7 @@ import { prompt } from "@shared/prompts"
 import { bundleScript } from "@shared/runtime/bundle"
 import { prepareScript } from "@shared/runtime/prepare"
 import { spawnScript } from "@shared/runtime/spawn"
+import { text } from "@shared/text"
 import { loadConfig, saveConfig } from "@/config"
 import { cloneSource, parseScriptAddress } from "@/remote"
 import { SDK_URL } from "@/runtime/sdk"
@@ -34,7 +35,7 @@ export async function runScript({ type, address, tokens, trust }: RunScriptOptio
     const argv = parseScriptArgv(tokens, schema)
     await fillRequiredArgs(schema, argv)
 
-    const bundle = await bundleScript({ scriptDir, entry: script.entry ?? "index.ts", sdkUrl: SDK_URL })
+    const bundle = await bundleScript({ scriptDir, entry: script.entry ?? text.terms.entryFile, sdkUrl: SDK_URL })
     try {
       const code = await spawnScript(bundle.file, argv, { cwd: process.cwd() })
       if (code !== 0)
@@ -59,15 +60,15 @@ async function ensureTrusted(
     return
 
   if (!process.stdin.isTTY) {
-    throw new Error(`source ${key} is not trusted, pass --trust to allow this run`)
+    throw new Error(text.error.source.notTrusted(key))
   }
 
   const accepted = await prompt.confirm(
-    `source ${key} (${source.name}) is not trusted: ${source.url}\nsources from this source run arbitrary code, continue?`,
+    text.question.confirmTrust(key, source.name, source.url),
     { default: false },
   )
   if (!accepted)
-    throw new Error(`aborted: source ${key} is not trusted`)
+    throw new Error(text.error.source.trustAborted(key))
 
   config.source[key] = { ...source, trust: true }
   await saveConfig(config)

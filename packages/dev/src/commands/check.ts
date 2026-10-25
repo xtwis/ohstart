@@ -2,19 +2,20 @@ import type { CheckReport, Finding } from "@/check"
 import { resolve } from "node:path"
 import process from "node:process"
 import { fail, log } from "@shared/logger"
+import { text } from "@shared/text"
 import { defineCommand } from "citty"
 import { checkDuplicatePaths, checkScript, createReport, errorFinding, findOrphanScripts, loadSource, toFinding } from "@/check"
 
 export default defineCommand({
   meta: {
     name: "check",
-    description: "校验源契约完整性",
+    description: text.description.command.dev.check,
   },
   args: {
     script: {
       type: "positional",
       required: false,
-      description: "只检查指定脚本, 省略则检查整个源",
+      description: text.description.arg.script.checkName,
     },
   },
   async run({ args }) {
@@ -22,12 +23,12 @@ export default defineCommand({
       const report = await runCheck(".", args.script)
 
       if (report.source)
-        log.info(`source ${report.source.name} at ${report.root} (${Object.keys(report.source.scripts).length} scripts registered)`)
+        log.info(`${text.state.sourceLoaded(report.source.name, report.root)} (${Object.keys(report.source.scripts).length} ${text.label.field.scriptsRegistered})`)
       else
-        log.info(`source not loaded at ${report.root}`)
+        log.info(text.state.sourceNotLoaded(report.root))
 
       for (const finding of report.findings) {
-        const line = `${finding.level === "error" ? "error  " : "warning"} ${finding.message}`
+        const line = finding.level === "error" ? `${text.label.mark.severityError}  ${finding.message}` : `${text.label.mark.severityWarning} ${finding.message}`
         if (finding.level === "error")
           log.error(line)
         else
@@ -35,10 +36,10 @@ export default defineCommand({
       }
 
       if (report.findings.length === 0) {
-        log.info("check passed")
+        log.info(text.state.checkPassed)
         return
       }
-      log.info(`${report.errors} errors, ${report.warnings} warnings`)
+      log.info(text.state.checkSummary(report.errors, report.warnings))
       if (!report.ok)
         process.exitCode = 1
     }
@@ -72,7 +73,7 @@ async function runCheck(start: string, name?: string): Promise<CheckReport> {
   for (const key of names) {
     const path = meta.scripts[key]
     if (path === undefined) {
-      findings.push(errorFinding(`script "${key}" is not registered in ohstart.json`))
+      findings.push(errorFinding(text.error.project.skeleton.notRegistered(key)))
       continue
     }
     findings.push(...await checkScript(root, key, path))

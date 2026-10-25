@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import { text } from "@shared/text"
 import { defineCommand, runMain } from "citty"
 import { subCommands } from "@/commands"
 import { VERSION } from "@/version"
@@ -7,7 +8,7 @@ export const main = defineCommand({
   meta: {
     name: "ohstart-dev",
     version: VERSION,
-    description: "开发 ohstart 源: 创建骨架、校验契约、试跑脚本",
+    description: text.description.command.dev.dev,
   },
   subCommands,
   default: "help",
