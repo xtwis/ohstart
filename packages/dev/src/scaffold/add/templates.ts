@@ -18,7 +18,7 @@ export const SAYHI_ARGV_TS = `import { defineArgv } from "@xtwis/ohstart-dev"
 
 export default defineArgv({
   args: [{ name: "name", description: "Name to greet" }],
-  flags: { path: { type: "string", description: "Directory to start from (default: cwd)" } },
+  flags: { path: { type: "string", description: "Directory to create hello.md in (default: cwd)" } },
 })
 `
 
@@ -26,7 +26,7 @@ export const SAYHI_INDEX_TS = `import argv from "./argv.js"
 import { log } from "@xtwis/ohstart-dev"
 import { execFile } from "node:child_process"
 import { access, writeFile } from "node:fs/promises"
-import { dirname, join, resolve } from "node:path"
+import { join, resolve } from "node:path"
 import process from "node:process"
 import { promisify } from "node:util"
 
@@ -34,25 +34,9 @@ const execFileAsync = promisify(execFile)
 
 const { getArgv } = argv
 
-async function findGitRoot(dir: string): Promise<string | undefined> {
-  let current = resolve(dir)
-  while (true) {
-    try {
-      await access(join(current, ".git"))
-      return current
-    }
-    catch {
-      const parent = dirname(current)
-      if (parent === current)
-        return
-      current = parent
-    }
-  }
-}
-
-async function gitUserName(): Promise<string> {
+async function gitUserName(dir: string): Promise<string> {
   try {
-    const { stdout } = await execFileAsync("git", ["config", "user.name"])
+    const { stdout } = await execFileAsync("git", ["config", "user.name"], { cwd: dir })
     return stdout.trim()
   }
   catch {
@@ -84,13 +68,9 @@ async function nextHelloFile(dir: string): Promise<string> {
 
 export default async function main() {
   const { args, flags } = getArgv()
-  const start = flags.path ?? process.cwd()
-  const root = await findGitRoot(start)
-  if (!root)
-    throw new Error(\`no git repository found from \${start}\`)
-
-  const name = args[0] || await gitUserName() || "developer"
-  const file = await nextHelloFile(root)
+  const dir = resolve(flags.path ?? process.cwd())
+  const name = args[0] || await gitUserName(dir) || "developer"
+  const file = await nextHelloFile(dir)
   await writeFile(file, \`Hi, \${name}!\\n\`, "utf8")
   log.info(\`wrote \${file}\`)
 }
@@ -105,6 +85,6 @@ export function sampleScript(): ScriptJson {
   return {
     name: SAMPLE_NAME,
     type: "add",
-    description: "Sample add script: write hello.md at the git root",
+    description: "Sample add script: write hello.md in the working directory",
   }
 }
