@@ -78,6 +78,15 @@ export const error = {
     invalidAgent: (agent: string): string => `invalid ${terms.packageManager}: ${agent}, expected npm, pnpm, or yarn`,
     commandFailed: (command: string, exitCode: number): string => `${command} failed with exit code ${exitCode}`,
     spawnFailed: (command: string, reason: string): string => `failed to run ${command}: ${reason}`,
+    multipleSpecified: (sources: string): string => `only one ${terms.packageManager} can be specified: ${sources}`,
+    missingAgentValue: "option --agent requires a value: use --agent=<npm|pnpm|yarn>",
+    notDetected: (cwd: string): string =>
+      `cannot detect the ${terms.packageManager} in ${cwd}\npass --agent=<npm|pnpm|yarn> to choose one, or --no-detect if the script does not need one`,
+    unsupportedDetected: (name: string): string => `detected an unsupported ${terms.packageManager}: ${name}, expected npm, pnpm, or yarn`,
+    multipleLockFiles: (files: string): string =>
+      `multiple lock files found: ${files}\npass --agent=<npm|pnpm|yarn> to choose one`,
+    requiresTty: `cannot confirm the ${terms.packageManager} without a tty\npass --no-detect to use the specified ${terms.packageManager} without detection`,
+    aborted: `aborted: ${terms.packageManager} was not confirmed`,
   },
 
   runtime: {

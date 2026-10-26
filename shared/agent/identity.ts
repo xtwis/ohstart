@@ -21,6 +21,10 @@ export function parseAgent(source: string | undefined): AgentIdentity | undefine
   return { name, version: version || undefined }
 }
 
+export function formatIdentity(identity: AgentIdentity): string {
+  return identity.version ? `${identity.name}@${identity.version}` : identity.name
+}
+
 export function assertAgent(name: string): AgentName {
   if (isAgentName(name))
     return name

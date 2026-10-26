@@ -52,6 +52,12 @@ export const description = {
       runType: "script type, init or add",
       runName: "script name, must match a key registered in ohstart.json",
     },
+    agent: {
+      npm: "use npm as the package manager",
+      pnpm: "use pnpm as the package manager",
+      yarn: "use yarn as the package manager",
+      noDetect: "detect the package manager in the target project; --no-detect skips detection, and combines with --agent to force one",
+    },
     flag: {
       trust: "skip the trust confirmation once (does not persist)",
       typeFilter: "only init or add",

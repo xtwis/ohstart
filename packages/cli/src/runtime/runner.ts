@@ -1,4 +1,5 @@
 import type { OhstartConfig, ScriptType, SourceConfig } from "@shared/types"
+import type { AgentSelection } from "@/runtime/agent"
 import process from "node:process"
 import { fillRequiredArgs, parseScriptArgv } from "@shared/argv/parse"
 import { prompt } from "@shared/prompts"
@@ -8,6 +9,7 @@ import { spawnScript } from "@shared/runtime/spawn"
 import { text } from "@shared/text"
 import { loadConfig, saveConfig } from "@/config"
 import { cloneSource, parseScriptAddress } from "@/remote"
+import { resolveAgent } from "@/runtime/agent"
 import { SDK_URL } from "@/runtime/sdk"
 
 export interface RunScriptOptions {
@@ -15,12 +17,15 @@ export interface RunScriptOptions {
   address: string
   tokens: string[]
   trust: boolean
+  selection: AgentSelection
 }
 
-export async function runScript({ type, address, tokens, trust }: RunScriptOptions): Promise<void> {
+export async function runScript({ type, address, tokens, trust, selection }: RunScriptOptions): Promise<void> {
   const config = await loadConfig()
   const target = parseScriptAddress(config, address)
   await ensureTrusted(config, target.key, target.source, trust)
+
+  const agent = await resolveAgent(selection, process.cwd())
 
   const workspace = await cloneSource(target.source.url)
   try {
@@ -37,7 +42,7 @@ export async function runScript({ type, address, tokens, trust }: RunScriptOptio
 
     const bundle = await bundleScript({ scriptDir, entry: script.entry ?? text.terms.entryFile, sdkUrl: SDK_URL })
     try {
-      const code = await spawnScript(bundle.file, argv, { cwd: process.cwd() })
+      const code = await spawnScript(bundle.file, argv, { cwd: process.cwd(), agent })
       if (code !== 0)
         process.exitCode = code ?? 1
     }
