@@ -11,16 +11,14 @@ export function isAgentName(value: unknown): value is AgentName {
 export function parseAgent(source: string | undefined): AgentIdentity | undefined {
   if (!source)
     return undefined
-  try {
-    const parsed = JSON.parse(source) as { name?: unknown, version?: unknown }
-    if (!isAgentName(parsed.name))
-      return undefined
-    const version = typeof parsed.version === "string" ? parsed.version : undefined
-    return { name: parsed.name, version }
-  }
-  catch {
+  const at = source.indexOf("@")
+  const name = at === -1 ? source : source.slice(0, at)
+  if (!isAgentName(name))
     return undefined
-  }
+  if (at === -1)
+    return { name }
+  const version = source.slice(at + 1).split("+")[0]
+  return { name, version: version || undefined }
 }
 
 export function assertAgent(name: string): AgentName {
