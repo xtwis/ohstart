@@ -4,8 +4,13 @@ import { AgentNotSpecifiedError } from "@shared/agent/error"
 import { run } from "@shared/agent/exec"
 import { assertAgent } from "@shared/agent/identity"
 
+export { detectAgent } from "@shared/agent/detect"
+export type { DetectedAgent, DetectResult } from "@shared/agent/detect"
 export { AgentError, AgentNotSpecifiedError } from "@shared/agent/error"
 export { parseAgent } from "@shared/agent/identity"
+export { resolveAgent } from "@shared/agent/resolve"
+export { parseAgentSelection } from "@shared/agent/selection"
+export type { AgentSelection } from "@shared/agent/selection"
 export type { Agent, AgentAction, AgentCommand, AgentIdentity, AgentName, AgentOptions, AgentResult } from "@shared/agent/types"
 
 export function createAgent(identity: AgentIdentity | undefined): Agent {

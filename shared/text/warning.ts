@@ -5,7 +5,7 @@ export const warning = {
   skippingScript: (name: string, reason: string): string => `skipping ${name}: ${reason}`,
   orphanScript: (dir: string): string => `orphan ${dir} has a script.json but is not registered in ohstart.json`,
   gitInitFailed: (dir: string): string => `git init failed in ${dir}, falling back to a minimal git skeleton`,
-  pnpmInitFailed: (dir: string): string => `pnpm init failed in ${dir}, falling back to a minimal package manifest`,
+  agentInitFailed: (dir: string): string => `${terms.packageManager} init failed in ${dir}, falling back to a minimal package manifest`,
   agent: {
     unsupportedDetected: (detected: string, specified: string): string =>
       `detected an unsupported ${terms.packageManager}: ${detected}, using ${specified}`,

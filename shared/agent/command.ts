@@ -5,7 +5,7 @@ export function buildArgs(name: AgentName, action: AgentAction, options: AgentOp
     case "install":
       return { command: name, args: ["install", ...ignoreScripts(options)] }
     case "add":
-      return { command: name, args: [addVerb(name), ...action.names, ...dev(options), ...ignoreScripts(options)] }
+      return { command: name, args: [addVerb(name), ...dev(options), ...ignoreScripts(options), ...action.names] }
     case "remove":
       return { command: name, args: [removeVerb(name), ...action.names] }
     case "run":

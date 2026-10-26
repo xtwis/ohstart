@@ -1,6 +1,7 @@
+import type { AgentSelection } from "@shared/agent/selection"
 import type { OhstartConfig, ScriptType, SourceConfig } from "@shared/types"
-import type { AgentSelection } from "@/runtime/agent"
 import process from "node:process"
+import { resolveAgent } from "@shared/agent"
 import { fillRequiredArgs, parseScriptArgv } from "@shared/argv/parse"
 import { prompt } from "@shared/prompts"
 import { bundleScript } from "@shared/runtime/bundle"
@@ -9,7 +10,6 @@ import { spawnScript } from "@shared/runtime/spawn"
 import { text } from "@shared/text"
 import { loadConfig, saveConfig } from "@/config"
 import { cloneSource, parseScriptAddress } from "@/remote"
-import { resolveAgent } from "@/runtime/agent"
 import { SDK_URL } from "@/runtime/sdk"
 
 export interface RunScriptOptions {
@@ -25,7 +25,7 @@ export async function runScript({ type, address, tokens, trust, selection }: Run
   const target = parseScriptAddress(config, address)
   await ensureTrusted(config, target.key, target.source, trust)
 
-  const agent = await resolveAgent(selection, process.cwd())
+  const agent = await resolveAgent({ selection, cwd: process.cwd() })
 
   const workspace = await cloneSource(target.source.url)
   try {

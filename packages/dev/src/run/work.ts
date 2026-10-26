@@ -1,3 +1,4 @@
+import type { AgentIdentity, AgentName } from "@shared/agent/types"
 import { execFile } from "node:child_process"
 import { lstat, mkdir, rm, writeFile } from "node:fs/promises"
 import { join } from "node:path"
@@ -5,11 +6,14 @@ import { promisify } from "node:util"
 import { log } from "@shared/logger"
 import { resolveInside } from "@shared/path"
 import { text } from "@shared/text"
+import { x } from "tinyexec"
 import { ensureGitignore, GITIGNORE_HEADER, pathExists } from "@/scaffold"
 
 const execFileAsync = promisify(execFile)
 
 export const WORK_DIR = ".ohstart"
+
+export const DEFAULT_AGENT_NAME = "pnpm"
 
 const BUNDLE_FILE = ".ohstart-run.mjs"
 
@@ -25,24 +29,34 @@ const GIT_CONFIG = `[core]
 const PNPM_WORKSPACE = `packages: []
 `
 
-const PNPM_PACKAGE_JSON = `{
+const PACKAGE_JSON = `{
+  "name": "ohstart-work",
   "type": "module"
 }
 `
 
-const PNPM_INIT_COMMAND = "pnpm init --bare --no-init-package-manager"
+const INIT_ARGS: Record<AgentName, string[] | undefined> = {
+  pnpm: ["init", "--bare", "--no-init-package-manager"],
+  npm: undefined,
+  yarn: undefined,
+}
 
 export interface WorkDirOptions {
   root: string
   keep: boolean
   git: boolean
-  pnpm: boolean
+  agent: AgentIdentity
 }
 
-export async function prepareWorkDir({ root, keep, git, pnpm }: WorkDirOptions): Promise<string> {
+export function resolveWorkDir(root: string): string {
   const dir = resolveInside(root, WORK_DIR)
   if (!dir)
     throw new Error(text.error.runtime.cannotCreateWorkDir(root))
+  return dir
+}
+
+export async function prepareWorkDir({ root, keep, git, agent }: WorkDirOptions): Promise<string> {
+  const dir = resolveWorkDir(root)
 
   if (!keep)
     await clearWorkDir(dir)
@@ -54,7 +68,7 @@ export async function prepareWorkDir({ root, keep, git, pnpm }: WorkDirOptions):
     log.debug(text.debug.appendedGitignore(join(root, ".gitignore"), ignored))
 
   await ensureGitRepo(dir, git)
-  await ensurePnpmProject(dir, pnpm)
+  await ensurePackageProject(dir, agent)
 
   return dir
 }
@@ -95,35 +109,42 @@ async function writeGitSkeleton(dir: string): Promise<void> {
   await writeFile(join(gitDir, "config"), GIT_CONFIG, "utf8")
 }
 
-async function ensurePnpmProject(dir: string, usePnpmBinary: boolean): Promise<void> {
-  await ensurePnpmManifest(dir, usePnpmBinary)
-  await ensurePnpmWorkspace(dir)
+async function ensurePackageProject(dir: string, agent: AgentIdentity): Promise<void> {
+  await ensurePackageManifest(dir, agent)
+  await ensurePnpmWorkspace(dir, agent)
 }
 
-async function ensurePnpmManifest(dir: string, usePnpmBinary: boolean): Promise<void> {
+async function ensurePackageManifest(dir: string, agent: AgentIdentity): Promise<void> {
   if (await pathExists(join(dir, "package.json")))
     return
 
-  if (usePnpmBinary) {
+  const args = INIT_ARGS[agent.name]
+  if (args) {
     try {
-      await execFileAsync(PNPM_INIT_COMMAND, { cwd: dir, shell: true })
-      return
+      const result = await x(agent.name, args, {
+        nodeOptions: { cwd: dir, stdio: "inherit" },
+      })
+      if (result.exitCode === 0)
+        return
+      log.warn(text.warning.agentInitFailed(dir))
     }
     catch {
-      log.warn(text.warning.pnpmInitFailed(dir))
+      log.warn(text.warning.agentInitFailed(dir))
     }
   }
 
-  await writePnpmSkeleton(dir)
+  await writePackageSkeleton(dir)
 }
 
-async function ensurePnpmWorkspace(dir: string): Promise<void> {
+async function ensurePnpmWorkspace(dir: string, agent: AgentIdentity): Promise<void> {
+  if (agent.name !== "pnpm")
+    return
   const file = join(dir, "pnpm-workspace.yaml")
   if (await pathExists(file))
     return
   await writeFile(file, PNPM_WORKSPACE, "utf8")
 }
 
-async function writePnpmSkeleton(dir: string): Promise<void> {
-  await writeFile(join(dir, "package.json"), PNPM_PACKAGE_JSON, "utf8")
+async function writePackageSkeleton(dir: string): Promise<void> {
+  await writeFile(join(dir, "package.json"), PACKAGE_JSON, "utf8")
 }

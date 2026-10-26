@@ -1,5 +1,6 @@
 import type { ScriptType } from "@shared/types"
 import process from "node:process"
+import { parseAgentSelection, resolveAgent } from "@shared/agent"
 import { fillRequiredArgs, parseScriptArgv } from "@shared/argv/parse"
 import { fail, log } from "@shared/logger"
 import { bundleScript } from "@shared/runtime/bundle"
@@ -7,7 +8,7 @@ import { prepareScript } from "@shared/runtime/prepare"
 import { spawnScript } from "@shared/runtime/spawn"
 import { text } from "@shared/text"
 import { defineCommand } from "citty"
-import { prepareWorkDir } from "@/run"
+import { DEFAULT_AGENT_NAME, prepareWorkDir, resolveWorkDir } from "@/run"
 import { SDK_URL } from "@/runtime/sdk"
 import { findSourceRoot } from "@/source"
 
@@ -38,18 +39,37 @@ export default defineCommand({
       default: true,
       description: text.description.arg.flag.git,
     },
+    npm: {
+      type: "boolean",
+      description: text.description.arg.agent.npm,
+    },
     pnpm: {
       type: "boolean",
+      description: text.description.arg.agent.pnpm,
+    },
+    yarn: {
+      type: "boolean",
+      description: text.description.arg.agent.yarn,
+    },
+    detect: {
+      type: "boolean",
       default: true,
-      description: text.description.arg.flag.pnpm,
+      description: text.description.arg.agent.noDetect,
     },
   },
   async run({ args, rawArgs }) {
     try {
       const type = parseType(args.type)
       const { tokens } = splitTokens(rawArgs, args.script)
+      const selection = parseAgentSelection(rawArgs, args.script)
 
       const root = await findSourceRoot(".")
+      const agent = await resolveAgent({
+        selection,
+        cwd: resolveWorkDir(root),
+        fallback: DEFAULT_AGENT_NAME,
+      })
+
       const { scriptDir, script, schema } = await prepareScript({
         root,
         name: args.script,
@@ -63,9 +83,9 @@ export default defineCommand({
 
       const bundle = await bundleScript({ scriptDir, entry: script.entry ?? text.terms.entryFile, sdkUrl: SDK_URL })
       try {
-        const workDir = await prepareWorkDir({ root, keep: args.keep === true, git: args.git !== false, pnpm: args.pnpm !== false })
+        const workDir = await prepareWorkDir({ root, keep: args.keep === true, git: args.git !== false, agent })
         log.debug(text.debug.workingDirectory(workDir))
-        const code = await spawnScript(bundle.file, argv, { cwd: workDir })
+        const code = await spawnScript(bundle.file, argv, { cwd: workDir, agent })
         if (code !== 0)
           process.exitCode = code ?? 1
       }
