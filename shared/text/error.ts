@@ -73,6 +73,13 @@ export const error = {
     unexpectedArguments: (args: string): string => `unexpected arguments: ${args}`,
   },
 
+  agent: {
+    notSpecified: `no ${terms.packageManager} specified`,
+    invalidAgent: (agent: string): string => `invalid ${terms.packageManager}: ${agent}, expected npm, pnpm, or yarn`,
+    commandFailed: (command: string, exitCode: number): string => `${command} failed with exit code ${exitCode}`,
+    spawnFailed: (command: string, reason: string): string => `failed to run ${command}: ${reason}`,
+  },
+
   runtime: {
     noOptions: "no option to select from",
     requiresTty: "interactive prompt requires a tty",

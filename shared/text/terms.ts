@@ -7,4 +7,5 @@ export const terms = {
   argvFile: "argv.ts",
   entryFile: "index.ts",
   workDir: ".ohstart",
+  packageManager: "package manager",
 } as const
