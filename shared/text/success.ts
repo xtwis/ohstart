@@ -4,6 +4,7 @@ export const success = {
   addedSource: (key: string, url: string, name?: string): string =>
     `added ${terms.source} ${key}${name ? ` (${name})` : ""} -> ${url}`,
   removedSource: (key: string): string => `removed ${terms.source} ${key}`,
+  renamedSource: (from: string, to: string): string => `renamed ${terms.source} ${from} to ${to}`,
   createdSource: (name: string, root: string, sample?: boolean): string =>
     `created ${terms.source} ${name}${sample ? ` with sample ${terms.script}` : ""} in ${root}`,
   createdScript: (name: string, path: string): string => `created ${terms.script} ${name} at ${path}`,

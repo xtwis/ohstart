@@ -33,6 +33,9 @@ export const error = {
 
   source: {
     unknown: (key: string): string => `unknown ${terms.source}: ${key}`,
+    keyExists: (key: string): string => `${terms.source} ${key} already exists`,
+    missingKeyName: `a new ${terms.keyName} is required`,
+    sameKeyName: (key: string): string => `the new ${terms.keyName} is the same as ${key}`,
     noDefault: `no ${terms.defaultSource}: run \`ohstart source default <key>\` first`,
     defaultMissing: (key: string): string => `${terms.defaultSource} is not configured: ${key}`,
     invalidAddress: (address: string): string => `invalid address: ${address}, expected @<key>/<script>`,
