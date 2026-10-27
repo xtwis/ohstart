@@ -33,6 +33,14 @@ interface LineState {
 
 let state: LineState | undefined
 
+function holdStdin(): void {
+  process.stdin.ref?.()
+}
+
+function releaseStdin(): void {
+  process.stdin.unref?.()
+}
+
 function openSession(): LineState {
   const created: LineState = {
     session: undefined as never,
@@ -48,6 +56,7 @@ function openSession(): LineState {
     if (created.pending) {
       const { resolve } = created.pending
       created.pending = undefined
+      releaseStdin()
       resolve(line)
       return
     }
@@ -55,11 +64,13 @@ function openSession(): LineState {
   })
   created.session.on("close", () => {
     created.ended = true
+    releaseStdin()
     if (created.pending) {
       created.pending.reject(new Error(text.error.runtime.stdinClosed))
       created.pending = undefined
     }
   })
+  releaseStdin()
   state = created
   return created
 }
@@ -75,6 +86,7 @@ export function readLine(question: string): Promise<string> {
 
   const current = state ?? openSession()
   current.session.setPrompt(question)
+  holdStdin()
   current.session.prompt()
   return new Promise((resolve, reject) => {
     current.pending = { resolve, reject }
@@ -92,6 +104,7 @@ export async function* readKeypresses(): AsyncGenerator<Keypress> {
   emitKeypressEvents(stdin)
   stdin.setRawMode(true)
   stdin.resume()
+  holdStdin()
 
   const queue: Keypress[] = []
   let notify: (() => void) | undefined
@@ -130,5 +143,6 @@ export async function* readKeypresses(): AsyncGenerator<Keypress> {
     stdin.off("end", onEnd)
     stdin.setRawMode(false)
     stdin.pause()
+    releaseStdin()
   }
 }
