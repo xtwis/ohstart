@@ -1,7 +1,7 @@
 {
   "name": "@xtwis/ohstart-dev",
   "type": "module",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "ohstart dev CLI and SDK",
   "author": "Twisuki <hi@twis.uk>",
   "license": "MIT",
