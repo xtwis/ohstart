@@ -7,6 +7,7 @@ import { loadConfig, saveConfig } from "@/config"
 export default defineCommand({
   meta: {
     name: "remove",
+    alias: "rm",
     description: text.description.command.cli.source.remove,
   },
   args: {

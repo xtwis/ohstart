@@ -6,6 +6,7 @@ import { loadConfig, saveConfig } from "@/config"
 export default defineCommand({
   meta: {
     name: "default",
+    alias: "def",
     description: text.description.command.cli.source.default,
   },
   args: {

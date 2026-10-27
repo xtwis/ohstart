@@ -8,6 +8,7 @@ import { cloneSource, resolveDefaultSource } from "@/remote"
 export default defineCommand({
   meta: {
     name: "list",
+    alias: "ls",
     description: text.description.command.cli.list,
   },
   args: {

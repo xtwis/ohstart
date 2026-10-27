@@ -6,6 +6,7 @@ import { loadConfig } from "@/config"
 export default defineCommand({
   meta: {
     name: "list",
+    alias: "ls",
     description: text.description.command.cli.source.list,
   },
   async run() {

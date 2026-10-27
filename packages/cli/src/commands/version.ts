@@ -6,6 +6,7 @@ import { VERSION } from "@/version"
 export default defineCommand({
   meta: {
     name: "version",
+    alias: "ver",
     description: text.description.command.cli.version,
   },
   run() {

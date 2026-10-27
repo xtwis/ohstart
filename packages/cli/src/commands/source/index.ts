@@ -24,6 +24,7 @@ export const subCommands = {
 export default defineCommand({
   meta: {
     name: "source",
+    alias: "src",
     description: text.description.command.cli.source.manage,
   },
   subCommands,
