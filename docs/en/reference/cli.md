@@ -39,14 +39,14 @@ The two commands differ only in script type: `init` runs `init` scripts, `add` r
 
 Everything after the script name is handed to the script; `ohstart` does not parse it. These flags are consumed by `ohstart` itself:
 
-| Flag                          | Position                        | Effect                                                       |
-| ----------------------------- | ------------------------------- | ------------------------------------------------------------ |
-| `--trust`                     | Before or after the script name | Skip the trust confirmation for this run, without persisting |
-| `--npm` / `--pnpm` / `--yarn` | Before the script name          | Select the package manager                                   |
-| `--agent=<npm\|pnpm\|yarn>`   | Before the script name          | Same, in assignment form                                     |
-| `--no-detect`                 | Before the script name          | Skip package manager detection                               |
+| Flag                          | Position               | Effect                                                       |
+| ----------------------------- | ---------------------- | ------------------------------------------------------------ |
+| `--trust`                     | Before the script name | Skip the trust confirmation for this run, without persisting |
+| `--npm` / `--pnpm` / `--yarn` | Before the script name | Select the package manager                                   |
+| `--agent=<npm\|pnpm\|yarn>`   | Before the script name | Same, in assignment form                                     |
+| `--no-detect`                 | Before the script name | Skip package manager detection                               |
 
-Package manager flags must precede the script name; after it they belong to the script. `--trust` is the exception and is recognized on either side.
+Every flag above must precede the script name. A token of the same name after it belongs to the script; `ohstart` makes no distinction.
 
 When the source is untrusted and the terminal is not interactive, the run fails instead of prompting. See [Managing Sources](../guide/sources.md) for the trust model.
 

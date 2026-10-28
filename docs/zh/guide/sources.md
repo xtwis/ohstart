@@ -119,7 +119,7 @@ ohstart source untrust my-team   # 撤销信任
 `--trust` 仅对本次执行生效, 不写入配置:
 
 ```bash
-ohstart init @my-team/vite/react --trust
+ohstart init --trust @my-team/vite/react
 ```
 
 ## 下一步

@@ -21,18 +21,11 @@ export function parseAgentSelection(tokens: string[], address: string): AgentSel
   const head = index === -1 ? tokens.length : index
   const selection: AgentSelection = { name: undefined, noDetect: false }
   const sources: string[] = []
-  let afterSeparator = false
 
   for (const [position, token] of tokens.entries()) {
-    if (!afterSeparator && token === "--") {
-      afterSeparator = true
+    if (position >= head)
       continue
-    }
-    if (afterSeparator || position >= head)
-      continue
-    const picked = pickAgentFlag(token, selection, sources)
-    if (picked)
-      continue
+    pickAgentFlag(token, selection, sources)
   }
 
   if (sources.length > 1)
@@ -41,10 +34,10 @@ export function parseAgentSelection(tokens: string[], address: string): AgentSel
   return selection
 }
 
-function pickAgentFlag(token: string, selection: AgentSelection, sources: string[]): boolean {
+function pickAgentFlag(token: string, selection: AgentSelection, sources: string[]): void {
   if (token === NO_DETECT_FLAG) {
     selection.noDetect = true
-    return true
+    return
   }
   if (token === AGENT_FLAG)
     throw new Error(text.error.agent.missingAgentValue)
@@ -56,13 +49,11 @@ function pickAgentFlag(token: string, selection: AgentSelection, sources: string
       throw new Error(text.error.agent.invalidAgent(value))
     sources.push(token)
     selection.name = value
-    return true
+    return
   }
   const name = AGENT_FLAGS[token as keyof typeof AGENT_FLAGS]
   if (name) {
     sources.push(token)
     selection.name = name
-    return true
   }
-  return false
 }

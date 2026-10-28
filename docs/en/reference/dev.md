@@ -147,18 +147,18 @@ ohsd run <type> <script> [arg...]
 
 Executes a script in a work directory, to verify its actual behavior.
 
-| Argument or flag              | Position                        | Description                                             |
-| ----------------------------- | ------------------------------- | ------------------------------------------------------- |
-| `type`                        | Required                        | `init` or `add`, must match the registered type         |
-| `script`                      | Required                        | Script name, must match a key in `ohstart.json`         |
-| `arg...`                      | Optional                        | Passed to the script as-is                              |
-| `--keep`                      | Before or after the script name | Keep the previous work directory content                |
-| `--no-git`                    | Before or after the script name | Skip `git init` and write a minimal repository skeleton |
-| `--npm` / `--pnpm` / `--yarn` | Before the script name          | Select the package manager for the work directory       |
-| `--agent=<npm\|pnpm\|yarn>`   | Before the script name          | Same, in assignment form                                |
-| `--no-detect`                 | Before the script name          | Skip package manager detection                          |
+| Argument or flag              | Position               | Description                                             |
+| ----------------------------- | ---------------------- | ------------------------------------------------------- |
+| `type`                        | Required               | `init` or `add`, must match the registered type         |
+| `script`                      | Required               | Script name, must match a key in `ohstart.json`         |
+| `arg...`                      | Optional               | Passed to the script as-is                              |
+| `--keep`                      | Before the script name | Keep the previous work directory content                |
+| `--no-git`                    | Before the script name | Skip `git init` and write a minimal repository skeleton |
+| `--npm` / `--pnpm` / `--yarn` | Before the script name | Select the package manager for the work directory       |
+| `--agent=<npm\|pnpm\|yarn>`   | Before the script name | Same, in assignment form                                |
+| `--no-detect`                 | Before the script name | Skip package manager detection                          |
 
-`--keep` and `--no-git` are consumed by `ohsd` on either side of the script name, so a script never receives flags of those names. The three package manager forms only apply before the script name; after it they belong to the script.
+Every flag above must precede the script name. A token of the same name after it belongs to the script; `ohsd` makes no distinction.
 
 The work directory is always `.ohstart` under the source root:
 

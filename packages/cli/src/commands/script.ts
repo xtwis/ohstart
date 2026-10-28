@@ -45,23 +45,11 @@ interface SplitTokens {
 }
 
 function splitTokens(rawArgs: string[], address: string): SplitTokens {
-  const kept: string[] = []
-  let trust = false
-  let afterSeparator = false
-
-  for (const token of rawArgs) {
-    if (!afterSeparator && token === "--") {
-      afterSeparator = true
-      kept.push(token)
-      continue
-    }
-    if (!afterSeparator && token === RESERVED_TRUST_FLAG) {
-      trust = true
-      continue
-    }
-    kept.push(token)
+  const index = rawArgs.indexOf(address)
+  if (index === -1)
+    return { tokens: [], trust: rawArgs.includes(RESERVED_TRUST_FLAG) }
+  return {
+    tokens: rawArgs.slice(index + 1),
+    trust: rawArgs.slice(0, index).includes(RESERVED_TRUST_FLAG),
   }
-
-  const index = kept.indexOf(address)
-  return { tokens: index === -1 ? [] : kept.slice(index + 1), trust }
 }

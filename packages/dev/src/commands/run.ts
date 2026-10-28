@@ -12,8 +12,6 @@ import { DEFAULT_AGENT_NAME, prepareWorkDir, resolveWorkDir } from "@/run"
 import { SDK_URL } from "@/runtime/sdk"
 import { findSourceRoot } from "@/source"
 
-const RESERVED_FLAGS = new Set(["--keep", "--no-git"])
-
 export default defineCommand({
   meta: {
     name: "run",
@@ -106,20 +104,6 @@ function parseType(value: string): ScriptType {
 }
 
 function splitTokens(rawArgs: string[], script: string): { tokens: string[] } {
-  const kept: string[] = []
-  let afterSeparator = false
-
-  for (const token of rawArgs) {
-    if (!afterSeparator && token === "--") {
-      afterSeparator = true
-      kept.push(token)
-      continue
-    }
-    if (!afterSeparator && RESERVED_FLAGS.has(token))
-      continue
-    kept.push(token)
-  }
-
-  const index = kept.indexOf(script)
-  return { tokens: index === -1 ? [] : kept.slice(index + 1) }
+  const index = rawArgs.indexOf(script)
+  return { tokens: index === -1 ? [] : rawArgs.slice(index + 1) }
 }

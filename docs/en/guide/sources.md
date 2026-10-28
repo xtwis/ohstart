@@ -119,7 +119,7 @@ Three ways through the gate:
 `--trust` applies to the current run only and is never written to the configuration:
 
 ```bash
-ohstart init @my-team/vite/react --trust
+ohstart init --trust @my-team/vite/react
 ```
 
 ## Next steps
