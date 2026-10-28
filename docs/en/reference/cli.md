@@ -9,15 +9,15 @@ order: 1
 
 ## Command overview
 
-| Command                          | Alias | Purpose                            |
-| -------------------------------- | ----- | ---------------------------------- |
-| `ohstart init <script> [arg...]` | -     | Run an `init` script               |
-| `ohstart add <script> [arg...]`  | -     | Run an `add` script                |
-| `ohstart list [type]`            | `ls`  | List scripts in the default source |
-| `ohstart view <script>`          | -     | Show script metadata               |
-| `ohstart source <subcommand>`    | `src` | Manage sources                     |
-| `ohstart version`                | `ver` | Print the version                  |
-| `ohstart help`                   | -     | Print usage                        |
+| Command                          | Alias | Purpose                  |
+| -------------------------------- | ----- | ------------------------ |
+| `ohstart init <script> [arg...]` | -     | Run an `init` script     |
+| `ohstart add <script> [arg...]`  | -     | Run an `add` script      |
+| `ohstart list [source]`          | `ls`  | List scripts in a source |
+| `ohstart view <script>`          | -     | Show script metadata     |
+| `ohstart source <subcommand>`    | `src` | Manage sources           |
+| `ohstart version`                | `ver` | Print the version        |
+| `ohstart help`                   | -     | Print usage              |
 
 Without a subcommand, `help` runs. `update` is registered but has no implementation; running it does nothing.
 
@@ -55,23 +55,30 @@ If the script exits with a non-zero code, that code becomes the exit code of `oh
 ## list
 
 ```
-ohstart list [type]
+ohstart list [source] [--type <init|add>] [--init | --add]
 ```
 
-Reads the default source only; a source cannot be specified.
+`source` is a configured key name; when omitted the default source is read. An unknown key fails with `unknown source: <key>`.
 
-| Argument | Required | Description                                      |
-| -------- | -------- | ------------------------------------------------ |
-| `type`   | No       | `init` or `add`; lists every script when omitted |
+| Argument or flag | Required | Description                                      |
+| ---------------- | -------- | ------------------------------------------------ |
+| `source`         | No       | Source key name, defaults to the default source  |
+| `--type`         | No       | `init` or `add`; lists every script when omitted |
+| `--init`         | No       | Same as `--type init`                            |
+| `--add`          | No       | Same as `--type add`                             |
 
-Each line prints the script type, name and description, sorted by name:
+Only one of `--type`, `--init` and `--add` may be given; several fail with `only one script type can be specified: <flags>`.
+
+A header line `source <key> (<source name>)` comes first, then a blank line, then one line per script with its type, name and description, sorted by name:
 
 ```
+source my-team (templates)
+
 add  lint/eslint   install an eslint config
 init vite/react    create a React project
 ```
 
-A broken script directory does not stop the listing; it is skipped with the warning `skipping <name>: <reason>`. With no matching scripts the output is `no script in source <key>`.
+A broken script directory does not stop the listing; it is skipped with the warning `skipping <name>: <reason>`. With no matching scripts the output is `no script in source <source name>`.
 
 ## view
 

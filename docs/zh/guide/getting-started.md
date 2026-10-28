@@ -70,17 +70,23 @@ ohstart list
 ```
 
 ```
-add  sayhi     Sample add script: write hello.md in the working directory
+source my-team (templates)
+
+add  sayhi       Sample add script: write hello.md in the working directory
 init vite/react  Scaffold a React project
 ```
 
-`list` 只读取**默认源**. 需要查看其他源的脚本时, 可先切换默认源, 或用 `ohstart view` 直接查看指定脚本.
+不带参数时读取**默认源**. 查看其他源时把键名作为参数:
+
+```bash
+ohstart list my-team
+```
 
 按类型过滤:
 
 ```bash
-ohstart list init
-ohstart list add
+ohstart list --type init
+ohstart list --add
 ```
 
 ## 运行脚本

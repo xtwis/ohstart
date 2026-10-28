@@ -62,7 +62,9 @@ export const description = {
     },
     flag: {
       trust: "skip the trust confirmation once (does not persist)",
-      typeFilter: "only init or add",
+      type: "filter by script type, init or add",
+      init: "list init scripts only",
+      add: "list add scripts only",
       bare: "do not create the sample script",
       keep: "keep the existing working directory content (cleared before each run by default)",
       git: "create a git repository in the working directory so scripts that look for a git root stop here; --no-git skips the git command and writes a minimal repository skeleton",

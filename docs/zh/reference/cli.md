@@ -13,7 +13,7 @@ order: 1
 | ------------------------------- | ----- | ------------------ |
 | `ohstart init <脚本> [参数...]` | -     | 执行 `init` 类脚本 |
 | `ohstart add <脚本> [参数...]`  | -     | 执行 `add` 类脚本  |
-| `ohstart list [type]`           | `ls`  | 列出默认源中的脚本 |
+| `ohstart list [源]`             | `ls`  | 列出源中的脚本     |
 | `ohstart view <脚本>`           | -     | 展示脚本元信息     |
 | `ohstart source <子命令>`       | `src` | 管理源             |
 | `ohstart version`               | `ver` | 输出版本号         |
@@ -55,23 +55,30 @@ ohstart add <脚本> [参数...]
 ## list
 
 ```
-ohstart list [type]
+ohstart list [源] [--type <init|add>] [--init | --add]
 ```
 
-只读取默认源, 不支持指定源.
+`源` 为配置中的键名, 省略时读取默认源. 键名不存在时报错 `unknown source: <键名>`.
 
-| 参数   | 必需 | 说明                                   |
-| ------ | ---- | -------------------------------------- |
-| `type` | 否   | 取 `init` 或 `add`, 省略时列出全部脚本 |
+| 参数或 flag | 必需 | 说明                                   |
+| ----------- | ---- | -------------------------------------- |
+| `源`        | 否   | 源键名, 省略时为默认源                 |
+| `--type`    | 否   | 取 `init` 或 `add`, 省略时列出全部脚本 |
+| `--init`    | 否   | 等价于 `--type init`                   |
+| `--add`     | 否   | 等价于 `--type add`                    |
 
-每行输出脚本类型, 名称与描述, 名称按字母序排列:
+`--type`、`--init`、`--add` 只能给一个, 同时给出时报错 `only one script type can be specified: <flag 列表>`.
+
+先输出来源行 `source <键名> (<源名>)`, 空一行后逐行输出脚本类型, 名称与描述, 名称按字母序排列:
 
 ```
+source my-team (templates)
+
 add  lint/eslint   安装一套 eslint 配置
 init vite/react    创建 React 项目
 ```
 
-脚本目录损坏时不中断列表, 而是以 `skipping <名称>: <原因>` 警告后跳过. 无匹配脚本时输出 `no script in source <键名>`.
+脚本目录损坏时不中断列表, 而是以 `skipping <名称>: <原因>` 警告后跳过. 无匹配脚本时输出 `no script in source <源名>`.
 
 ## view
 

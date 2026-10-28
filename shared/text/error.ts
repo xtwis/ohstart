@@ -73,6 +73,8 @@ export const error = {
 
   command: {
     invalidScriptType: (type: string): string => `invalid ${terms.script} type: ${type}, expected init or add`,
+    multipleScriptTypes: (flags: string): string => `only one ${terms.script} type can be specified: ${flags}`,
+    missingScriptType: "option --type requires a value: use --type=<init|add>",
     unexpectedArguments: (args: string): string => `unexpected arguments: ${args}`,
   },
 

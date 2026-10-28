@@ -1,9 +1,16 @@
+import type { ScriptType } from "@shared/types"
 import { fail, log } from "@shared/logger"
 import { readOhstartJson, readSourceScripts } from "@shared/read"
 import { text } from "@shared/text"
 import { defineCommand } from "citty"
 import { loadConfig } from "@/config"
-import { cloneSource, resolveDefaultSource } from "@/remote"
+import { cloneSource, resolveDefaultKey } from "@/remote"
+
+interface TypeFilterArgs {
+  type?: string
+  init?: boolean
+  add?: boolean
+}
 
 export default defineCommand({
   meta: {
@@ -12,20 +19,35 @@ export default defineCommand({
     description: text.description.command.cli.list,
   },
   args: {
-    type: {
+    source: {
       type: "positional",
       required: false,
-      description: text.description.arg.flag.typeFilter,
+      description: text.description.arg.source.keyName,
+    },
+    type: {
+      type: "string",
+      description: text.description.arg.flag.type,
+    },
+    init: {
+      type: "boolean",
+      description: text.description.arg.flag.init,
+    },
+    add: {
+      type: "boolean",
+      description: text.description.arg.flag.add,
     },
   },
   async run({ args }) {
     try {
-      const wanted = args.type
-      if (wanted && wanted !== "init" && wanted !== "add")
-        throw new Error(text.error.command.invalidScriptType(wanted))
-
+      const wanted = resolveTypeFilter(args)
       const config = await loadConfig()
-      const source = resolveDefaultSource(config)
+      const key = args.source ?? resolveDefaultKey(config)
+      const source = config.source[key]
+      if (!source)
+        throw new Error(text.error.source.unknown(key))
+
+      log.info(text.state.sourceListing(key, source.name))
+      log.info("")
 
       const workspace = await cloneSource(source.url)
       try {
@@ -62,3 +84,23 @@ export default defineCommand({
     }
   },
 })
+
+function resolveTypeFilter({ type, init, add }: TypeFilterArgs): ScriptType | undefined {
+  const picked = [
+    ...(type === undefined ? [] : [{ flag: "--type", value: type }]),
+    ...(init ? [{ flag: "--init", value: "init" }] : []),
+    ...(add ? [{ flag: "--add", value: "add" }] : []),
+  ]
+
+  if (picked.length > 1)
+    throw new Error(text.error.command.multipleScriptTypes(picked.map(entry => entry.flag).join(", ")))
+
+  const value = picked[0]?.value
+  if (value === undefined)
+    return undefined
+  if (value === "")
+    throw new Error(text.error.command.missingScriptType)
+  if (value !== "init" && value !== "add")
+    throw new Error(text.error.command.invalidScriptType(value))
+  return value
+}

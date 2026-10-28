@@ -70,17 +70,23 @@ ohstart list
 ```
 
 ```
-add  sayhi     Sample add script: write hello.md in the working directory
+source my-team (templates)
+
+add  sayhi       Sample add script: write hello.md in the working directory
 init vite/react  Scaffold a React project
 ```
 
-`list` reads the **default source** only. To inspect another source, switch the default first, or use `ohstart view` for a specific script.
+Without arguments it reads the **default source**. To inspect another source, pass its key name:
+
+```bash
+ohstart list my-team
+```
 
 Filter by type:
 
 ```bash
-ohstart list init
-ohstart list add
+ohstart list --type init
+ohstart list --add
 ```
 
 ## Running a script
