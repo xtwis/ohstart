@@ -155,10 +155,10 @@ Rules for `scripts`:
 - Paths must not escape the source directory.
 - A single path cannot be used by two script names.
 
-See the [Contract Reference](../reference/contracts.md) for field-level details.
+See [Contract fields](../reference/contracts.md) for field-level details.
 
 ## Next steps
 
 - [SDK Reference](./sdk.md): `log` / `prompt` / `agent` inside scripts.
 - [Local Debugging](./debug.md): contract checks and execution.
-- [Contract Reference](../reference/contracts.md): field-level details.
+- [Contract fields](../reference/contracts.md): field-level details.

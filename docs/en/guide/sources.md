@@ -125,4 +125,4 @@ ohstart init @my-team/vite/react --trust
 ## Next steps
 
 - [Running Scripts](./scripts.md): executing scripts once sources are configured.
-- [Configuration Reference](../reference/config.md): every configuration field.
+- [Configuration file](../reference/config.md): every configuration field.

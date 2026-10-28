@@ -155,10 +155,10 @@ flag 名称按 `argv.ts` 中的写法原样传入, ohstart 不做命名转换.
 - 路径不能超出源目录.
 - 同一个路径不能对应两个脚本名.
 
-字段级规格见 [契约规格](../reference/contracts.md).
+字段级规格见 [契约字段](../reference/contracts.md).
 
 ## 下一步
 
 - [SDK 参考](./sdk.md): 脚本中可用的 `log` / `prompt` / `agent`.
 - [本地调试](./debug.md): 契约检查与执行方式.
-- [契约规格](../reference/contracts.md): 字段级细节.
+- [契约字段](../reference/contracts.md): 字段级细节.

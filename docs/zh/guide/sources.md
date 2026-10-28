@@ -125,4 +125,4 @@ ohstart init @my-team/vite/react --trust
 ## 下一步
 
 - [运行脚本](./scripts.md): 源配置完成后如何执行脚本.
-- [配置文件规格](../reference/config.md): 配置文件的完整字段.
+- [配置文件](../reference/config.md): 配置文件的完整字段.
