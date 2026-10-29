@@ -18,7 +18,7 @@ import { agent, defineArgv, log, prompt } from "@xtwis/ohstart-dev"
 | Export       | Type     | Purpose                                                                        |
 | ------------ | -------- | ------------------------------------------------------------------------------ |
 | `log`        | object   | Print info, warnings, errors and debug logs                                    |
-| `prompt`     | object   | Interact with the user: input, confirm, select, multiselect                    |
+| `prompt`     | object   | Interact with the user: text, confirm, select, multiselect, password           |
 | `agent`      | object   | Drive the package manager: install dependencies, run scripts, execute commands |
 | `defineArgv` | function | Declare script arguments                                                       |
 
@@ -45,33 +45,38 @@ log.debug("only shown with OHSTART_DEBUG")
 
 ## Prompts
 
-`prompt` handles user interaction and provides input, confirmation, single and multiple selection:
+`prompt` handles user interaction with the [clack](https://github.com/bombshell-dev/clack) prompt components:
 
 ```ts
-const name = await prompt.input("Your name")
-const ok = await prompt.confirm("Continue?")
-const one = await prompt.select("Pick one", [{ label: "A" }, { label: "B" }])
-const many = await prompt.multiselect("Pick some", [{ label: "A" }, { label: "B" }])
+const name = await prompt.text({ message: "Your name" })
+const ok = await prompt.confirm({ message: "Continue?" })
+const one = await prompt.select({ message: "Pick one", options: [{ value: "a", label: "A" }, { value: "b", label: "B" }] })
+const many = await prompt.multiselect({ message: "Pick some", options: [{ value: "a", label: "A" }] })
+const secret = await prompt.password({ message: "Token" })
 ```
 
-| Method        | Arguments                            | Returns    |
-| ------------- | ------------------------------------ | ---------- |
-| `input`       | `(message, { default?, validate? })` | `string`   |
-| `confirm`     | `(message, { default? })`            | `boolean`  |
-| `select`      | `(message, options)`                 | `string`   |
-| `multiselect` | `(message, options)`                 | `string[]` |
+| Member        | Arguments                      | Returns    |
+| ------------- | ------------------------------ | ---------- |
+| `text`        | `({ message, validate? })`     | `string`   |
+| `confirm`     | `({ message, initialValue? })` | `boolean`  |
+| `select`      | `({ message, options })`       | `string`   |
+| `multiselect` | `({ message, options })`       | `string[]` |
+| `password`    | `({ message })`                | `string`   |
 
-An option is `{ label, value? }`; `label` is used when `value` is omitted.
+An option is `{ value, label?, hint? }`; `label` is used when it is omitted.
 
-`validate` in `input` returns `true` to accept a value, or a string to reject it; that string is shown to the user.
+`validate` in `text` returns `undefined` to accept a value, or a string to reject it; that string is shown to the user.
 
 ```ts
-const name = await prompt.input("Your name", {
-  validate: value => value.trim().length > 0 || "name is required",
+const name = await prompt.text({
+  message: "Your name",
+  validate: value => value?.trim() ? undefined : "name is required",
 })
 ```
 
-`select` and `multiselect` need key presses and therefore a terminal with raw mode; non-interactive environments fail immediately.
+`group` runs several prompts in sequence and returns their answers, and `cancel` prints the cancellation message.
+
+Prompts need key presses and therefore a terminal with raw mode; non-interactive environments fail immediately with `interactive prompt requires a tty`. A cancelled prompt prints the cancellation message and exits with status 0.
 
 ## Package manager
 

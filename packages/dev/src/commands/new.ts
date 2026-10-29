@@ -77,6 +77,12 @@ export default defineCommand({
 })
 
 async function selectType(): Promise<ScriptType> {
-  const value = await prompt.select(text.question.selectScriptType, [{ label: text.label.option.init }, { label: text.label.option.add }])
-  return value === "init" ? "init" : "add"
+  const answer = await prompt.select({
+    message: text.question.selectScriptType,
+    options: [
+      { value: "init", label: text.label.option.init },
+      { value: "add", label: text.label.option.add },
+    ],
+  })
+  return answer === "init" ? "init" : "add"
 }

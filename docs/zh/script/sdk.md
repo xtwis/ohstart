@@ -18,7 +18,7 @@ import { agent, defineArgv, log, prompt } from "@xtwis/ohstart-dev"
 | 导出         | 类型 | 作用                                       |
 | ------------ | ---- | ------------------------------------------ |
 | `log`        | 对象 | 输出信息, 警告, 错误与调试日志             |
-| `prompt`     | 对象 | 用户交互: 输入, 确认, 单选, 多选           |
+| `prompt`     | 对象 | 用户交互: 输入, 确认, 单选, 多选, 密码     |
 | `agent`      | 对象 | 操作包管理器: 安装依赖, 执行脚本, 执行命令 |
 | `defineArgv` | 函数 | 定义脚本参数                               |
 
@@ -45,33 +45,38 @@ log.debug("only shown with OHSTART_DEBUG")
 
 ## 交互
 
-`prompt` 负责与用户交互, 提供输入, 确认, 单选与多选:
+`prompt` 用 [clack](https://github.com/bombshell-dev/clack) 的交互组件与用户交互:
 
 ```ts
-const name = await prompt.input("Your name")
-const ok = await prompt.confirm("Continue?")
-const one = await prompt.select("Pick one", [{ label: "A" }, { label: "B" }])
-const many = await prompt.multiselect("Pick some", [{ label: "A" }, { label: "B" }])
+const name = await prompt.text({ message: "Your name" })
+const ok = await prompt.confirm({ message: "Continue?" })
+const one = await prompt.select({ message: "Pick one", options: [{ value: "a", label: "A" }, { value: "b", label: "B" }] })
+const many = await prompt.multiselect({ message: "Pick some", options: [{ value: "a", label: "A" }] })
+const secret = await prompt.password({ message: "Token" })
 ```
 
-| 方法          | 参数                                | 返回       |
-| ------------- | ----------------------------------- | ---------- |
-| `input`       | `(提示语, { default?, validate? })` | `string`   |
-| `confirm`     | `(提示语, { default? })`            | `boolean`  |
-| `select`      | `(提示语, 选项数组)`                | `string`   |
-| `multiselect` | `(提示语, 选项数组)`                | `string[]` |
+| 成员          | 参数                           | 返回       |
+| ------------- | ------------------------------ | ---------- |
+| `text`        | `({ message, validate? })`     | `string`   |
+| `confirm`     | `({ message, initialValue? })` | `boolean`  |
+| `select`      | `({ message, options })`       | `string`   |
+| `multiselect` | `({ message, options })`       | `string[]` |
+| `password`    | `({ message })`                | `string`   |
 
-选项项结构为 `{ label, value? }`, 未提供 `value` 时使用 `label`.
+选项项结构为 `{ value, label?, hint? }`, 未提供 `label` 时使用 `value`.
 
-`input` 的 `validate` 返回 `true` 表示通过, 返回字符串表示不通过, 该字符串会展示给用户.
+`text` 的 `validate` 返回 `undefined` 表示通过, 返回字符串表示不通过, 该字符串会展示给用户.
 
 ```ts
-const name = await prompt.input("Your name", {
-  validate: value => value.trim().length > 0 || "name is required",
+const name = await prompt.text({
+  message: "Your name",
+  validate: value => value?.trim() ? undefined : "name is required",
 })
 ```
 
-`select` 与 `multiselect` 依赖按键交互, 需要终端支持 raw mode, 非交互环境中直接报错.
+`group` 顺序执行多个交互并返回结果, `cancel` 输出取消提示.
+
+交互依赖按键, 需要终端支持 raw mode, 非交互环境中直接报 `interactive prompt requires a tty`. 交互被取消时输出取消提示并以状态码 0 退出.
 
 ## 包管理器
 

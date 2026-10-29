@@ -42,8 +42,9 @@ export default defineCommand({
         const config = await loadConfig()
         let keyName = key ?? meta.name
         while (config.source[keyName]) {
-          keyName = await prompt.input(text.question.enterKeyName(keyName), {
-            validate: value => value.trim().length > 0 || text.question.argRequired(text.terms.keyName),
+          keyName = await prompt.text({
+            message: text.question.enterKeyName(keyName),
+            validate: value => (value?.trim().length ?? 0) > 0 ? undefined : text.question.argRequired(text.terms.keyName),
           })
         }
 

@@ -8,6 +8,5 @@ export const question = {
     `detected ${detected} (${source}), use ${specified} instead?`,
   confirmTrust: (key: string, name: string, url: string): string =>
     `${terms.source} ${key} (${name}) is not ${terms.trusted}: ${url}\nsources from this ${terms.source} run arbitrary code, continue?`,
-  answerYesNo: "please answer y or n",
   argRequired: (name: string): string => `${name} is required`,
 } as const

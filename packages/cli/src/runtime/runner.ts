@@ -23,7 +23,8 @@ export interface RunScriptOptions {
 export async function runScript({ type, address, tokens, trust, selection }: RunScriptOptions): Promise<void> {
   const config = await loadConfig()
   const target = parseScriptAddress(config, address)
-  await ensureTrusted(config, target.key, target.source, trust)
+  if (!await ensureTrusted(config, target.key, target.source, trust))
+    return
 
   const agent = await resolveAgent({ selection, cwd: process.cwd() })
 
@@ -60,21 +61,22 @@ async function ensureTrusted(
   key: string,
   source: SourceConfig,
   temporaryTrust: boolean,
-): Promise<void> {
+): Promise<boolean> {
   if (source.trust === true || temporaryTrust)
-    return
+    return true
 
   if (!process.stdin.isTTY) {
     throw new Error(text.error.source.notTrusted(key))
   }
 
-  const accepted = await prompt.confirm(
-    text.question.confirmTrust(key, source.name, source.url),
-    { default: false },
-  )
-  if (!accepted)
+  const answer = await prompt.confirm({
+    message: text.question.confirmTrust(key, source.name, source.url),
+    initialValue: false,
+  })
+  if (!answer)
     throw new Error(text.error.source.trustAborted(key))
 
   config.source[key] = { ...source, trust: true }
   await saveConfig(config)
+  return true
 }

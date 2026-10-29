@@ -60,8 +60,9 @@ export async function fillRequiredArgs(schema: ArgvSchema, argv: RawScriptArgv):
       continue
     if (!process.stdin.isTTY)
       throw new Error(text.error.script.missingRequiredArg(arg.name))
-    argv.args[index] = await prompt.input(arg.description || arg.name, {
-      validate: value => value.length > 0 || text.question.argRequired(arg.name),
+    argv.args[index] = await prompt.text({
+      message: arg.description || arg.name,
+      validate: value => (value?.length ?? 0) > 0 ? undefined : text.question.argRequired(arg.name),
     })
   }
 }

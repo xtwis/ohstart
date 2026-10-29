@@ -24,7 +24,8 @@ export default defineCommand({
       if (!config.source[keyName])
         throw new Error(text.error.source.unknown(keyName))
 
-      if (!(await prompt.confirm(text.question.removeSource(keyName), { default: false }))) {
+      const answer = await prompt.confirm({ message: text.question.removeSource(keyName), initialValue: false })
+      if (!answer) {
         log.info(text.state.cancelled)
         return
       }

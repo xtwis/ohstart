@@ -95,9 +95,7 @@ export const error = {
   },
 
   runtime: {
-    noOptions: "no option to select from",
     requiresTty: "interactive prompt requires a tty",
-    stdinClosed: "stdin closed",
     cannotCreateWorkDir: (root: string): string => `cannot create the working directory ${terms.workDir} inside ${root}`,
     refuseSymlink: (dir: string): string => `refusing to clear: ${dir} is a symbolic link`,
     refuseNotDir: (dir: string): string => `refusing to clear: ${dir} is not a directory`,

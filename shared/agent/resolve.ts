@@ -61,10 +61,11 @@ export async function resolveAgent({ selection, cwd, fallback }: ResolveAgentOpt
   if (!process.stdin.isTTY)
     throw new Error(text.error.agent.requiresTty)
 
-  const confirmed = await prompt.confirm(
-    text.question.confirmAgent(detected.agent.name, detected.agent.source, selection.name),
-    { default: true },
-  )
+  const specified = selection.name
+  const confirmed = await prompt.confirm({
+    message: text.question.confirmAgent(detected.agent.name, detected.agent.source, specified),
+    initialValue: true,
+  })
   if (!confirmed)
     throw new Error(text.error.agent.aborted)
   return { name: selection.name }
