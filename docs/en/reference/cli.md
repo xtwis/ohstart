@@ -19,7 +19,7 @@ order: 1
 | `ohstart version`                | `ver` | Print the version        |
 | `ohstart help`                   | -     | Print usage              |
 
-Without a subcommand, `help` runs. `update` is registered but has no implementation; running it does nothing.
+Without a subcommand, `help` runs.
 
 ## init / add
 

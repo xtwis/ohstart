@@ -17,7 +17,6 @@ export const description = {
       },
       initScript: "run an init script in a new project",
       addScript: "apply an add script to an existing project",
-      update: "update ohstart itself",
       version: "print the ohstart version",
       view: "show the full metadata of a script",
     },

@@ -19,7 +19,7 @@ order: 1
 | `ohstart version`               | `ver` | 输出版本号         |
 | `ohstart help`                  | -     | 输出用法           |
 
-不带子命令时执行 `help`. `update` 已注册但尚未实现, 执行后不产生任何行为.
+不带子命令时执行 `help`.
 
 ## init / add
 

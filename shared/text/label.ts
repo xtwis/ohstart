@@ -41,7 +41,6 @@ export const label = {
     cliAdd: "ohstart add",
     cliInit: "ohstart init",
     cliList: "ohstart list",
-    cliUpdate: "ohstart update",
     cliVersion: "ohstart version",
     cliView: "ohstart view",
     devCheck: "ohstart-dev check",
