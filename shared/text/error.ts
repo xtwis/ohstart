@@ -78,6 +78,12 @@ export const error = {
     unexpectedArguments: (args: string): string => `unexpected arguments: ${args}`,
   },
 
+  output: {
+    notStarted: "command output has not started",
+    alreadyStarted: "command output has already started",
+    alreadyFinished: "command output has already finished",
+  },
+
   agent: {
     notSpecified: `no ${terms.packageManager} specified`,
     invalidAgent: (agent: string): string => `invalid ${terms.packageManager}: ${agent}, expected npm, pnpm, or yarn`,

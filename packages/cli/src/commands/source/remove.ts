@@ -1,6 +1,7 @@
-import { fail, log } from "@shared/logger"
+import { command } from "@shared/command"
 import { prompt } from "@shared/prompts"
 import { text } from "@shared/text"
+import { ui } from "@shared/ui"
 import { defineCommand } from "citty"
 import { loadConfig, saveConfig } from "@/config"
 
@@ -18,15 +19,19 @@ export default defineCommand({
     },
   },
   async run({ args }) {
+    const cmd = command()
     try {
       const { keyName } = args
+      cmd.start(text.label.command.sourceRemove, text.description.command.cli.source.remove)
+
       const config = await loadConfig()
       if (!config.source[keyName])
         throw new Error(text.error.source.unknown(keyName))
 
-      const answer = await prompt.confirm({ message: text.question.removeSource(keyName), initialValue: false })
+      const answer = await cmd.step(() => prompt.confirm({ message: text.question.removeSource(ui.primary(keyName)), initialValue: false }))
       if (!answer) {
-        log.out(text.state.cancelled)
+        cmd.say(text.state.cancelled)
+        cmd.finish()
         return
       }
 
@@ -34,10 +39,11 @@ export default defineCommand({
       if (config.default === keyName)
         delete config.default
       await saveConfig(config)
-      log.out(text.success.removedSource(keyName))
+      cmd.say(text.success.removedSource(ui.primary(keyName)))
+      cmd.finish()
     }
     catch (error) {
-      fail(error)
+      cmd.fail(error)
     }
   },
 })

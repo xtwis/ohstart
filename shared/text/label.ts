@@ -25,4 +25,15 @@ export const label = {
     severityError: "error",
     severityWarning: "warning",
   },
+
+  command: {
+    sourceAdd: "ohstart source add",
+    sourceDefault: "ohstart source default",
+    sourceList: "ohstart source list",
+    sourceRemove: "ohstart source remove",
+    sourceRename: "ohstart source rename",
+    sourceTrust: "ohstart source trust",
+    sourceUntrust: "ohstart source untrust",
+    sourceView: "ohstart source view",
+  },
 } as const

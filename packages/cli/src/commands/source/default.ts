@@ -1,5 +1,6 @@
-import { fail, log } from "@shared/logger"
+import { command } from "@shared/command"
 import { text } from "@shared/text"
+import { ui } from "@shared/ui"
 import { defineCommand } from "citty"
 import { loadConfig, saveConfig } from "@/config"
 
@@ -17,11 +18,15 @@ export default defineCommand({
     },
   },
   async run({ args }) {
+    const cmd = command()
     try {
-      const config = await loadConfig()
       const { keyName } = args
+      cmd.start(text.label.command.sourceDefault, text.description.command.cli.source.default)
+
+      const config = await loadConfig()
       if (!keyName) {
-        log.out(config.default ?? text.state.noDefaultSource)
+        cmd.say(config.default ? ui.primary(config.default) : text.state.noDefaultSource)
+        cmd.finish()
         return
       }
       if (!config.source[keyName])
@@ -29,10 +34,11 @@ export default defineCommand({
 
       config.default = keyName
       await saveConfig(config)
-      log.out(text.success.defaultSourceNow(keyName))
+      cmd.say(text.success.defaultSourceNow(ui.primary(keyName)))
+      cmd.finish()
     }
     catch (error) {
-      fail(error)
+      cmd.fail(error)
     }
   },
 })

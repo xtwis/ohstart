@@ -1,7 +1,8 @@
-import { fail, log } from "@shared/logger"
+import { command } from "@shared/command"
 import { prompt } from "@shared/prompts"
 import { readOhstartJson } from "@shared/read"
 import { text } from "@shared/text"
+import { ui } from "@shared/ui"
 import { defineCommand } from "citty"
 import { loadConfig, saveConfig } from "@/config"
 import { cloneSource } from "@/remote"
@@ -31,8 +32,11 @@ export default defineCommand({
     },
   },
   async run({ args }) {
+    const cmd = command()
     try {
       const { url, key, note, trust } = args
+      cmd.start(text.label.command.sourceAdd, text.description.command.cli.source.add)
+
       if (args._.length > 1)
         throw new Error(text.error.command.unexpectedArguments(args._.slice(1).join(" ")))
 
@@ -42,10 +46,10 @@ export default defineCommand({
         const config = await loadConfig()
         let keyName = key ?? meta.name
         while (config.source[keyName]) {
-          keyName = await prompt.text({
-            message: text.question.enterKeyName(keyName),
+          keyName = await cmd.step(() => prompt.text({
+            message: text.question.enterKeyName(ui.primary(keyName)),
             validate: value => (value?.trim().length ?? 0) > 0 ? undefined : text.question.argRequired(text.terms.keyName),
-          })
+          }))
         }
 
         config.source[keyName] = {
@@ -55,14 +59,16 @@ export default defineCommand({
           ...(note ? { note } : {}),
         }
         await saveConfig(config)
-        log.out(text.success.addedSource(keyName, url, meta.name))
+        cmd.say(text.success.addedSource(ui.primary(keyName), url, meta.name))
       }
       finally {
         await workspace.dispose()
       }
+
+      cmd.finish()
     }
     catch (error) {
-      fail(error)
+      cmd.fail(error)
     }
   },
 })
