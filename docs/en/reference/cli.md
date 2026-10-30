@@ -264,7 +264,18 @@ ohstart source --help
 ohstart version
 ```
 
-Prints the current version.
+Prints the package name, the version, and the date the package was built:
+
+```
+ohstart version
+┌  print the ohstart version
+│
+◇  @xtwis/ohstart
+│
+◇  v0.1.2  2026-10-31
+│
+●
+```
 
 ## Exit codes
 

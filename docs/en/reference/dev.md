@@ -230,7 +230,18 @@ ohsd run --help
 ohsd version
 ```
 
-Prints the current version.
+Prints the package name, the version, and the date the package was built:
+
+```
+ohsd version
+┌  print the ohstart-dev version
+│
+◇  @xtwis/ohstart-dev
+│
+◇  v0.1.2  2026-10-31
+│
+●
+```
 
 ## Next steps
 

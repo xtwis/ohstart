@@ -222,7 +222,18 @@ ohsd run --help
 ohsd version
 ```
 
-输出当前版本号.
+输出包名, 版本号, 以及打包日期:
+
+```
+ohsd version
+┌  print the ohstart-dev version
+│
+◇  @xtwis/ohstart-dev
+│
+◇  v0.1.2  2026-10-31
+│
+●
+```
 
 ## 下一步
 

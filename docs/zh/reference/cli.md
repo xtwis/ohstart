@@ -264,7 +264,18 @@ ohstart source --help
 ohstart version
 ```
 
-输出当前版本号.
+输出包名, 版本号, 以及打包日期:
+
+```
+ohstart version
+┌  print the ohstart version
+│
+◇  @xtwis/ohstart
+│
+◇  v0.1.2  2026-10-31
+│
+●
+```
 
 ## 退出码
 
