@@ -6,7 +6,7 @@ import { text } from "@shared/text"
 import { hasHelpFlag, resolveRoute } from "@shared/tree"
 import { defineCommand, runMain } from "citty"
 import { subCommands } from "@/commands"
-import { VERSION } from "@/version"
+import { VERSION } from "@/meta"
 
 export const main = defineCommand({
   meta: {

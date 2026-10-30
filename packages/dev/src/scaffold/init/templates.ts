@@ -1,4 +1,4 @@
-import { VERSION } from "@/version"
+import { VERSION } from "@/meta"
 
 export function sourcePackageJson(): string {
   const body = {
