@@ -14,10 +14,10 @@ interface SourceRow {
 }
 
 const columns: TableColumn<SourceRow>[] = [
-  { label: "", render: row => row.mark },
-  { label: ui.primary("KEY"), render: row => ui.primary(row.key) + (row.trusted ? ` (${text.label.mark.trusted})` : "") },
-  { label: "NAME", render: row => row.name },
-  { label: "URL", render: row => row.url },
+  { render: row => row.mark },
+  { render: row => ui.primary(row.key) + (row.trusted ? ` (${text.label.mark.trusted})` : "") },
+  { render: row => row.name },
+  { render: row => row.url },
 ]
 
 export default defineCommand({
