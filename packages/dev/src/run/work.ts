@@ -94,7 +94,7 @@ async function ensureGitRepo(dir: string, useGitBinary: boolean): Promise<void> 
       return
     }
     catch {
-      log.warn(text.warning.gitInitFailed(dir))
+      log.error(text.warning.gitInitFailed(dir))
     }
   }
 
@@ -126,10 +126,10 @@ async function ensurePackageManifest(dir: string, agent: AgentIdentity): Promise
       })
       if (result.exitCode === 0)
         return
-      log.warn(text.warning.agentInitFailed(dir))
+      log.error(text.warning.agentInitFailed(dir))
     }
     catch {
-      log.warn(text.warning.agentInitFailed(dir))
+      log.error(text.warning.agentInitFailed(dir))
     }
   }
 

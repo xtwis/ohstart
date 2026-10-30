@@ -55,7 +55,7 @@ export default defineCommand({
           ...(note ? { note } : {}),
         }
         await saveConfig(config)
-        log.info(text.success.addedSource(keyName, url, meta.name))
+        log.out(text.success.addedSource(keyName, url, meta.name))
       }
       finally {
         await workspace.dispose()

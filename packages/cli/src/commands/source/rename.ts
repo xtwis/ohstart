@@ -40,7 +40,7 @@ export default defineCommand({
       if (config.default === keyName)
         config.default = newKeyName
       await saveConfig(config)
-      log.info(text.success.renamedSource(keyName, newKeyName))
+      log.out(text.success.renamedSource(keyName, newKeyName))
     }
     catch (error) {
       fail(error)

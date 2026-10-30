@@ -23,12 +23,12 @@ export default defineCommand({
       if (!entry)
         throw new Error(text.error.source.unknown(keyName))
 
-      log.info(`${text.label.field.key}: ${keyName}`)
-      log.info(`${text.label.field.name}: ${entry.name}`)
-      log.info(`${text.label.field.url}: ${entry.url}`)
-      log.info(`${text.label.field.trust}: ${entry.trust ?? false}`)
-      log.info(`${text.label.field.note}: ${entry.note ?? ""}`)
-      log.info(`${text.label.field.default}: ${config.default === keyName}`)
+      log.out(`${text.label.field.key}: ${keyName}`)
+      log.out(`${text.label.field.name}: ${entry.name}`)
+      log.out(`${text.label.field.url}: ${entry.url}`)
+      log.out(`${text.label.field.trust}: ${entry.trust ?? false}`)
+      log.out(`${text.label.field.note}: ${entry.note ?? ""}`)
+      log.out(`${text.label.field.default}: ${config.default === keyName}`)
     }
     catch (error) {
       fail(error)

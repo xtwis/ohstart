@@ -67,8 +67,8 @@ export default defineCommand({
       meta.scripts[name] = path
       await writeSourceJson(root, meta)
 
-      log.info(text.success.createdScript(name, path))
-      log.info(text.next.checkSteps(name))
+      log.out(text.success.createdScript(name, path))
+      log.out(text.next.checkSteps(name))
     }
     catch (error) {
       fail(error)

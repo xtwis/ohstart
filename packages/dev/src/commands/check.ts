@@ -23,23 +23,20 @@ export default defineCommand({
       const report = await runCheck(".", args.script)
 
       if (report.source)
-        log.info(`${text.state.sourceLoaded(report.source.name, report.root)} (${Object.keys(report.source.scripts).length} ${text.label.field.scriptsRegistered})`)
+        log.out(`${text.state.sourceLoaded(report.source.name, report.root)} (${Object.keys(report.source.scripts).length} ${text.label.field.scriptsRegistered})`)
       else
-        log.info(text.state.sourceNotLoaded(report.root))
+        log.out(text.state.sourceNotLoaded(report.root))
 
       for (const finding of report.findings) {
         const line = finding.level === "error" ? `${text.label.mark.severityError}  ${finding.message}` : `${text.label.mark.severityWarning} ${finding.message}`
-        if (finding.level === "error")
-          log.error(line)
-        else
-          log.warn(line)
+        log.error(line)
       }
 
       if (report.findings.length === 0) {
-        log.info(text.state.checkPassed)
+        log.out(text.state.checkPassed)
         return
       }
-      log.info(text.state.checkSummary(report.errors, report.warnings))
+      log.out(text.state.checkSummary(report.errors, report.warnings))
       if (!report.ok)
         process.exitCode = 1
     }

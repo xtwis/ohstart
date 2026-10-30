@@ -21,7 +21,7 @@ export default defineCommand({
       const config = await loadConfig()
       const { keyName } = args
       if (!keyName) {
-        log.info(config.default ?? text.state.noDefaultSource)
+        log.out(config.default ?? text.state.noDefaultSource)
         return
       }
       if (!config.source[keyName])
@@ -29,7 +29,7 @@ export default defineCommand({
 
       config.default = keyName
       await saveConfig(config)
-      log.info(text.success.defaultSourceNow(keyName))
+      log.out(text.success.defaultSourceNow(keyName))
     }
     catch (error) {
       fail(error)

@@ -46,8 +46,8 @@ export default defineCommand({
       if (!source)
         throw new Error(text.error.source.unknown(key))
 
-      log.info(text.state.sourceListing(key, source.name))
-      log.info("")
+      log.out(text.state.sourceListing(key, source.name))
+      log.out()
 
       const workspace = await cloneSource(source.url)
       try {
@@ -55,7 +55,7 @@ export default defineCommand({
         const scripts = await readSourceScripts(workspace.dir, meta)
         for (const entry of scripts) {
           if (entry.error)
-            log.warn(text.warning.skippingScript(entry.name, entry.error))
+            log.error(text.warning.skippingScript(entry.name, entry.error))
         }
 
         const rows = scripts.flatMap((entry) => {
@@ -67,13 +67,13 @@ export default defineCommand({
         })
 
         if (rows.length === 0) {
-          log.info(text.state.noScriptInSource(source.name, wanted))
+          log.out(text.state.noScriptInSource(source.name, wanted))
           return
         }
 
         const width = Math.max(...rows.map(row => row.name.length))
         for (const row of rows)
-          log.info(`${row.script.type.padEnd(4)} ${row.name.padEnd(width)}  ${row.script.description}`)
+          log.out(`${row.script.type.padEnd(4)} ${row.name.padEnd(width)}  ${row.script.description}`)
       }
       finally {
         await workspace.dispose()

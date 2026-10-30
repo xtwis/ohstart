@@ -6,8 +6,7 @@ function write(stream: NodeJS.WriteStream, args: unknown[]): void {
 }
 
 export const log = {
-  info: (...args: unknown[]): void => write(process.stdout, args),
-  warn: (...args: unknown[]): void => write(process.stderr, args),
+  out: (...args: unknown[]): void => write(process.stdout, args),
   error: (...args: unknown[]): void => write(process.stderr, args),
   debug: (...args: unknown[]): void => {
     if (!process.env.OHSTART_DEBUG)
@@ -17,6 +16,6 @@ export const log = {
 }
 
 export function fail(error: unknown): void {
-  write(process.stderr, [error instanceof Error ? error.message : String(error)])
+  log.error(error instanceof Error ? error.message : String(error))
   process.exitCode = 1
 }

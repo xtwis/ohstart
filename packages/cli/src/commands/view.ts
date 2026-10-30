@@ -49,13 +49,13 @@ export default defineCommand({
 
         const schema = await loadArgvSchema(await resolveArgvFile(join(workspace.dir, path), script), SDK_URL)
 
-        log.info(`${text.label.field.name}: ${script.name}`)
-        log.info(`${text.label.field.type}: ${script.type}`)
-        log.info(`${text.label.field.description}: ${script.description}`)
-        log.info(`${text.label.field.path}: ${path}`)
-        log.info(`${text.label.field.entry}: ${script.entry ?? text.terms.entryFile}`)
-        log.info(`${text.label.field.argv}: ${script.argv ?? text.terms.argvFile}`)
-        log.info(`${text.label.field.usage}: ${renderUsage(script, schema)}`)
+        log.out(`${text.label.field.name}: ${script.name}`)
+        log.out(`${text.label.field.type}: ${script.type}`)
+        log.out(`${text.label.field.description}: ${script.description}`)
+        log.out(`${text.label.field.path}: ${path}`)
+        log.out(`${text.label.field.entry}: ${script.entry ?? text.terms.entryFile}`)
+        log.out(`${text.label.field.argv}: ${script.argv ?? text.terms.argvFile}`)
+        log.out(`${text.label.field.usage}: ${renderUsage(script, schema)}`)
       }
       finally {
         await workspace.dispose()

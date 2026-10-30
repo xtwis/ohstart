@@ -30,11 +30,11 @@ export async function resolveAgent({ selection, cwd, fallback }: ResolveAgentOpt
 
   if (detected.type === "unsupported") {
     if (selection.name) {
-      log.warn(text.warning.agent.unsupportedDetected(detected.name, selection.name))
+      log.error(text.warning.agent.unsupportedDetected(detected.name, selection.name))
       return { name: selection.name }
     }
     if (fallback) {
-      log.warn(text.warning.agent.unsupportedDetected(detected.name, fallback))
+      log.error(text.warning.agent.unsupportedDetected(detected.name, fallback))
       return { name: fallback }
     }
     throw new Error(text.error.agent.unsupportedDetected(detected.name))
@@ -42,11 +42,11 @@ export async function resolveAgent({ selection, cwd, fallback }: ResolveAgentOpt
 
   if (detected.type === "conflict") {
     if (selection.name) {
-      log.warn(text.warning.agent.multipleLockFiles(detected.files.join(", "), selection.name))
+      log.error(text.warning.agent.multipleLockFiles(detected.files.join(", "), selection.name))
       return { name: selection.name }
     }
     if (fallback) {
-      log.warn(text.warning.agent.multipleLockFiles(detected.files.join(", "), fallback))
+      log.error(text.warning.agent.multipleLockFiles(detected.files.join(", "), fallback))
       return { name: fallback }
     }
     throw new Error(text.error.agent.multipleLockFiles(detected.files.join(", ")))

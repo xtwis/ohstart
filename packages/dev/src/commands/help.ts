@@ -11,7 +11,7 @@ export default defineCommand({
   async run() {
     try {
       const { renderUsage } = await import("citty")
-      log.info(await renderUsage(main))
+      log.out(await renderUsage(main))
     }
     catch (error) {
       fail(error)

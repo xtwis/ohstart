@@ -27,7 +27,7 @@ export default defineCommand({
       delete rest.trust
       config.source[keyName] = rest
       await saveConfig(config)
-      log.info(text.success.sourceTrust(keyName, false))
+      log.out(text.success.sourceTrust(keyName, false))
     }
     catch (error) {
       fail(error)

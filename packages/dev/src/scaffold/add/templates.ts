@@ -10,7 +10,7 @@ export default defineArgv({})
 export const INDEX_TS = `import { log } from "@xtwis/ohstart-dev"
 
 export default async function main() {
-  log.info("hello from ohstart script")
+  log.out("hello from ohstart script")
 }
 `
 
@@ -72,7 +72,7 @@ export default async function main() {
   const name = args[0] || await gitUserName(dir) || "developer"
   const file = await nextHelloFile(dir)
   await writeFile(file, \`Hi, \${name}!\\n\`, "utf8")
-  log.info(\`wrote \${file}\`)
+  log.out(\`wrote \${file}\`)
 }
 `
 

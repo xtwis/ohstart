@@ -10,6 +10,6 @@ export default defineCommand({
     description: text.description.command.dev.version,
   },
   run() {
-    log.info(VERSION)
+    log.out(VERSION)
   },
 })

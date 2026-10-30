@@ -26,7 +26,7 @@ export default defineCommand({
 
       const answer = await prompt.confirm({ message: text.question.removeSource(keyName), initialValue: false })
       if (!answer) {
-        log.info(text.state.cancelled)
+        log.out(text.state.cancelled)
         return
       }
 
@@ -34,7 +34,7 @@ export default defineCommand({
       if (config.default === keyName)
         delete config.default
       await saveConfig(config)
-      log.info(text.success.removedSource(keyName))
+      log.out(text.success.removedSource(keyName))
     }
     catch (error) {
       fail(error)

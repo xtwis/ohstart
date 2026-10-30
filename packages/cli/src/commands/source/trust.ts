@@ -25,7 +25,7 @@ export default defineCommand({
 
       config.source[keyName] = { ...entry, trust: true }
       await saveConfig(config)
-      log.info(text.success.sourceTrust(keyName, true))
+      log.out(text.success.sourceTrust(keyName, true))
     }
     catch (error) {
       fail(error)

@@ -57,12 +57,12 @@ export default defineCommand({
         sample: !args.bare,
       })
 
-      log.info(text.success.createdSource(name, root, !args.bare))
+      log.out(text.success.createdSource(name, root, !args.bare))
       if (ignored.length > 0)
         log.debug(text.debug.appendedGitignore(join(root, ".gitignore"), ignored))
       if (!await pathExists(join(root, ".git")))
-        log.warn(text.warning.notGitRepo)
-      log.info(text.next.sourceSteps)
+        log.error(text.warning.notGitRepo)
+      log.out(text.next.sourceSteps)
     }
     catch (error) {
       fail(error)
