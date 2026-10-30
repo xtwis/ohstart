@@ -38,7 +38,7 @@ Creates a source skeleton; `dir` defaults to the current directory.
 | `--description`  | No       | Source description, defaults to an empty string |
 | `--bare`         | No       | Do not create the sample script                 |
 
-The target directory must be empty. These entries are ignored rather than counted as occupied: `.git`, `.gitignore`, `.DS_Store`, `README*`, `LICENSE*`.
+The target directory must be empty, and an existing entry is rejected as `is not empty`.
 
 Files created:
 
@@ -53,15 +53,19 @@ Files created:
 On success:
 
 ```
-created source my-templates with sample script in /path/to/my-templates
-next: pnpm install | pnpm check | ohsd new <dir> --type add | ohsd check
+ohsd init
+┌  create a new source skeleton (ohstart.json + project config + sample script)
+│
+◇  created source my-templates with sample script in /path/to/my-templates
+│
+◇  not a git repository yet: run `git init` before publishing this source
+│
+◇  next: pnpm install | pnpm check | ohsd new <dir> --type add | ohsd check
+│
+●
 ```
 
-When the directory is not yet a git repository, this warning is appended:
-
-```
-not a git repository yet: run `git init` before publishing this source
-```
+Without a git repository, ohstart hints at running `git init` first.
 
 ## new
 
@@ -91,8 +95,14 @@ The path of the directory relative to the source root is the script path. Constr
 Three files are written, `script.json`, `argv.ts` and `index.ts`, and the command prints:
 
 ```
-created script lint/eslint at lint/eslint
-next: ohsd check lint/eslint
+ohsd new
+┌  add a script skeleton to an existing source
+│
+◇  created script lint/eslint at lint/eslint
+│
+◇  next: ohsd check lint/eslint
+│
+●
 ```
 
 ## check
@@ -125,16 +135,29 @@ Validating a single script skips the duplicate path and unregistered script chec
 With no findings:
 
 ```
-source my-templates at /path/to/my-templates (2 scripts registered)
-check passed
+ohsd check
+┌  validate the source contract
+│
+◇  source my-templates at /path/to/my-templates (2 scripts registered)
+│
+◇  check passed
+│
+●
 ```
 
 With findings, each is printed and a summary closes the output:
 
 ```
-source my-templates at /path/to/my-templates (2 scripts registered)
-error  script directory does not exist: lint/eslint -> lint/eslint
-1 errors, 0 warnings
+ohsd check
+┌  validate the source contract
+│
+◇  source my-templates at /path/to/my-templates (2 scripts registered)
+│
+◇  error  script directory does not exist: lint/eslint -> lint/eslint
+│
+◇  1 errors, 0 warnings
+│
+●
 ```
 
 Any error exits with `1`; warnings alone exit with `0`.
@@ -177,11 +200,33 @@ OHSTART_DEBUG=1 ohsd run add sayhi
 
 With `OHSTART_DEBUG` set, the work directory path and appended `.gitignore` content are printed.
 
-When the script exits non-zero, `ohsd run` exits with the same code.
+When the script exits non-zero, `ohsd run` exits with the same code. The script's own output is printed inside the frame, before the closing marker:
+
+```
+ohsd run
+┌  try a script in the local source; the working directory is .ohstart under the source root
+hello from ohstart script
+│
+●
+```
+
+## help
+
+```bash
+ohsd help
+```
+
+Prints usage for the command: positional arguments, options and subcommands, listed with descriptions.
+
+Every command accepts `--help` to show the same usage:
+
+```bash
+ohsd run --help
+```
 
 ## version
 
-```
+```bash
 ohsd version
 ```
 

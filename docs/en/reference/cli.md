@@ -69,16 +69,27 @@ ohstart list [source] [--type <init|add>] [--init | --add]
 
 Only one of `--type`, `--init` and `--add` may be given; several fail with `only one script type can be specified: <flags>`.
 
-A header line `source <key> (<source name>)` comes first, then a blank line, then one line per script with its type, name and description, sorted by name:
+`list` starts with the source it read, then one line per script with its type, name and description, sorted by name:
 
 ```
-source my-team (templates)
-
-add  lint/eslint   install an eslint config
-init vite/react    create a React project
+ohstart list
+┌  list available scripts by init / add type
+│
+◇  source: my-team (templates)
+│
+◇  add     lint/eslint    install an eslint config
+│  init    vite/react     create a React project
+│
+●
 ```
 
-A broken script directory does not stop the listing; it is skipped with the warning `skipping <name>: <reason>`. With no matching scripts the output is `no script in source <source name>`.
+A broken script directory does not stop the listing; it is reported as a line of its own and the rest still prints:
+
+```
+│  skipping broken/script: script.json in broken/script: is not valid JSON
+```
+
+With no matching scripts the content is `no script in source <source name>`.
 
 ## view
 
@@ -89,13 +100,18 @@ ohstart view <script>
 Prints seven metadata fields, where `usage` is generated from the argument definition:
 
 ```
-name: lint/eslint
-type: add
-description: install an eslint config
-path: lint/eslint
-entry: index.ts
-argv: argv.ts
-usage: ohstart add lint/eslint [--fix <value>]
+ohstart view
+┌  show the full metadata of a script
+│
+◇  name           lint/eslint
+│  type           add
+│  description    install an eslint config
+│  path           lint/eslint
+│  entry          index.ts
+│  argv           argv.ts
+│  usage          ohstart add lint/eslint [--fix]
+│
+●
 ```
 
 `usage` always starts with `ohstart <type> <name>`, renders positional arguments as `<name>`, wraps optional positionals and flags in square brackets, and omits any `@<key>/` prefix.
@@ -134,7 +150,16 @@ Adding clones the source and reads its `ohstart.json` for the source name. When 
 enter another key name for source <key>?
 ```
 
-Success prints `added source <key> (<source name>) -> <url>`.
+Success prints `added source <key> (<source name>) -> <url>`:
+
+```
+ohstart source add
+┌  add a source
+│
+◇  added source demo (templates) -> https://github.com/<org>/<repo>
+│
+●
+```
 
 ### list
 
@@ -145,8 +170,13 @@ ohstart source list
 Each line holds the default marker, key, source name and URL. The default source is marked with `*`, and trusted sources append `(trusted)`:
 
 ```
-* my-team (trusted)  templates  git@github.com:team/templates.git
-  personal           mine       https://example.com/mine.git
+ohstart source list
+┌  list configured sources
+│
+◇  *    my-team (trusted)    templates    https://github.com/<org>/<repo>
+│       personal             mine         https://example.com/mine.git
+│
+●
 ```
 
 With no sources configured the output is `no source configured`.
@@ -160,12 +190,17 @@ ohstart source view <key>
 Prints six fields:
 
 ```
-key: my-team
-name: templates
-url: git@github.com:team/templates.git
-trust: true
-note: team templates
-default: true
+ohstart source view
+┌  show the details of a source
+│
+◇  key        my-team
+│  name       templates
+│  url        https://github.com/<org>/<repo>
+│  trust      true
+│  note       team templates
+│  default    true
+│
+●
 ```
 
 `note` is empty when unset; `trust` and `default` print `true` or `false`.
@@ -195,7 +230,7 @@ ohstart source remove <key>
 Asks for confirmation first:
 
 ```
-remove source <key>? [y/N]
+remove source <key>?
 ```
 
 On confirmation the entry is deleted; if it was the default source, the default is cleared as well. Declining prints `cancelled`, and success prints `removed source <key>`.
@@ -209,9 +244,23 @@ ohstart source untrust <key>
 
 They print `source <key> is now trusted` and `source <key> is no longer trusted` respectively.
 
+## help
+
+```bash
+ohstart help
+```
+
+Prints usage for the command: positional arguments, options and subcommands, listed with descriptions.
+
+Every command accepts `--help` to show the same usage:
+
+```bash
+ohstart source --help
+```
+
 ## version
 
-```
+```bash
 ohstart version
 ```
 

@@ -31,16 +31,27 @@ The checks are:
 Output when nothing is wrong:
 
 ```
-source my-templates at /path/to/my-templates (2 scripts registered)
-check passed
+ohsd check
+┌  validate the source contract
+│
+◇  source my-templates at /path/to/my-templates (2 scripts registered)
+│
+◇  check passed
+│
+●
 ```
 
 Problems are listed one per line, followed by a summary:
 
 ```
-source my-templates at /path/to/my-templates (2 scripts registered)
-error  script directory does not exist: lint/eslint -> lint/eslint
-1 errors, 0 warnings
+│
+◇  source my-templates at /path/to/my-templates (2 scripts registered)
+│
+◇  error  script directory does not exist: lint/eslint -> lint/eslint
+│
+◇  1 errors, 0 warnings
+│
+●
 ```
 
 Check a single script:

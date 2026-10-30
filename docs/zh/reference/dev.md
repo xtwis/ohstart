@@ -50,18 +50,22 @@ ohsd init [目录] [--name <名称>] [--author <作者>] [--description <描述>
 | `.gitignore`    | 追加 `# ohstart` 标题与 `.ohstart`, `.ohstart-run.mjs`, `node_modules/` |
 | `sayhi/`        | 示例 `add` 脚本, 写入 `hello.md`, `--bare` 时不生成                     |
 
-成功输出:
+成功时输出:
 
 ```
-created source my-templates with sample script in /path/to/my-templates
-next: pnpm install | pnpm check | ohsd new <dir> --type add | ohsd check
+ohsd init
+┌  create a new source skeleton (ohstart.json + project config + sample script)
+│
+◇  created source my-templates with sample script in /path/to/my-templates
+│
+◇  not a git repository yet: run `git init` before publishing this source
+│
+◇  next: pnpm install | pnpm check | ohsd new <dir> --type add | ohsd check
+│
+●
 ```
 
-目录尚未成为 git 仓库时追加警告:
-
-```
-not a git repository yet: run `git init` before publishing this source
-```
+无 git 仓库时提示先执行 `git init`.
 
 ## new
 
@@ -91,8 +95,14 @@ ohsd new [目录] [名称] [--type <init|add>] [--description <描述>]
 产出 `script.json`, `argv.ts`, `index.ts` 三个文件, 输出:
 
 ```
-created script lint/eslint at lint/eslint
-next: ohsd check lint/eslint
+ohsd new
+┌  add a script skeleton to an existing source
+│
+◇  created script lint/eslint at lint/eslint
+│
+◇  next: ohsd check lint/eslint
+│
+●
 ```
 
 ## check
@@ -125,16 +135,29 @@ ohsd check [脚本]
 无问题时输出:
 
 ```
-source my-templates at /path/to/my-templates (2 scripts registered)
-check passed
+ohsd check
+┌  validate the source contract
+│
+◇  source my-templates at /path/to/my-templates (2 scripts registered)
+│
+◇  check passed
+│
+●
 ```
 
 有问题时逐条输出, 末尾汇总:
 
 ```
-source my-templates at /path/to/my-templates (2 scripts registered)
-error  script directory does not exist: lint/eslint -> lint/eslint
-1 errors, 0 warnings
+ohsd check
+┌  validate the source contract
+│
+◇  source my-templates at /path/to/my-templates (2 scripts registered)
+│
+◇  error  script directory does not exist: lint/eslint -> lint/eslint
+│
+◇  1 errors, 0 warnings
+│
+●
 ```
 
 存在 error 时退出码为 `1`, 仅 warning 时为 `0`.
@@ -179,9 +202,23 @@ OHSTART_DEBUG=1 ohsd run add sayhi
 
 脚本以非零码退出时, `ohsd run` 的退出码与之相同.
 
+## help
+
+```bash
+ohsd help
+```
+
+输出该命令的用法: 逐项列出位置参数, 选项与子命令及其说明.
+
+所有命令均可接受 `--help` 查看说明:
+
+```bash
+ohsd run --help
+```
+
 ## version
 
-```
+```bash
 ohsd version
 ```
 

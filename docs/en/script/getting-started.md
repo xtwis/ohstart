@@ -97,7 +97,7 @@ The entry is `index.ts` and must default-export a function:
 import { log } from "@xtwis/ohstart-dev"
 
 export default async function main() {
-  log.info("hello from ohstart script")
+  log.out("hello from ohstart script")
 }
 ```
 
@@ -121,7 +121,7 @@ const { getArgv } = argv
 
 export default async function main() {
   const { args, flags } = getArgv()
-  log.info(`hello ${args[0] ?? "world"}`)
+  log.out(`hello ${args[0] ?? "world"}`)
 }
 ```
 

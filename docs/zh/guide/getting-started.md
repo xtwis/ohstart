@@ -43,8 +43,18 @@ ohstart source add https://github.com/<org>/<repo>
 键名冲突时, ohstart 会要求另指定一个键名:
 
 ```
-enter another key name for source templates? my-team
-added source my-team (templates) -> https://github.com/<org>/<repo>
+enter another key name for source templates?
+```
+
+结果:
+
+```
+ohstart source add
+┌  add a source
+│
+◇  added source my-team (templates) -> https://github.com/<org>/<repo>
+│
+●
 ```
 
 使用 `--key` 直接指定键名, 使用 `--note` 添加备注.
@@ -70,10 +80,15 @@ ohstart list
 ```
 
 ```
-source my-team (templates)
-
-add  sayhi       Sample add script: write hello.md in the working directory
-init vite/react  Scaffold a React project
+ohstart list
+┌  list available scripts by init / add type
+│
+◇  source: my-team (templates)
+│
+◇  add     sayhi         Sample add script: write hello.md in the working directory
+│  init    vite/react    Scaffold a React project
+│
+●
 ```
 
 不带参数时读取**默认源**. 查看其他源时把键名作为参数:
@@ -101,7 +116,7 @@ ohstart init vite/react
 
 ```
 source my-team (templates) is not trusted: https://github.com/<org>/<repo>
-sources from this source run arbitrary code, continue? [y/N]
+sources from this source run arbitrary code, continue?
 ```
 
 确认后信任状态被记录, 后续不再询问. 脚本在**当前目录**中执行.

@@ -43,8 +43,18 @@ The command performs three steps:
 When the key is already taken, ohstart asks for another one:
 
 ```
-enter another key name for source templates? my-team
-added source my-team (templates) -> https://github.com/<org>/<repo>
+enter another key name for source templates?
+```
+
+The result:
+
+```
+ohstart source add
+┌  add a source
+│
+◇  added source my-team (templates) -> https://github.com/<org>/<repo>
+│
+●
 ```
 
 Use `--key` to specify the key directly, and `--note` to attach a local note.
@@ -70,10 +80,15 @@ ohstart list
 ```
 
 ```
-source my-team (templates)
-
-add  sayhi       Sample add script: write hello.md in the working directory
-init vite/react  Scaffold a React project
+ohstart list
+┌  list available scripts by init / add type
+│
+◇  source: my-team (templates)
+│
+◇  add     sayhi         Sample add script: write hello.md in the working directory
+│  init    vite/react    Scaffold a React project
+│
+●
 ```
 
 Without arguments it reads the **default source**. To inspect another source, pass its key name:
@@ -101,7 +116,7 @@ The first run of a script from a given source asks for confirmation of the sourc
 
 ```
 source my-team (templates) is not trusted: https://github.com/<org>/<repo>
-sources from this source run arbitrary code, continue? [y/N]
+sources from this source run arbitrary code, continue?
 ```
 
 Once confirmed, the trust state is recorded and no further confirmation is required. The script runs in the **current directory**.

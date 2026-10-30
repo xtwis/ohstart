@@ -34,8 +34,18 @@ ohstart 先克隆仓库并读取其 `ohstart.json`, 然后:
 - `--trust` 在添加的同时标记为已信任.
 
 ```
-enter another key name for source templates? my-team
-added source my-team (templates) -> https://github.com/<org>/<repo>
+enter another key name for source templates?
+```
+
+结果:
+
+```
+ohstart source add
+┌  add a source
+│
+◇  added source my-team (templates) -> https://github.com/<org>/<repo>
+│
+●
 ```
 
 ## 列出源
@@ -45,8 +55,13 @@ ohstart source list
 ```
 
 ```
-* my-team (trusted)  templates  https://github.com/<org>/<repo>
-  other              templates  https://github.com/<other>/<repo>
+ohstart source list
+┌  list configured sources
+│
+◇  *    my-team (trusted)    templates    https://github.com/<org>/<repo>
+│       other               templates    https://github.com/<other>/<repo>
+│
+●
 ```
 
 - 行首 `*` 表示该源为默认源.
@@ -59,12 +74,17 @@ ohstart source view my-team
 ```
 
 ```
-key: my-team
-name: templates
-url: https://github.com/<org>/<repo>
-trust: true
-note: 团队模板
-default: true
+ohstart source view
+┌  show the details of a source
+│
+◇  key        my-team
+│  name       templates
+│  url        https://github.com/<org>/<repo>
+│  trust      true
+│  note       team templates
+│  default    true
+│
+●
 ```
 
 ## 默认源

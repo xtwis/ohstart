@@ -34,8 +34,18 @@ ohstart clones the repository and reads its `ohstart.json`, then:
 - Marks the source as trusted at the same time with `--trust`.
 
 ```
-enter another key name for source templates? my-team
-added source my-team (templates) -> https://github.com/<org>/<repo>
+enter another key name for source templates?
+```
+
+The result:
+
+```
+ohstart source add
+┌  add a source
+│
+◇  added source my-team (templates) -> https://github.com/<org>/<repo>
+│
+●
 ```
 
 ## Listing sources
@@ -45,8 +55,13 @@ ohstart source list
 ```
 
 ```
-* my-team (trusted)  templates  https://github.com/<org>/<repo>
-  other              templates  https://github.com/<other>/<repo>
+ohstart source list
+┌  list configured sources
+│
+◇  *    my-team (trusted)    templates    https://github.com/<org>/<repo>
+│       other               templates    https://github.com/<other>/<repo>
+│
+●
 ```
 
 - A leading `*` marks the default source.
@@ -59,12 +74,17 @@ ohstart source view my-team
 ```
 
 ```
-key: my-team
-name: templates
-url: https://github.com/<org>/<repo>
-trust: true
-note: team templates
-default: true
+ohstart source view
+┌  show the details of a source
+│
+◇  key        my-team
+│  name       templates
+│  url        https://github.com/<org>/<repo>
+│  trust      true
+│  note       team templates
+│  default    true
+│
+●
 ```
 
 ## Default source

@@ -17,7 +17,7 @@ import { agent, defineArgv, log, prompt } from "@xtwis/ohstart-dev"
 
 | 导出         | 类型 | 作用                                       |
 | ------------ | ---- | ------------------------------------------ |
-| `log`        | 对象 | 输出信息, 警告, 错误与调试日志             |
+| `log`        | 对象 | 向 stdout, stderr 与调试输出写入文本       |
 | `prompt`     | 对象 | 用户交互: 输入, 确认, 单选, 多选, 密码     |
 | `agent`      | 对象 | 操作包管理器: 安装依赖, 执行脚本, 执行命令 |
 | `defineArgv` | 函数 | 定义脚本参数                               |
@@ -32,16 +32,19 @@ SDK 由 ohstart 在打包时注入, 因此执行脚本前无需在源仓库安�
 
 ## 日志
 
-`log` 负责向终端输出信息, 警告, 错误与调试日志:
+`log` 用于向终端输出文本:
 
 ```ts
-log.info("hello")
-log.warn("careful")
+log.out("hello")
 log.error("something broke")
 log.debug("only shown with OHSTART_DEBUG")
 ```
 
-`info` 写入 stdout, `warn` 与 `error` 写入 stderr. `debug` 仅在环境变量 `OHSTART_DEBUG` 存在时输出.
+| 成员    | 流     | 说明                            |
+| ------- | ------ | ------------------------------- |
+| `out`   | stdout | 普通输出                        |
+| `error` | stderr | 失败与警告                      |
+| `debug` | stderr | 未设置 `OHSTART_DEBUG` 时不输出 |
 
 ## 交互
 

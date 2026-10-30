@@ -31,16 +31,27 @@ ohsd check
 无问题时输出:
 
 ```
-source my-templates at /path/to/my-templates (2 scripts registered)
-check passed
+ohsd check
+┌  validate the source contract
+│
+◇  source my-templates at /path/to/my-templates (2 scripts registered)
+│
+◇  check passed
+│
+●
 ```
 
 存在问题时逐条输出, 末尾给出汇总, 例如:
 
 ```
-source my-templates at /path/to/my-templates (2 scripts registered)
-error  script directory does not exist: lint/eslint -> lint/eslint
-1 errors, 0 warnings
+│
+◇  source my-templates at /path/to/my-templates (2 scripts registered)
+│
+◇  error  script directory does not exist: lint/eslint -> lint/eslint
+│
+◇  1 errors, 0 warnings
+│
+●
 ```
 
 仅检查一个脚本:

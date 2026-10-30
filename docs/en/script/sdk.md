@@ -17,7 +17,7 @@ import { agent, defineArgv, log, prompt } from "@xtwis/ohstart-dev"
 
 | Export       | Type     | Purpose                                                                        |
 | ------------ | -------- | ------------------------------------------------------------------------------ |
-| `log`        | object   | Print info, warnings, errors and debug logs                                    |
+| `log`        | object   | Write lines to stdout, stderr and debug output                                 |
 | `prompt`     | object   | Interact with the user: text, confirm, select, multiselect, password           |
 | `agent`      | object   | Drive the package manager: install dependencies, run scripts, execute commands |
 | `defineArgv` | function | Declare script arguments                                                       |
@@ -32,16 +32,19 @@ The trade-off is that scripts can only use SDK exports and Node built-ins, and c
 
 ## Logging
 
-`log` prints info, warnings, errors and debug output to the terminal:
+`log` writes text to the terminal:
 
 ```ts
-log.info("hello")
-log.warn("careful")
+log.out("hello")
 log.error("something broke")
 log.debug("only shown with OHSTART_DEBUG")
 ```
 
-`info` writes to stdout, `warn` and `error` write to stderr. `debug` only writes when `OHSTART_DEBUG` is set.
+| Member  | Stream | Notes                                |
+| ------- | ------ | ------------------------------------ |
+| `out`   | stdout | Normal output                        |
+| `error` | stderr | Failures and warnings                |
+| `debug` | stderr | Silent unless `OHSTART_DEBUG` is set |
 
 ## Prompts
 

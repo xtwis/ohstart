@@ -69,16 +69,27 @@ ohstart list [源] [--type <init|add>] [--init | --add]
 
 `--type`、`--init`、`--add` 只能给一个, 同时给出时报错 `only one script type can be specified: <flag 列表>`.
 
-先输出来源行 `source <键名> (<源名>)`, 空一行后逐行输出脚本类型, 名称与描述, 名称按字母序排列:
+先输出读到的源 `source: <键名> (<源名>)`, 再逐行输出脚本类型, 名称与描述, 名称按字母序排列:
 
 ```
-source my-team (templates)
-
-add  lint/eslint   安装一套 eslint 配置
-init vite/react    创建 React 项目
+ohstart list
+┌  list available scripts by init / add type
+│
+◇  source: my-team (templates)
+│
+◇  add     lint/eslint    install an eslint config
+│  init    vite/react     create a React project
+│
+●
 ```
 
-脚本目录损坏时不中断列表, 而是以 `skipping <名称>: <原因>` 警告后跳过. 无匹配脚本时输出 `no script in source <源名>`.
+脚本目录损坏时不中断列表, 单独占一行后继续:
+
+```
+│  skipping broken/script: script.json in broken/script: is not valid JSON
+```
+
+无匹配脚本时内容为 `no script in source <源名>`.
 
 ## view
 
@@ -89,13 +100,18 @@ ohstart view <脚本>
 输出脚本的七项元信息, 其中 `usage` 由参数定义生成:
 
 ```
-name: lint/eslint
-type: add
-description: 安装一套 eslint 配置
-path: lint/eslint
-entry: index.ts
-argv: argv.ts
-usage: ohstart add lint/eslint [--fix <value>]
+ohstart view
+┌  show the full metadata of a script
+│
+◇  name           lint/eslint
+│  type           add
+│  description    install an eslint config
+│  path           lint/eslint
+│  entry          index.ts
+│  argv           argv.ts
+│  usage          ohstart add lint/eslint [--fix]
+│
+●
 ```
 
 `usage` 恒以 `ohstart <类型> <名称>` 开头, 位置参数写成 `<名称>`, 非必填位置参数与 flag 外加方括号, 前置的 `@<键名>/` 不体现在其中.
@@ -134,7 +150,16 @@ ohstart source add <url> [--key <键名>] [--note <文本>] [--trust]
 enter another key name for source <键名>?
 ```
 
-成功输出 `added source <键名> (<源名>) -> <url>`.
+成功时输出:
+
+```
+ohstart source add
+┌  add a source
+│
+◇  added source demo (templates) -> https://github.com/<org>/<repo>
+│
+●
+```
 
 ### list
 
@@ -145,8 +170,13 @@ ohstart source list
 每行依次为默认源标记, 键名, 源名与地址. 默认源以 `*` 标出, 可信源追加 `(trusted)`:
 
 ```
-* my-team (trusted)  templates  git@github.com:team/templates.git
-  personal           mine       https://example.com/mine.git
+ohstart source list
+┌  list configured sources
+│
+◇  *    my-team (trusted)    templates    https://github.com/<org>/<repo>
+│       personal             mine         https://example.com/mine.git
+│
+●
 ```
 
 无源时输出 `no source configured`.
@@ -160,12 +190,17 @@ ohstart source view <键名>
 输出六项:
 
 ```
-key: my-team
-name: templates
-url: git@github.com:team/templates.git
-trust: true
-note: 团队模板
-default: true
+ohstart source view
+┌  show the details of a source
+│
+◇  key        my-team
+│  name       templates
+│  url        https://github.com/<org>/<repo>
+│  trust      true
+│  note       team templates
+│  default    true
+│
+●
 ```
 
 `note` 未设置时为空, `trust` 与 `default` 输出 `true` 或 `false`.
@@ -195,7 +230,7 @@ ohstart source remove <键名>
 先确认:
 
 ```
-remove source <键名>? [y/N]
+remove source <键名>?
 ```
 
 确认后删除, 原键名为默认源时一并清除默认源. 拒绝确认时输出 `cancelled`. 成功输出 `removed source <键名>`.
@@ -209,9 +244,23 @@ ohstart source untrust <键名>
 
 分别输出 `source <键名> is now trusted` 与 `source <键名> is no longer trusted`.
 
+## help
+
+```bash
+ohstart help
+```
+
+输出该命令的用法: 逐项列出位置参数, 选项与子命令及其说明.
+
+所有命令均可接受 `--help` 查看说明:
+
+```bash
+ohstart source --help
+```
+
 ## version
 
-```
+```bash
 ohstart version
 ```
 
