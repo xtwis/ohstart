@@ -1,4 +1,4 @@
-import { fail, log } from "@shared/logger"
+import { renderHelp } from "@shared/help"
 import { text } from "@shared/text"
 import { defineCommand } from "citty"
 import { main } from "@/cli"
@@ -9,12 +9,6 @@ export default defineCommand({
     description: text.description.command.cli.help,
   },
   async run() {
-    try {
-      const { renderUsage } = await import("citty")
-      log.out(await renderUsage(main))
-    }
-    catch (error) {
-      fail(error)
-    }
+    await renderHelp(main, main)
   },
 })

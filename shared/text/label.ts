@@ -26,6 +26,17 @@ export const label = {
     severityWarning: "warning",
   },
 
+  heading: {
+    usage: "USAGE",
+    arguments: "ARGUMENTS",
+    options: "OPTIONS",
+    commands: "COMMANDS",
+  },
+
+  hint: {
+    help: (command: string): string => `use ${command} <command> --help for more information about a command`,
+  },
+
   command: {
     cliAdd: "ohstart add",
     cliInit: "ohstart init",

@@ -14,6 +14,12 @@ export interface Command {
 
 type State = "idle" | "started" | "finished"
 
+export function commandError(title: string, description: string, error: unknown): void {
+  const cmd = command()
+  cmd.start(title, description)
+  cmd.fail(error)
+}
+
 export function command(): Command {
   let state: State = "idle"
   let pending = false

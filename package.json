@@ -27,6 +27,7 @@
     "@types/node": "^26.0.0",
     "@vitest/ui": "^5.0.5",
     "@xtwis/ohdoc": "^1.1.0",
+    "citty": "0.2.2",
     "esbuild": "^0.28.2",
     "eslint": "^10.13.0",
     "eslint-plugin-format": "^2.0.1",
