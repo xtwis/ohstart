@@ -60,7 +60,7 @@ order: 6
 | ----------------------------------------------------------------------------------------- | ------------------------------------ | ------------------------------ |
 | `not inside a git repository: <目录>`                                                     | 当前目录不在 git 仓库内              | 先 `git init`                  |
 | ``no ohstart.json at the git root: <根目录>, run `ohsd init` first``                      | 仓库根缺少 `ohstart.json`            | 执行 `ohsd init`, 或确认仓库根 |
-| `<根目录> is not empty, init needs a directory without source files (...)`                | 目标目录已有内容                     | 换空目录, 或清理后重试         |
+| `<根目录> is not empty`                                                                   | 目标目录已有内容                     | 换空目录, 或清理后重试         |
 | `path exists and is not a directory: <路径>`                                              | 同名路径不是目录                     | 换路径                         |
 | `<根目录> is the source root, create the script in a subdirectory: ohsd new <dir> <name>` | 在源根直接建脚本                     | 指定子目录                     |
 | `path is not inside the source: <路径>`                                                   | 路径越出源根                         | 改为源根内的路径               |

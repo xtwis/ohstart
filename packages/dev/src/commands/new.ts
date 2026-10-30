@@ -1,6 +1,6 @@
 import type { ScriptType } from "@shared/types"
 import { resolve } from "node:path"
-import { fail, log } from "@shared/logger"
+import { command } from "@shared/command"
 import { prompt } from "@shared/prompts"
 import { readOhstartJson } from "@shared/read"
 import { text } from "@shared/text"
@@ -36,14 +36,17 @@ export default defineCommand({
     },
   },
   async run({ args }) {
+    const cmd = command()
     try {
+      cmd.start(text.label.command.devNew, text.description.command.dev.new)
+
       const root = await findSourceRoot(args.dir ?? ".")
       const target = resolve(args.dir ?? ".")
 
       const path = resolveScriptPath(root, target)
       const name = args.name?.trim() || path
       assertScriptName(name)
-      const type = args.type ?? await selectType()
+      const type = args.type ?? await cmd.step(() => selectType())
       const description = args.description?.trim() ?? ""
 
       const meta = await readOhstartJson(root)
@@ -67,11 +70,12 @@ export default defineCommand({
       meta.scripts[name] = path
       await writeSourceJson(root, meta)
 
-      log.out(text.success.createdScript(name, path))
-      log.out(text.next.checkSteps(name))
+      cmd.say(text.success.createdScript(name, path))
+      cmd.say(text.next.checkSteps(name))
+      cmd.finish()
     }
     catch (error) {
-      fail(error)
+      cmd.fail(error)
     }
   },
 })

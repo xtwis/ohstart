@@ -2,8 +2,10 @@ import { execFile } from "node:child_process"
 import { mkdir } from "node:fs/promises"
 import { basename, join, resolve } from "node:path"
 import { promisify } from "node:util"
-import { fail, log } from "@shared/logger"
+import { command } from "@shared/command"
+import { log } from "@shared/logger"
 import { text } from "@shared/text"
+import { ui } from "@shared/ui"
 import { defineCommand } from "citty"
 import { isVacantSourceRoot, pathExists, writeSourceProject } from "@/scaffold"
 
@@ -38,7 +40,10 @@ export default defineCommand({
     },
   },
   async run({ args }) {
+    const cmd = command()
     try {
+      cmd.start(text.label.command.devInit, text.description.command.dev.init)
+
       const root = resolve(args.dir ?? ".")
       if (!await isVacantSourceRoot(root))
         throw new Error(text.error.project.root.notEmpty(root))
@@ -57,15 +62,16 @@ export default defineCommand({
         sample: !args.bare,
       })
 
-      log.out(text.success.createdSource(name, root, !args.bare))
+      cmd.say(text.success.createdSource(name, root, !args.bare))
       if (ignored.length > 0)
-        log.debug(text.debug.appendedGitignore(join(root, ".gitignore"), ignored))
+        log.debug(ui.debug(text.debug.appendedGitignore(join(root, ".gitignore"), ignored)))
       if (!await pathExists(join(root, ".git")))
-        log.error(text.warning.notGitRepo)
-      log.out(text.next.sourceSteps)
+        cmd.say(ui.yellow(text.warning.notGitRepo))
+      cmd.say(text.next.sourceSteps)
+      cmd.finish()
     }
     catch (error) {
-      fail(error)
+      cmd.fail(error)
     }
   },
 })

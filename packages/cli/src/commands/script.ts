@@ -1,7 +1,7 @@
 import type { ScriptType } from "@shared/types"
 import type { CommandDef } from "citty"
 import { parseAgentSelection } from "@shared/agent"
-import { fail } from "@shared/logger"
+import { command } from "@shared/command"
 import { text } from "@shared/text"
 import { defineCommand } from "citty"
 import { runScript } from "@/runtime"
@@ -11,6 +11,11 @@ const RESERVED_TRUST_FLAG = "--trust"
 const META: Record<ScriptType, { name: ScriptType, description: string }> = {
   init: { name: "init", description: text.description.command.cli.initScript },
   add: { name: "add", description: text.description.command.cli.addScript },
+}
+
+const TITLES: Record<ScriptType, string> = {
+  init: text.label.command.cliInit,
+  add: text.label.command.cliAdd,
 }
 
 const SCRIPT_ARGS = {
@@ -27,13 +32,16 @@ export function defineScriptCommand(type: ScriptType): CommandDef<typeof SCRIPT_
     meta: META[type],
     args: SCRIPT_ARGS,
     async run({ args, rawArgs }) {
+      const cmd = command()
       try {
         const { tokens, trust } = splitTokens(rawArgs, args.script)
         const selection = parseAgentSelection(rawArgs, args.script)
+        cmd.start(TITLES[type], META[type].description)
         await runScript({ type, address: args.script, tokens, trust, selection })
+        cmd.finish()
       }
       catch (error) {
-        fail(error)
+        cmd.fail(error)
       }
     },
   })

@@ -60,7 +60,7 @@ Command failures write the message to stderr and exit with `1`; warnings only in
 | --------------------------------------------------------------------------------------- | ----------------------------------------------------------------------- | -------------------------------------- |
 | `not inside a git repository: <dir>`                                                    | The current directory is not in a git repository                        | Run `git init` first                   |
 | ``no ohstart.json at the git root: <root>, run `ohsd init` first``                      | The repository root lacks `ohstart.json`                                | Run `ohsd init`, or check the root     |
-| `<root> is not empty, init needs a directory without source files (...)`                | The target directory is not empty                                       | Use an empty directory, or clean it    |
+| `<root> is not empty`                                                                   | The target directory is not empty                                       | Use an empty directory, or clean it    |
 | `path exists and is not a directory: <path>`                                            | The path exists but is not a directory                                  | Use another path                       |
 | `<root> is the source root, create the script in a subdirectory: ohsd new <dir> <name>` | A script was created at the source root                                 | Use a subdirectory                     |
 | `path is not inside the source: <path>`                                                 | The path escapes the source root                                        | Use a path inside the root             |

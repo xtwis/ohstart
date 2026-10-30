@@ -1,7 +1,5 @@
 import { terms } from "@shared/text/terms"
 
-export const ignoredEntriesHint = ".git, .gitignore, .DS_Store, README*, LICENSE*"
-
 export const error = {
   contract: {
     sourceNoName: "ohstart.json: name is required",
@@ -47,8 +45,7 @@ export const error = {
 
   project: {
     root: {
-      notEmpty: (root: string): string =>
-        `${root} is not empty, init needs a directory without source files (${ignoredEntriesHint})`,
+      notEmpty: (root: string): string => `${root} is not empty`,
       isSourceRoot: (root: string): string =>
         `${root} is the ${terms.source} root, create the ${terms.script} in a subdirectory: ohsd new <dir> <name>`,
       pathOutsideSource: (path: string): string => `path is not inside the source: ${path}`,

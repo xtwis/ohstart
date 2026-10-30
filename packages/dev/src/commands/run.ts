@@ -2,11 +2,13 @@ import type { ScriptType } from "@shared/types"
 import process from "node:process"
 import { parseAgentSelection, resolveAgent } from "@shared/agent"
 import { fillRequiredArgs, parseScriptArgv } from "@shared/argv/parse"
-import { fail, log } from "@shared/logger"
+import { command } from "@shared/command"
+import { log } from "@shared/logger"
 import { bundleScript } from "@shared/runtime/bundle"
 import { prepareScript } from "@shared/runtime/prepare"
 import { spawnScript } from "@shared/runtime/spawn"
 import { text } from "@shared/text"
+import { ui } from "@shared/ui"
 import { defineCommand } from "citty"
 import { DEFAULT_AGENT_NAME, prepareWorkDir, resolveWorkDir } from "@/run"
 import { SDK_URL } from "@/runtime/sdk"
@@ -56,7 +58,10 @@ export default defineCommand({
     },
   },
   async run({ args, rawArgs }) {
+    const cmd = command()
     try {
+      cmd.start(text.label.command.devRun, text.description.command.dev.run)
+
       const type = parseType(args.type)
       const { tokens } = splitTokens(rawArgs, args.script)
       const selection = parseAgentSelection(rawArgs, args.script)
@@ -82,7 +87,7 @@ export default defineCommand({
       const bundle = await bundleScript({ scriptDir, entry: script.entry ?? text.terms.entryFile, sdkUrl: SDK_URL })
       try {
         const workDir = await prepareWorkDir({ root, keep: args.keep === true, git: args.git !== false, agent })
-        log.debug(text.debug.workingDirectory(workDir))
+        log.debug(ui.debug(text.debug.workingDirectory(workDir)))
         const code = await spawnScript(bundle.file, argv, { cwd: workDir, agent })
         if (code !== 0)
           process.exitCode = code ?? 1
@@ -90,9 +95,11 @@ export default defineCommand({
       finally {
         await bundle.dispose()
       }
+
+      cmd.finish()
     }
     catch (error) {
-      fail(error)
+      cmd.fail(error)
     }
   },
 })

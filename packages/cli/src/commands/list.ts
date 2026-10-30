@@ -1,7 +1,9 @@
 import type { ScriptType } from "@shared/types"
-import { fail, log } from "@shared/logger"
+import type { TableColumn } from "@shared/ui"
+import { command } from "@shared/command"
 import { readOhstartJson, readSourceScripts } from "@shared/read"
 import { text } from "@shared/text"
+import { ui } from "@shared/ui"
 import { defineCommand } from "citty"
 import { loadConfig } from "@/config"
 import { cloneSource, resolveDefaultKey } from "@/remote"
@@ -11,6 +13,18 @@ interface TypeFilterArgs {
   init?: boolean
   add?: boolean
 }
+
+interface ScriptRow {
+  type: string
+  name: string
+  description: string
+}
+
+const columns: TableColumn<ScriptRow>[] = [
+  { render: row => row.type },
+  { render: row => ui.primary(row.name) },
+  { render: row => row.description },
+]
 
 export default defineCommand({
   meta: {
@@ -38,7 +52,10 @@ export default defineCommand({
     },
   },
   async run({ args }) {
+    const cmd = command()
     try {
+      cmd.start(text.label.command.cliList, text.description.command.cli.list)
+
       const wanted = resolveTypeFilter(args)
       const config = await loadConfig()
       const key = args.source ?? resolveDefaultKey(config)
@@ -46,8 +63,7 @@ export default defineCommand({
       if (!source)
         throw new Error(text.error.source.unknown(key))
 
-      log.out(text.state.sourceListing(key, source.name))
-      log.out()
+      cmd.say(text.state.sourceListing(ui.primary(key), source.name))
 
       const workspace = await cloneSource(source.url)
       try {
@@ -55,7 +71,7 @@ export default defineCommand({
         const scripts = await readSourceScripts(workspace.dir, meta)
         for (const entry of scripts) {
           if (entry.error)
-            log.error(text.warning.skippingScript(entry.name, entry.error))
+            cmd.say(ui.yellow(text.warning.skippingScript(entry.name, entry.error)))
         }
 
         const rows = scripts.flatMap((entry) => {
@@ -67,20 +83,27 @@ export default defineCommand({
         })
 
         if (rows.length === 0) {
-          log.out(text.state.noScriptInSource(source.name, wanted))
+          cmd.say(text.state.noScriptInSource(source.name, wanted))
+          cmd.finish()
           return
         }
 
-        const width = Math.max(...rows.map(row => row.name.length))
-        for (const row of rows)
-          log.out(`${row.script.type.padEnd(4)} ${row.name.padEnd(width)}  ${row.script.description}`)
+        const tableRows: ScriptRow[] = rows.map(row => ({
+          type: row.script.type,
+          name: row.name,
+          description: row.script.description,
+        }))
+
+        cmd.say(ui.table(tableRows, columns))
       }
       finally {
         await workspace.dispose()
       }
+
+      cmd.finish()
     }
     catch (error) {
-      fail(error)
+      cmd.fail(error)
     }
   },
 })
