@@ -41,6 +41,7 @@ export const error = {
     notTrusted: (key: string): string =>
       `${terms.source} is not ${terms.trusted}: ${key}, pass --trust to allow this run`,
     trustAborted: (key: string): string => `aborted: ${terms.source} is not ${terms.trusted}: ${key}`,
+    noteEmpty: "the note text must not be empty, use --unset to remove the note",
   },
 
   project: {
@@ -73,6 +74,7 @@ export const error = {
     multipleScriptTypes: (flags: string): string => `only one ${terms.script} type can be specified: ${flags}`,
     missingScriptType: "option --type requires a value: use --type=<init|add>",
     unexpectedArguments: (args: string): string => `unexpected arguments: ${args}`,
+    conflictingNote: "cannot set and unset the note at the same time",
     unknownCommand: (name: string): string => `unknown command: ${name}`,
   },
 

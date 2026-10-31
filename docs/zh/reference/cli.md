@@ -126,6 +126,7 @@ ohstart view
 | `ohstart source list`                   | `ls`        | 列出已配置的源   |
 | `ohstart source view <键名>`            | -           | 查看源详情       |
 | `ohstart source default [键名]`         | `def`       | 查看或设置默认源 |
+| `ohstart source note <键名> [文本]`     | -           | 查看或设置备注   |
 | `ohstart source rename <键名> <新键名>` | `ren`, `mv` | 重命名源         |
 | `ohstart source remove <键名>`          | `rm`        | 删除源           |
 | `ohstart source trust <键名>`           | -           | 标记为可信       |
@@ -212,6 +213,22 @@ ohstart source default [键名]
 ```
 
 省略键名时输出配置中的默认源, 未设置则输出 `no default source`. 指定键名时校验其存在后写回配置, 输出 `default source is now <键名>`.
+
+### note
+
+```
+ohstart source note <键名> [文本] [--unset]
+```
+
+| 参数或 flag | 必需 | 说明                   |
+| ----------- | ---- | ---------------------- |
+| `键名`      | 是   | 源的本地键名           |
+| `文本`      | 否   | 备注内容, 多词须加引号 |
+| `--unset`   | 否   | 清除备注               |
+
+三态与 `source default` 同构. 不带文本时输出当前备注, 未设置则输出 `no note for source <键名>`. 带文本时写入配置, 输出 `note of source <键名> is now <文本>`. 带 `--unset` 时删除配置中的 `note` 字段, 输出 `note of source <键名> is removed`.
+
+文本为空时报错, 清除备注只能用 `--unset`: "未设置" 与 "空字符串" 在配置里是两种状态, 显式动词更好读. 该命令不做交互确认, `--unset` 属于可恢复操作, 改回即可.
 
 ### rename
 

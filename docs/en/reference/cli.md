@@ -126,6 +126,7 @@ ohstart view
 | `ohstart source list`                   | `ls`        | List configured sources        |
 | `ohstart source view <key>`             | -           | Show source details            |
 | `ohstart source default [key]`          | `def`       | Show or set the default source |
+| `ohstart source note <key> [text]`      | -           | Show or set the note           |
 | `ohstart source rename <key> <new-key>` | `ren`, `mv` | Rename a source                |
 | `ohstart source remove <key>`           | `rm`        | Remove a source                |
 | `ohstart source trust <key>`            | -           | Mark as trusted                |
@@ -212,6 +213,22 @@ ohstart source default [key]
 ```
 
 Without a key it prints the configured default source, or `no default source` when none is set. With a key it checks that the source exists, writes the change, and prints `default source is now <key>`.
+
+### note
+
+```
+ohstart source note <key> [text] [--unset]
+```
+
+| Argument or flag | Required | Description                            |
+| ---------------- | -------- | -------------------------------------- |
+| `key`            | Yes      | Local key name of the source           |
+| `text`           | No       | Note text, quote it when it has spaces |
+| `--unset`        | No       | Remove the note                        |
+
+The three states mirror `source default`. Without text it prints the current note, or `no note for source <key>` when none is set. With text it writes the note to the config and prints `note of source <key> is now <text>`. With `--unset` it deletes the `note` field from the config and prints `note of source <key> is removed`.
+
+An empty text is rejected; use `--unset` to clear a note. "Unset" and "empty string" are two different states in the config, so the explicit verb reads better. The command never prompts: `--unset` is recoverable, set the note back whenever you like.
 
 ### rename
 

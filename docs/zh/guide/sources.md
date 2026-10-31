@@ -15,6 +15,7 @@ order: 3
 | `ohstart source list`                   | `ohstart src ls`                     | 列出已配置的源   |
 | `ohstart source view <键名>`            |                                      | 查看源详情       |
 | `ohstart source default [键名]`         | `ohstart src def`                    | 查看或设置默认源 |
+| `ohstart source note <键名> [文本]`     |                                      | 查看或设置备注   |
 | `ohstart source rename <键名> [新键名]` | `ohstart src ren` / `ohstart src mv` | 重命名键名       |
 | `ohstart source remove <键名>`          | `ohstart src rm`                     | 删除源           |
 | `ohstart source trust <键名>`           |                                      | 标记为已信任     |
@@ -102,6 +103,16 @@ ohstart source default my-team
 ```
 
 未设置默认源时执行脚本会直接报错, 并提示先设置一个.
+
+## 备注
+
+```bash
+ohstart source note my-team
+ohstart source note my-team "团队模板"
+ohstart source note my-team --unset
+```
+
+备注只存在本地配置里, 不随源更新. 不带文本时读取当前备注, 带文本时写入, `--unset` 清除. 清除只能用 `--unset`: "未设置" 与 "空字符串" 是配置里的两种不同状态.
 
 ## 重命名键名
 

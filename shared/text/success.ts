@@ -11,4 +11,6 @@ export const success = {
   defaultSourceNow: (key: string): string => `${terms.defaultSource} is now ${key}`,
   sourceTrust: (key: string, trusted: boolean): string =>
     `${terms.source} ${key} is ${trusted ? `now ${terms.trusted}` : `no longer ${terms.trusted}`}`,
+  sourceNoteSet: (key: string, note: string): string => `note of ${terms.source} ${key} is now ${note}`,
+  sourceNoteUnset: (key: string): string => `note of ${terms.source} ${key} is removed`,
 } as const

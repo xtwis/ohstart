@@ -15,6 +15,7 @@ The source command group covers adding, inspecting and removing sources, setting
 | `ohstart source list`                   | `ohstart src ls`                     | List configured sources        |
 | `ohstart source view <key>`             |                                      | Show source details            |
 | `ohstart source default [key]`          | `ohstart src def`                    | Show or set the default source |
+| `ohstart source note <key> [text]`      |                                      | Show or set the note           |
 | `ohstart source rename <key> [new-key]` | `ohstart src ren` / `ohstart src mv` | Rename a key                   |
 | `ohstart source remove <key>`           | `ohstart src rm`                     | Remove a source                |
 | `ohstart source trust <key>`            |                                      | Mark as trusted                |
@@ -102,6 +103,16 @@ ohstart source default my-team
 ```
 
 Running a script with no default source fails immediately and asks you to set one.
+
+## Note
+
+```bash
+ohstart source note my-team
+ohstart source note my-team "team templates"
+ohstart source note my-team --unset
+```
+
+The note lives in the local configuration only and does not follow source updates. Without text it reads the current note, with text it writes it, and `--unset` clears it. Clearing requires `--unset`: "unset" and "empty string" are two different states in the configuration.
 
 ## Renaming a key
 

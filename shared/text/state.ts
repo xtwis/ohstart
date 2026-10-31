@@ -4,6 +4,7 @@ export const state = {
   cancelled: "cancelled",
   noSourceConfigured: "no source configured",
   noDefaultSource: `no ${terms.defaultSource}`,
+  noSourceNote: (key: string): string => `no note for ${terms.source} ${key}`,
   noScriptInSource: (source: string, type?: string): string =>
     `no ${type ? `${type} ` : ""}${terms.script} in ${terms.source} ${source}`,
   sourceLoaded: (name: string, root: string): string => `${terms.source} ${name} at ${root}`,

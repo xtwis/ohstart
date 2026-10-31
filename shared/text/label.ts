@@ -51,6 +51,7 @@ export const label = {
     sourceAdd: "ohstart source add",
     sourceDefault: "ohstart source default",
     sourceList: "ohstart source list",
+    sourceNote: "ohstart source note",
     sourceRemove: "ohstart source remove",
     sourceRename: "ohstart source rename",
     sourceTrust: "ohstart source trust",

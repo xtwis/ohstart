@@ -4,6 +4,7 @@ import { defineCommand } from "citty"
 import add from "@/commands/source/add"
 import sourceDefault from "@/commands/source/default"
 import list from "@/commands/source/list"
+import note from "@/commands/source/note"
 import remove from "@/commands/source/remove"
 import rename from "@/commands/source/rename"
 import trust from "@/commands/source/trust"
@@ -14,6 +15,7 @@ export const subCommands = {
   add,
   default: sourceDefault,
   list,
+  note,
   remove,
   rename,
   trust,
