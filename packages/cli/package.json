@@ -2,13 +2,14 @@
   "name": "@xtwis/ohstart",
   "type": "module",
   "version": "0.1.3",
-  "description": "ohstart CLI",
+  "description": "Install your configuration in one command.",
   "author": "Twisuki <hi@twis.uk>",
   "license": "MIT",
   "publishConfig": {
     "access": "public"
   },
   "readme": "README.md",
+  "homepage": "https://x.twis.uk/en/ohstart/",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/xtwis/ohstart.git"
@@ -16,7 +17,14 @@
   "bugs": {
     "url": "https://github.com/xtwis/ohstart/issues"
   },
-  "keywords": [],
+  "keywords": [
+    "cli",
+    "template",
+    "scaffold",
+    "toolchain",
+    "git",
+    "typescript"
+  ],
   "sideEffects": false,
   "exports": {
     "./package.json": "./package.json",
@@ -30,6 +38,7 @@
     "ohs": "./dist/cli.mjs"
   },
   "files": [
+    "CHANGELOG.md",
     "LICENSE",
     "README.md",
     "dist"

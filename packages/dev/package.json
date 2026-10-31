@@ -2,13 +2,14 @@
   "name": "@xtwis/ohstart-dev",
   "type": "module",
   "version": "0.1.3",
-  "description": "ohstart dev CLI and SDK",
+  "description": "Author-side toolchain for ohstart sources.",
   "author": "Twisuki <hi@twis.uk>",
   "license": "MIT",
   "publishConfig": {
     "access": "public"
   },
   "readme": "README.md",
+  "homepage": "https://x.twis.uk/en/ohstart/",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/xtwis/ohstart.git"
@@ -16,7 +17,14 @@
   "bugs": {
     "url": "https://github.com/xtwis/ohstart/issues"
   },
-  "keywords": [],
+  "keywords": [
+    "cli",
+    "sdk",
+    "scaffold",
+    "template",
+    "toolchain",
+    "typescript"
+  ],
   "sideEffects": false,
   "exports": {
     ".": {
@@ -31,6 +39,7 @@
     "ohsd": "./dist/cli.mjs"
   },
   "files": [
+    "CHANGELOG.md",
     "LICENSE",
     "README.md",
     "dist"
