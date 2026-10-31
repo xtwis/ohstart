@@ -111,8 +111,8 @@ export default async function main() {
 
 Full guides, command reference and examples live at:
 
-- English: <https://x.twis.uk/en/ohstart/>
-- 简体中文: <https://x.twis.uk/zh/ohstart/>
+- English: <https://x.twis.uk/ohstart>
+- 简体中文: <https://x.twis.uk/zh/ohstart>
 
 ## License
 
