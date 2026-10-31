@@ -1,5 +1,11 @@
 # @xtwis/ohstart-dev
 
+## 1.0.0
+
+### Major Changes
+
+- e43dfdb: Add README and complete the `package.json`
+
 ## 0.1.3
 
 ### Patch Changes
