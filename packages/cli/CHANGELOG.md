@@ -1,5 +1,16 @@
 # @xtwis/ohstart
 
+## 1.0.0
+
+### Major Changes
+
+- e43dfdb: Add README and complete the `package.json`
+
+### Patch Changes
+
+- f3c413f: Remove the unimplemented `update` command
+- fc53f3e: Add `ohstart source note` to read, write and clear the local note of a source
+
 ## 0.1.3
 
 ### Patch Changes
