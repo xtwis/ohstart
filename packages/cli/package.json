@@ -1,7 +1,7 @@
 {
   "name": "@xtwis/ohstart",
   "type": "module",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Install your configuration in one command.",
   "author": "Twisuki <hi@twis.uk>",
   "license": "MIT",

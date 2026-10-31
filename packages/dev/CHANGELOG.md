@@ -1,5 +1,11 @@
 # @xtwis/ohstart-dev
 
+## 1.0.1
+
+### Patch Changes
+
+- 8c2a9ba: Modified the site link of the documentation site
+
 ## 1.0.0
 
 ### Major Changes
