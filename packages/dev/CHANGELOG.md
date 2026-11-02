@@ -1,5 +1,13 @@
 # @xtwis/ohstart-dev
 
+## 1.0.2
+
+### Patch Changes
+
+- d19c895: Parse the `ohsd run` flags only before the script name
+- 0b22282: Fix the semantics of `--no-git`
+- 7b9e16a: Add `--no-package` to `ohsd run` to skip the package project in the working directory
+
 ## 1.0.1
 
 ### Patch Changes
