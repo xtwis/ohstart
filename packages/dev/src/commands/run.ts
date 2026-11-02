@@ -39,6 +39,11 @@ export default defineCommand({
       default: true,
       description: text.description.arg.flag.git,
     },
+    package: {
+      type: "boolean",
+      default: true,
+      description: text.description.arg.flag.package,
+    },
     npm: {
       type: "boolean",
       description: text.description.arg.agent.npm,
@@ -86,7 +91,13 @@ export default defineCommand({
 
       const bundle = await bundleScript({ scriptDir, entry: script.entry ?? text.terms.entryFile, sdkUrl: SDK_URL })
       try {
-        const workDir = await prepareWorkDir({ root, keep: args.keep === true, git: args.git !== false, agent })
+        const workDir = await prepareWorkDir({
+          root,
+          keep: args.keep === true,
+          git: args.git !== false,
+          package: args.package !== false,
+          agent,
+        })
         log.debug(ui.debug(text.debug.workingDirectory(workDir)))
         const code = await spawnScript(bundle.file, argv, { cwd: workDir, agent })
         if (code !== 0)

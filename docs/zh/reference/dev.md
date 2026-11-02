@@ -177,6 +177,7 @@ ohsd run <类型> <脚本> [参数...]
 | `参数...`                     | 可选       | 原样传给脚本                            |
 | `--keep`                      | 脚本名之前 | 保留上次的工作目录内容                  |
 | `--no-git`                    | 脚本名之前 | 跳过 `git init`, 写入最小仓库骨架       |
+| `--no-package`                | 脚本名之前 | 跳过工作目录的包项目初始化              |
 | `--npm` / `--pnpm` / `--yarn` | 脚本名之前 | 指定工作目录的包管理器                  |
 | `--agent=<npm\|pnpm\|yarn>`   | 脚本名之前 | 同上, 取值形式                          |
 | `--no-detect`                 | 脚本名之前 | 跳过包管理器探测                        |
@@ -188,7 +189,7 @@ ohsd run <类型> <脚本> [参数...]
 - 每次执行前清空, `--keep` 时保留.
 - 首次使用时会向源根 `.gitignore` 追加 `.ohstart` 与 `.ohstart-run.mjs`.
 - 目录内初始化 git 仓库, 使脚本向上查找仓库根时停在此处而不命中源仓库. `--no-git` 时写入由 `HEAD` 与 `config` 组成的最小骨架.
-- 目录内初始化包管理器项目. pnpm 使用 `pnpm init --bare --no-init-package-manager`, 并写入 `packages` 为空的 `pnpm-workspace.yaml`, 以免向上命中源仓库的 workspace. 初始化失败时回落到最小 `package.json`.
+- 目录内初始化包管理器项目. pnpm 使用 `pnpm init --bare --no-init-package-manager`, 并写入 `packages` 为空的 `pnpm-workspace.yaml`, 以免向上命中源仓库的 workspace. 初始化失败时回落到最小 `package.json`. `--no-package` 时整段跳过, 工作目录内不初始化包项目.
 
 包管理器探测起点是工作目录, 因此会向上命中源仓库自身的 `package.json` 与锁文件. 探测不到或探测到不支持的包管理器时使用 pnpm, 并输出对应警告. 探测规则见 [包管理器](../guide/scripts.md).
 

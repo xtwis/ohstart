@@ -84,11 +84,12 @@ ohsd run add sayhi
 | ----------------------------- | -------------------------------------------- |
 | `--keep`                      | 保留上一次的工作目录, 不先清空               |
 | `--no-git`                    | 不调用 git, 工作目录内直接写入最小的仓库骨架 |
+| `--no-package`                | 跳过工作目录的包项目初始化                   |
 | `--npm` / `--pnpm` / `--yarn` | 指定工作目录使用的包管理器                   |
 | `--agent=<名>`                | 同上一行, 以赋值形式指定                     |
 | `--no-detect`                 | 跳过探测, 与 `--agent` 同用时直接使用指定值  |
 
-工作目录内的项目按包管理器初始化. 指定或探测到 pnpm 时, 还会写入一份 `packages` 为空的 `pnpm-workspace.yaml`, 以免 pnpm 向上将源仓库当作 workspace 根; 初始化失败时回落到最小的 `package.json`. 未指定且探测不到时, 默认使用 pnpm.
+工作目录内的项目按包管理器初始化. 指定或探测到 pnpm 时, 还会写入一份 `packages` 为空的 `pnpm-workspace.yaml`, 以免 pnpm 向上将源仓库当作 workspace 根; 初始化失败时回落到最小的 `package.json`. 未指定且探测不到时, 默认使用 pnpm. `--no-package` 时跳过整段初始化, 工作目录内不初始化包项目.
 
 `--no-git` 适用于没有 git 的环境: 跳过 `git init`, 直接写入由 `HEAD` 与 `config` 组成的最小仓库骨架. 脚本向上查找 git 仓库根时, 会停在 `.ohstart` 而不会命中源仓库.
 

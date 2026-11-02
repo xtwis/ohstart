@@ -45,6 +45,7 @@ export interface WorkDirOptions {
   root: string
   keep: boolean
   git: boolean
+  package: boolean
   agent: AgentIdentity
 }
 
@@ -55,7 +56,7 @@ export function resolveWorkDir(root: string): string {
   return dir
 }
 
-export async function prepareWorkDir({ root, keep, git, agent }: WorkDirOptions): Promise<string> {
+export async function prepareWorkDir({ root, keep, git, package: usePackage, agent }: WorkDirOptions): Promise<string> {
   const dir = resolveWorkDir(root)
 
   if (!keep)
@@ -68,7 +69,8 @@ export async function prepareWorkDir({ root, keep, git, agent }: WorkDirOptions)
     log.debug(text.debug.appendedGitignore(join(root, ".gitignore"), ignored))
 
   await ensureGitRepo(dir, git)
-  await ensurePackageProject(dir, agent)
+  if (usePackage)
+    await ensurePackageProject(dir, agent)
 
   return dir
 }
