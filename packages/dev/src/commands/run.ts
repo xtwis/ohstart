@@ -36,12 +36,10 @@ export default defineCommand({
     },
     git: {
       type: "boolean",
-      default: true,
       description: text.description.arg.flag.git,
     },
     package: {
       type: "boolean",
-      default: true,
       description: text.description.arg.flag.package,
     },
     npm: {
@@ -68,7 +66,7 @@ export default defineCommand({
       cmd.start(text.label.command.devRun, text.description.command.dev.run)
 
       const type = parseType(args.type)
-      const { tokens } = splitTokens(rawArgs, args.script)
+      const { tokens, keep, git, package: usePackage } = splitTokens(rawArgs, args.script)
       const selection = parseAgentSelection(rawArgs, args.script)
 
       const root = await findSourceRoot(".")
@@ -93,9 +91,9 @@ export default defineCommand({
       try {
         const workDir = await prepareWorkDir({
           root,
-          keep: args.keep === true,
-          git: args.git !== false,
-          package: args.package !== false,
+          keep,
+          git,
+          package: usePackage,
           agent,
         })
         log.debug(ui.debug(text.debug.workingDirectory(workDir)))
@@ -121,7 +119,20 @@ function parseType(value: string): ScriptType {
   throw new Error(text.error.command.invalidScriptType(value))
 }
 
-function splitTokens(rawArgs: string[], script: string): { tokens: string[] } {
+interface SplitTokens {
+  tokens: string[]
+  keep: boolean
+  git: boolean
+  package: boolean
+}
+
+function splitTokens(rawArgs: string[], script: string): SplitTokens {
   const index = rawArgs.indexOf(script)
-  return { tokens: index === -1 ? [] : rawArgs.slice(index + 1) }
+  const head = index === -1 ? rawArgs : rawArgs.slice(0, index)
+  return {
+    tokens: index === -1 ? [] : rawArgs.slice(index + 1),
+    keep: head.includes("--keep"),
+    git: !head.includes("--no-git"),
+    package: !head.includes("--no-package"),
+  }
 }
