@@ -68,7 +68,8 @@ export async function prepareWorkDir({ root, keep, git, package: usePackage, age
   if (ignored.length > 0)
     log.debug(text.debug.appendedGitignore(join(root, ".gitignore"), ignored))
 
-  await ensureGitRepo(dir, git)
+  if (git)
+    await ensureGitRepo(dir)
   if (usePackage)
     await ensurePackageProject(dir, agent)
 
@@ -86,21 +87,17 @@ async function clearWorkDir(dir: string): Promise<void> {
   await rm(dir, { recursive: true, force: true })
 }
 
-async function ensureGitRepo(dir: string, useGitBinary: boolean): Promise<void> {
+async function ensureGitRepo(dir: string): Promise<void> {
   if (await pathExists(join(dir, ".git")))
     return
 
-  if (useGitBinary) {
-    try {
-      await execFileAsync("git", ["init", "--quiet", `--initial-branch=${GIT_BRANCH}`], { cwd: dir })
-      return
-    }
-    catch {
-      log.error(text.warning.gitInitFailed(dir))
-    }
+  try {
+    await execFileAsync("git", ["init", "--quiet", `--initial-branch=${GIT_BRANCH}`], { cwd: dir })
   }
-
-  await writeGitSkeleton(dir)
+  catch {
+    log.error(text.warning.gitInitFailed(dir))
+    await writeGitSkeleton(dir)
+  }
 }
 
 async function writeGitSkeleton(dir: string): Promise<void> {

@@ -69,8 +69,8 @@ export const description = {
       add: "list add scripts only",
       bare: "do not create the sample script",
       keep: "keep the existing working directory content (cleared before each run by default)",
-      git: "create a git repository in the working directory so scripts that look for a git root stop here; --no-git skips the git command and writes a minimal repository skeleton",
-      package: "create a package project in the working directory so scripts that look for a package root stop here; --no-package skips the package manager project",
+      git: "create a git repository in the working directory; --no-git skips it",
+      package: "create a package project in the working directory; --no-package skips it",
     },
   },
 } as const

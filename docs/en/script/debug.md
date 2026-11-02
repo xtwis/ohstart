@@ -83,15 +83,15 @@ Related flags:
 | Flag                          | Purpose                                                      |
 | ----------------------------- | ------------------------------------------------------------ |
 | `--keep`                      | Keep the previous working directory instead of clearing it   |
-| `--no-git`                    | Skip git and write a minimal repository skeleton instead     |
-| `--no-package`                | Skip the package project initialization                      |
+| `--no-git`                    | Skip the git repository                                      |
+| `--no-package`                | Skip the package project                                     |
 | `--npm` / `--pnpm` / `--yarn` | Choose the package manager used in the working directory     |
 | `--agent=<name>`              | Same as above, in assignment form                            |
 | `--no-detect`                 | Skip detection; combined with `--agent`, use the given value |
 
-The project inside the working directory is initialized per package manager. With pnpm, a `pnpm-workspace.yaml` containing an empty `packages` list is also written, so that pnpm does not treat the source repository as the workspace root; if initialization fails, a minimal `package.json` is written. When nothing is specified and detection fails, pnpm is used. With `--no-package`, the whole step is skipped and no package project is created.
+The project inside the working directory is initialized per package manager. With pnpm, a `pnpm-workspace.yaml` containing an empty `packages` list is also written, so that pnpm does not treat the source repository as the workspace root; if initialization fails, a minimal `package.json` is written. When nothing is specified and detection fails, pnpm is used. With `--no-package`, the step is skipped.
 
-`--no-git` is meant for environments without git: `git init` is skipped and a minimal repository skeleton made of `HEAD` and `config` is written. A script looking upwards for a git root stops at `.ohstart` instead of hitting the source repository.
+`--no-git` neither calls git nor creates any git content, so a script looking upwards for a repository root reaches the source repository.
 
 The working directory is `.ohstart`, which is written to `.gitignore` and never committed by accident.
 

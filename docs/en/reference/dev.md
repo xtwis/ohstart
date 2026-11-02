@@ -170,17 +170,17 @@ ohsd run <type> <script> [arg...]
 
 Executes a script in a work directory, to verify its actual behavior.
 
-| Argument or flag              | Position               | Description                                             |
-| ----------------------------- | ---------------------- | ------------------------------------------------------- |
-| `type`                        | Required               | `init` or `add`, must match the registered type         |
-| `script`                      | Required               | Script name, must match a key in `ohstart.json`         |
-| `arg...`                      | Optional               | Passed to the script as-is                              |
-| `--keep`                      | Before the script name | Keep the previous work directory content                |
-| `--no-git`                    | Before the script name | Skip `git init` and write a minimal repository skeleton |
-| `--no-package`                | Before the script name | Skip the package project in the working directory       |
-| `--npm` / `--pnpm` / `--yarn` | Before the script name | Select the package manager for the work directory       |
-| `--agent=<npm\|pnpm\|yarn>`   | Before the script name | Same, in assignment form                                |
-| `--no-detect`                 | Before the script name | Skip package manager detection                          |
+| Argument or flag              | Position               | Description                                       |
+| ----------------------------- | ---------------------- | ------------------------------------------------- |
+| `type`                        | Required               | `init` or `add`, must match the registered type   |
+| `script`                      | Required               | Script name, must match a key in `ohstart.json`   |
+| `arg...`                      | Optional               | Passed to the script as-is                        |
+| `--keep`                      | Before the script name | Keep the previous work directory content          |
+| `--no-git`                    | Before the script name | Skip the git repository                           |
+| `--no-package`                | Before the script name | Skip the package project                          |
+| `--npm` / `--pnpm` / `--yarn` | Before the script name | Select the package manager for the work directory |
+| `--agent=<npm\|pnpm\|yarn>`   | Before the script name | Same, in assignment form                          |
+| `--no-detect`                 | Before the script name | Skip package manager detection                    |
 
 Every flag above must precede the script name. A token of the same name after it belongs to the script; `ohsd` makes no distinction.
 
@@ -188,8 +188,8 @@ The work directory is always `.ohstart` under the source root:
 
 - It is cleared before each run, or kept with `--keep`.
 - On first use, `.ohstart` and `.ohstart-run.mjs` are appended to the source `.gitignore`.
-- A git repository is initialized inside, so a script looking for a repository root stops here instead of hitting the source repository. With `--no-git`, a minimal skeleton made of `HEAD` and `config` is written instead.
-- A package manager project is initialized inside. For pnpm the command runs `pnpm init --bare --no-init-package-manager` and writes a `pnpm-workspace.yaml` with an empty `packages` list, so pnpm does not treat the source repository as a workspace root. A failed init falls back to a minimal `package.json`. With `--no-package`, the whole step is skipped and no package project is created.
+- A git repository is initialized inside, so a script looking for a repository root stops here; with `--no-git` it is skipped and the script reaches the source repository.
+- A package manager project is initialized inside: for pnpm the command runs `pnpm init --bare --no-init-package-manager` and writes a `pnpm-workspace.yaml` with an empty `packages` list, so pnpm does not treat the source repository as a workspace root; a failed init falls back to a minimal `package.json`. With `--no-package` the step is skipped.
 
 Package manager detection starts at the work directory, so it walks up into the source repository own `package.json` and lock files. When detection finds nothing or an unsupported package manager, pnpm is used and a warning is printed. See [Package manager](../guide/scripts.md) for the detection rules.
 
